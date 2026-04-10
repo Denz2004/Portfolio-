@@ -1,0 +1,62 @@
+---
+title: "Our Project"
+format: html
+self-contained: true
+
+about:
+  template: jolla
+  image: ./pictures/_methode_times_prod_web_bin_31bac9d5-25be-4cef-9745-b75c82eb24d0.png
+  links:
+    - icon: github
+      text: Github
+      href: https://github.com/orgs/lse-ds105/teams/my-team
+---
+
+<style>
+body {
+  background-color: #f0f7ff;
+}
+</style>
+
+
+
+## Our Team
+
+<strong>Deniz Ozayaz |</strong> Bsc Politics and Data Science
+
+<strong>Blanche Boomla |</strong> Bsc Phsychological and Behavioural Sciences
+
+<strong>Amelie Byrne |</strong> Bsc Phsychological and Behavioural Sciences
+
+<strong>Ibrahim Ghazali |</strong>Bsc Economics
+
+
+
+## Research Question
+<figure class="text-center" style="position: relative; margin: auto; 50px; top: 0px; max-width: 600px;margin-bottom: 75px;">
+  <blockquote class="blockquote" style="color: #FEFEFE; font-size: 40px; background-color: rgba(3, 82, 128, 0.5); padding: 20px; border-radius: 50px;">
+    <p class="mb-0">Can we use social media data to provide inisghts into voters political preferences in the US? </p>
+  </blockquote>
+</figure>
+
+<body>
+    <img src="Unknown.jpeg" alt="">
+</body>
+
+## Our Mission
+
+<figure class="text-center" sstyle="display: block; margin-left: auto; margin-right: auto; max-width: 600px; margin-bottom: 75px;">
+  <blockquote class="blockquote" style="color: #FEFEFE; font-size: 25px; background-color: rgba(3, 82, 128, 0.5); padding: 20px; border-radius: 50px;">
+    <p class="mb-0">Our mission is to unlock the potential of social media data to highlight voter trends within the US political system.
+    
+  We hope to use webscraping using APIs and data visualisation techniques to present the patterns of the subreddit data.
+
+  We envision that our insights would provide presidential candidates with state unique data on political and social preferences. Data that would hopefully be invaluable during the course of a presedential campaign.
+   </p>
+  </blockquote>
+</figure>
+
+
+
+
+

@@ -1,0 +1,98 @@
+
+---
+title : ""
+format: 
+  html:
+    embed-resources: true
+self-contained: true
+---
+# Analysis
+
+Our primary tool for analysing the data is BERTopic, a topic modelling technique which allows us to gain insight on the most common topic for each subreddit and the words associated with each topic.
+
+We analysed all the 54 subreddits to see the top 3 topics of every subreddit and try to see whether the top topic for each state have some correlation with the state's majority political stand.
+
+
+### Separate Analysis of Each State
+
+Below, we have included graphs and figures from our separate analysis of four states. Arkansas, Texas, Indiana, and Florida provide a diversity of sociopolitical landscapes, making them ideal for investigation. Arkansas, with its deeply conservative and rural focus, contrasts sharply with the increasingly progressive urban centers within Texas, which also balances a strong conservative presence in its rural regions. Indiana, traditionally conservative with strong rural values, provides a different Midwestern perspective. Florida, as a battleground state, showcases a unique blend of influences from its diverse demographics, significant retiree population, and a mix of liberal and conservative areas. This variety allows for a comprehensive analysis of sociopolitical dynamics across different environments.
+
+::: {.panel-tabset}
+
+## Arkansas
+
+{{< embed ./code_analysis/bert.ipynb#arkansas-top-topics >}}
+
+```{=html}
+<iframe width="800" height="800" src="./docs/code_analysis/bert_files/arkansas/arkansas-topic-map.html" ></iframe>
+<iframe width="800" height="500" src="./docs/code_analysis/bert_files/arkansas/arkansas-topic-hierarchy.html" ></iframe>
+<iframe width="800" height="800" src="./docs/code_analysis/bert_files/arkansas/arkansas-topic-bar.html" ></iframe>
+<iframe width="800" height="800" src="./docs/code_analysis/bert_files/arkansas/arkansas-topic-heatmap.html" ></iframe>
+```
+ 
+ Arkansas' top topic is seemingly politics related, including the name Huckabee, the former governor, and Sanders, the current governor. Other high ranking topics include one denoting Arkansas' rich natural landscapes and outdoor recreational opportunities (topic 1), with mentions of "park," "lake," "buffalo," and "falls," highlighting popular destinations for hiking, boating, and scenic views, such as the Buffalo National River and its waterfalls. In topic 9, the terms "worst," "food," "states," "USDA," and "workforce" suggest a discussion related to various aspects of state conditions, such as economic indicators, agricultural policies, and labor force statistics. These topics could potentially reflect concerns about state rankings, food insecurity, government programs like the USDA, and workforce development initiatives.
+
+
+## Texas
+
+{{< embed ./code_analysis/bert.ipynb#texas-top-topics >}}
+
+```{=html}
+<iframe width="800" height="800" src="./docs/code_analysis/bert_files/texas/texas-topic-map.html" ></iframe>
+<iframe width="800" height="500" src="./docs/code_analysis/bert_files/texas/texas-topic-hierarchy.html" ></iframe>
+<iframe width="800" height="800" src="./docs/code_analysis/bert_files/texas/texas-topic-bar.html" ></iframe>
+<iframe width="800" height="800" src="./docs/code_analysis/bert_files/texas/texas-topic-heatmap.html" ></iframe>
+```
+
+In Texas, topic 3 - "Greg Abbott," "pardon," "aid," and "federal" - suggests discussions related to Governor Greg Abbott's actions or policies, including potential pardons, federal assistance programs, and interactions between the state and federal government. Topic 9, including "Cruz," "Ted," "Colin," "pronouns," and "alarm", may indicate discussions related to Senator Ted Cruz, potentially including his statements or actions, along with broader political debates involving gender pronouns and alarmist rhetoric.
+
+## Florida
+
+{{< embed ./code_analysis/bert.ipynb#florida-top-topics >}}
+
+```{=html}
+<iframe width="800" height="800" src="./docs/code_analysis/bert_files/florida/florida-topic-map.html" ></iframe>
+<iframe width="800" height="500" src="./docs/code_analysis/bert_files/florida/florida-topic-hierarchy.html" ></iframe>
+<iframe width="800" height="800" src="./docs/code_analysis/bert_files/florida/florida-topic-bar.html" ></iframe>
+<iframe width="800" height="800" src="./docs/code_analysis/bert_files/florida/florida-topic-heatmap.html" ></iframe>
+```
+
+In Florida, topics such as "schools," "bible," "anti," "LGBTQ," and "ban" could imply discussions related to education policies, religious influences in public institutions, opposition to certain social movements, LGBTQ+ rights, and potentially discussions about banning certain activities or behaviors within the state. Topic 2 suggests discussions in Florida surrounding figures like Governor Ron DeSantis, potential bids for presidential candidacy, and political figures like Marco Rubio. Topic 7, referencing "data," "COVID," "measles," "FDA," and "outbreak", could suggest discussions in Florida related to data analysis, COVID-19 pandemic updates, potential outbreaks of diseases like measles, regulations by the Food and Drug Administration (FDA), and public health concerns.
+
+## Indiana 
+
+{{< embed ./code_analysis/bert.ipynb#indiana-top-topics >}}
+
+```{=html}
+<iframe width="800" height="800" src="./docs/code_analysis/bert_files/indiana/indiana-topic-map.html" ></iframe>
+<iframe width="800" height="500" src="./docs/code_analysis/bert_files/indiana/indiana-topic-hierarchy.html" ></iframe>
+<iframe width="1000" height="800" src="./docs/code_analysis/bert_files/indiana/indiana-topic-bar.html" ></iframe>
+<iframe width="800" height="800" src="./docs/code_analysis/bert_files/Indiana/indiana-topic-heatmap.html" ></iframe>
+```
+
+
+Topic 1 in Indiana appears to revolve around discussions related to marijuana, including talks about legalization, lawmakers' actions, and proposals to legalize its use.
+Topic 2 seems to involve discussions about newly elected Republican goveror Mike Braun, with reference to elections, images, and his support for Donald Trump. Topic 7 in Indiana seems to center around legal and social issues concerning gender identity, particularly regarding transgender minors, court cases related to gender dysphoria, and possibly legislation surrounding transgender rights.
+
+:::
+ 
+### Cross Analysis Between States 
+
+We also did a cross analysis between the two states to identify the degree of similarity of the topics discussed in their respective reddits based on their cosine similarity. 
+
+
+::: {.panel-tabset}
+
+## Texas & Arkansas
+
+```{=html}
+<iframe width="800" height="800" src="./docs/code_analysis/bert_files/texas-arkansas-comp.html" ></iframe>
+```
+
+## Florida & Indiana
+
+```{=html}
+<iframe width="800" height="800" src="./docs/code_analysis/bert_files/florida-indiana-comp.html" ></iframe>
+```
+
+:::

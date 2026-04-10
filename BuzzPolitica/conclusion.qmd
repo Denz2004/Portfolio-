@@ -1,0 +1,17 @@
+---
+title: "Conclusion"
+self-contained: true
+format: html
+---
+
+# Conclusion
+
+The Reddit data across states provides useful insights into the similarities and differences between not only individual states, but across the whole of the US. The interactive map gives a useful, user-friendly way to navigate and understand the data. The map allows for visualisation of such Reddit trends, this is particularly beneficial for people less familiar with US geography, as it enables easy understanding of the data.
+
+Moreover, our project allows for replication of the data processes, which could therefore be applied further to other areas of the world, and to compare the same point (e.g., US) at different points in time.
+
+While acknowledging that our project does not meet our initial goal of predicting political votes using Reddit to understand political trends, it does, however, provide useful insights into the trending social media topics between states. This provides a valuable understanding of how social media trends differ regionally, which can be useful for various sociopolitical analyses and marketing strategies. 
+
+As a result, we did achieve our goals of managing to obtain and use Reddit data to analyse social media trends and sentiments across US States via ML models such as Bertropic, our own graphs and visualisations such as the interactive map - despite not in a political context.
+
+::: {.panel-tabset}

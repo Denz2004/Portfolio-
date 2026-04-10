@@ -1,0 +1,136 @@
+---
+title: "Summary of Our Work"
+format: 
+    revealjs:
+        theme: serif
+---
+
+## Data Scraping
+
+- We scraped posts from 54 subreddits, including all the states and the subreddits of the Democrats and Republicans.
+
+- In total, we have text data of 27000 posts, from which we analysed, mainly using BERTopic, a package mainly used for topic modelling.
+---
+
+## Analysis
+
+
+
+---
+
+## Conclusion
+::: {.incremental}
+- What makes these [red]{style="color:red;font-weight:bold;"} and [blue]{style="color:blue;font-weight:bold;"} states vote for their parties ?
+
+- What makes these [purple]{style="color:purple;font-weight:bold;"} states change their dominant votes ?
+
+- Our plan is to analyse people's political speeches and opinions of every state and see the most common words, a ***"Buzzword"***
+
+- Defining a **buzzword**: "tba"
+
+:::
+
+---
+
+## Data Collection {transition="fade-in slide-out"}
+::: {.incremental}
+
+- What parts of Reddit / Twitter we plan on scraping
+- Number of posts/ comments/ shares
+
+- Our plan to integrate / merge the data (expand here from last week's lecture)
+
+:::
+
+---
+
+## Data Visualisation {auto-animate=true auto-animate-easing="ease-in-out"}
+
+- Exploratory / Primary Analysis
+- Variables to compare etc
+
+::: {.r-hstack}
+::: {data-id="box1" auto-animate-delay="0" style="background: #0000FF; width: 200px; height: 150px; margin: 10px;"}
+:::
+
+::: {data-id="box2" auto-animate-delay="0.1" style="background: #FF0000; width: 200px; height: 150px; margin: 10px;"}
+:::
+
+:::
+
+---
+
+## Data Visualisation {auto-animate=true auto-animate-easing="ease-in-out"}
+
+- Exploratory / Primary Analysis
+- Variables to compare etc
+
+::: {.r-stack}
+::: {data-id="box1" style="background: #FF0000; width: 350px; height: 350px; border-radius: 200px;"}
+:::
+
+::: {data-id="box2" style="background: #0000FF; width: 250px; height: 250px; border-radius: 200px;"}
+:::
+
+:::
+
+--- 
+
+## The website {auto-animate=true auto-animate-easing="ease-in-out"}
+
+- Exploratory / Primary Analysis
+- Variables to compare etc
+
+::: {.r-stack}
+::: {data-id="box1" style="background: #FF0000; width: 350px; height: 350px; border-radius: 200px;"}
+:::
+
+::: {data-id="box2" style="background: #0000FF; width: 250px; height: 250px; border-radius: 200px;"}
+:::
+
+:::
+
+---
+ 
+## Interactive Map {transition="fade-in slide-out"}
+::: {.incremental}
+ 
+- Google Maps API
+- HTML and CSS code for the map
+- Data inputed the 'buzzword dateframe'
+ 
+:::
+ 
+---
+ 
+## Interactive Map {transition="fade-in slide-out"}
+::: {.incremental}
+ 
+- Hoover/ click on the map
+    - Social media data
+<![](/pictures/Red-BlueStates-03.jpeg){fig-align="center"}
+ 
+
+:::
+ 
+---
+ 
+## Census Data {transition="fade-in slide-out"}
+::: {.incremental}
+ 
+- Compare predictions with presidential election results
+<![](/pictures/censusimg.jpeg){fig-align="center"}
+ 
+
+:::
+ 
+
+---
+ 
+## Generative AI {transition="fade-in slide-out"}
+::: {.incremental}
+ 
+<![](/pictures/chatgptimg.jpeg){fig-align="center"}
+ 
+
+:::

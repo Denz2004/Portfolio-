@@ -1,0 +1,73 @@
+﻿Year,SchoolYR,Age,Variable ,Type,Meaning
+2004,10,14,W1GrssyrMP,continuous,Gross annual salary of main parent
+2004,10,14,W1GrssyrHH,continuous,Gross annual salary of household
+2004,10,14,W1wrk1aMP,categorical,MP: current working status
+2004,10,14,W1condur5MP,categorical,Whether there is a computer in HH
+2004,10,14,W1hea2MP,categorical,Whether MP has longstanding illness or disability
+2004,10,14,W1NoldBroHS,categorical,Number of younger siblings
+2004,10,14,W1InCarHH,categorical,Whether YP is living in a private HH or not
+2004,10,14,W1hous12HH,categorical,Tenure
+2004,10,14,W1usevcHH,categorical,Whether anyone uses a motor vehicle
+2004,10,14,W1hiqualmum,categorical,Mother’s highest qualification
+2004,10,14,W1hiqualdad,categorical,Father’s highest qualification
+2004,10,14,W1wrkfulldad,categorical,Whether father works full-time
+2004,10,14,W1wrkfullmum,categorical,Whether mother works full-time
+2004,10,14,W1empsmum,categorical,Employment status of mother
+2004,10,14,W1empsdad,categorical,Employment status of father
+2004,10,14,W1ch0_2HH,categorical,Number of children aged 0-2 in HH
+2004,10,14,W1ch3_11HH,categorical,Number of children aged 3-11 in HH
+2004,10,14,W1ch12_15HH,categorical,Number of children aged 12-15 in HH
+2004,10,14,W1ch16_17HH,categorical,Number of children aged 16-17 in HH
+2004,10,14,IndSchool,categorical,Independent school
+2004,10,14,W1marstatmum,categorical,Marital status of mother
+2004,10,14,W1depkids,categorical,Number of dependent children in HH
+2004,10,14,W1famtyp2,categorical,Whether single parent HH
+2004,10,14,W1nssecfam,categorical,Family’s NS-SEC class
+2004,10,14,W1ethgrpYP,categorical,Young person’s ethnic group
+2004,10,14,W1heposs9YP,categorical,Likelihood of YP going to university
+2004,10,14,W1hwndayYP,categorical,Number of evenings of HWK per week
+2004,10,14,W1truantYP,categorical,Whether YP played truant in last 12 months
+2004,10,14,W1alceverYP,categorical,Whether YP ever had alcohol
+2004,10,14,W1bulrc,categorical,Whether YP bullied in last 12 months
+2004,10,14,W1disabYP,categorical,Whether YP has any disability/long term illness or health problem
+2004,10,14,W1yschat1,continuous,YP attitude to school
+2005,11,15,W2ghq12scr,continuous,YP GHQ12 score
+2005,11,15,W2disc1YP,categorical,Whether YP thinks they have ever been treated unfairly by teachers because of skin colour or ethnic origin
+2005,11,15,W2depressYP,categorical,Whether YP has been feeling unhappy or depressed recently
+2006,11,15,W4AlcFreqYP,categorical,Frequency of having an alcoholic drink in last 12 months
+2006,11,15,W4CannTryYP,categorical,Whether YP ever tried cannabis
+2006,11,15,W4NamesYP,categorical,"Whether YP has been called names, sworn at or insulted in last 12 months"
+2006,11,15,W4RacismYP,categorical,Whether YP has been threatened/insulted in the last 12 months due to skin colour/ethnicity
+2006,11,15,W4empsYP,categorical,Employment status of young person
+2006,11,15,W4schatYP,continuous,Young person's attitude to school
+2006,11,15,W4Childck1YP,categorical,Interviewer confirm YP has child
+2007,12,16,W5JobYP,categorical,YP: Whether currently doing paid work
+2007,12,16,W5EducYP,categorical,YP: Whether currently going to school or college
+2007,12,16,W5Apprent1YP,categorical,YP: Whether currently doing an apprenticeship
+2008,13,17,W6JobYP,categorical,YP: Whether currently doing paid work
+2008,13,17,W6UnivYP,categorical,YP: Whether currently at university
+2008,13,17,W6EducYP,categorical,YP: Whether currently going to school or college
+2008,13,17,W6Apprent1YP,categorical,YP: Whether currently doing an Apprenticeship
+2008,13,17,W6acqno,categorical,Highest academic qualification studied at Wave 6
+2008,13,17,W6gcse,categorical,Number of GCSEs studied at Wave 6
+2008,13,17,W6als,categorical,Number of A/A2/AS levels being studied at Wave 6
+2008,13,17,W6OwnchiDV,categorical,Whether Respondents have own Child/Children
+2008,13,17,W6Childliv,categorical,Whether has own Child/Children Living with Them
+2008,13,17,W6DebtattYP,continuous,Young person's attitude to debt
+2008,13,17,W6NEETAct,categorical,Activities of NEETs (Not in Employment or Education)
+2016,,25,W8DINCW,continuous,Continuous weekly income
+2016,,25,W8DDEGP,binary,Whether achieved first degree or higher 
+2016,,25,W8DGHQSC,continuous,General Health Questionnaire (GHQ12) score 
+2016,,25,W8DAGEYCH,continuous,Age of CM's youngest child 
+2016,,25,W8DMARSTAT,categorical,Legal marital status
+2016,,25,W8DACTIVITYC,categorical,Current activity of CM
+2016,,25,W8DWRK,binary,Whether CM currently employed
+2016,,25,W8CMSEX,categorical,Gender  
+2016,,25,W8TENURE,categorical,Tenure
+2016,,25,W8DACTIVITY,categorical,Current activity
+2016,,25,W8GROW,continuous, Gross pay per week
+2016,,25,W8NETW,continuous,Weekly take home pay
+2016,,25,W8PUSA,continuous, Partner’s usual monthly take-home pay after tax and any other deductions
+2016,,25,W8NETA,continuous,Last take-home pay (net)
+2016,,25,W8QDEB2,continuous,Total amount owe
+2016,,25,W8QMAFI,categorical,How managing financially these days

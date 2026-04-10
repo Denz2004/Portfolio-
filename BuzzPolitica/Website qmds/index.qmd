@@ -1,0 +1,80 @@
+---
+title: ""
+format: html
+self-contained: true
+---
+<style>
+body {
+  background-color: #f0f7ff;
+}
+</style>
+
+
+<style>
+  .banner {
+    height: 300px;  
+    width: 100%px; 
+    background-image: url('https://static.scientificamerican.com/sciam/cache/file/3ABB81C7-C2B7-4409-A68E534F11E345A7_source.jpg?w=1200');
+    background-size: cover; 
+    background-position: center; 
+    background-attachment: scroll; 
+  }
+</style>
+
+<div class="banner"></div>
+
+<style>
+  blockquote {
+    border-left: none; 
+    padding-left: 0;
+  }
+</style>
+<style>
+.text-box {
+  background: rgba(255, 255, 255, 0.8); 
+  border: 1px solid #a3c1da; 
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1); 
+  border-radius: 10px; 
+  padding: 20px; 
+  margin: 20px; 
+  max-width: 800px; 
+  box-sizing: border-box; 
+}
+</style>
+
+<div class="text-box">
+<figure class="text-center">
+  <blockquote class="blockquote" style="font-size: 60px;">
+    <p class="mb-0"style="color: black; font-weight: bold;">How easy is it for AI to predict and manipulate voter behaviour?</p>
+  </blockquote>
+</figure>
+</div>
+
+<div class="text-box">
+<figure class="text-center">
+  <blockquote class="blockquote;" style="font-size: 20px;">
+    <p class="mb-0" style="color: black;">Digital data has the power to analyse, predict and manipulate populations. AI and machine learning based political work began in the 60s when the New York times launched Data journalism and election predictions in partnership with one of the earliest data science firms: “Simulmatics”.</p>
+  </blockquote>
+</figure>
+
+<figure class="text-center">
+  <blockquote class="blockquote;" style="font-size: 20px;">
+    <p class="mb-0" style="color: black;">It was later released this same firm was partnered with at the time presidential candidate John F. Kennedy where they were rumoured to use similar data driven approaches to formulate speeches for Kennedy’s campaign to appeal to different sets of voters.</p>
+  </blockquote>
+</figure>
+
+<figure class="text-center">
+  <blockquote class="blockquote;" style="font-size: 20px;">
+    <p class="mb-0" style="color: black;">These Data driven approaches to politics are now widely used for population analysis and manipulation as highlighted by Cambridge Analytica’s 2016 scandal during the Trump campaign where they utilized personal data from millions to attempt to sway the elections.</p>
+  </blockquote>
+</figure>
+
+<figure class="text-center">
+  <blockquote class="blockquote;" style="font-size: 20px;">
+    <p class="mb-0" style="color: black;">We decided to create a project that focused on identifying voter preferences through deep data and content analysis (In a more ethical way).</p>
+  </blockquote>
+</figure>
+</p>
+
+</div>
+

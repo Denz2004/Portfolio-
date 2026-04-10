@@ -1,0 +1,249 @@
+name,native,phone,continent,capital,currency,languages,emoji,emojiu,alpha_2_code,alpha_3_code,numeric,West_world_flag,Europe_flag,EU_flag,prettified_name,geo_region,internet_cctld,population2022,dealroom_country_id
+Svalbard and Jan Mayen,Svalbard og Jan Mayen,4779,EU,Longyearbyen,NOK,['no'],🇸🇯,U+1F1F8 U+1F1EF,SJ,SJM,744,FALSE,FALSE,FALSE,🇸🇯Svalbard and Jan Mayen,ROW,,,
+Kyrgyzstan,Кыргызстан,996,AS,Bishkek,KGS,"['ky', 'ru']",🇰🇬,U+1F1F0 U+1F1EC,KG,KGZ,417,FALSE,FALSE,FALSE,🇰🇬Kyrgyzstan,CIS,.kg,6856044,
+Comoros,Komori,269,AF,Moroni,KMF,"['ar', 'fr']",🇰🇲,U+1F1F0 U+1F1F2,KM,COM,174,FALSE,FALSE,FALSE,🇰🇲Comoros,AFRICA,.km,906777,
+Saint Martin,Saint-Martin,590,NA,Marigot,EUR,"['en', 'fr', 'nl']",🇲🇫,U+1F1F2 U+1F1EB,MF,MAF,663,FALSE,FALSE,FALSE,🇲🇫Saint Martin,ROW,,40053,
+U.S. Minor Outlying Islands,United States Minor Outlying Islands,1,OC,,USD,['en'],🇺🇲,U+1F1FA U+1F1F2,UM,UMI,581,FALSE,FALSE,FALSE,🇺🇲U.S. Minor Outlying Islands,OC,,,
+Saint Lucia,Saint Lucia,1758,NA,Castries,XCD,['en'],🇱🇨,U+1F1F1 U+1F1E8,LC,LCA,662,FALSE,FALSE,FALSE,🇱🇨Saint Lucia,NA,,185397,
+Azerbaijan,Azərbaycan,994,AS,Baku,AZN,['az'],🇦🇿,U+1F1E6 U+1F1FF,AZ,AZE,31,FALSE,FALSE,FALSE,🇦🇿Azerbaijan,CIS,.az,10250499,513
+Bahrain,‏البحرين,973,AS,Manama,BHD,['ar'],🇧🇭,U+1F1E7 U+1F1ED,BH,BHR,48,FALSE,FALSE,FALSE,🇧🇭Bahrain,ASIA,.bh,1837856,595
+Benin,Bénin,229,AF,Porto-Novo,XOF,['fr'],🇧🇯,U+1F1E7 U+1F1EF,BJ,BEN,204,FALSE,FALSE,FALSE,🇧🇯Benin,AFRICA,.bj,12757255,6296
+Bolivia,Bolivia,591,SA,Sucre,"BOB,BOV","['es', 'ay', 'qu']",🇧🇴,U+1F1E7 U+1F1F4,BO,BOL,68,FALSE,FALSE,FALSE,🇧🇴Bolivia,LATAM,.bo,11993071,1266
+Brazil,Brasil,55,SA,Brasília,BRL,['pt'],🇧🇷,U+1F1E7 U+1F1F7,BR,BRA,76,FALSE,FALSE,FALSE,🇧🇷Brazil,LATAM,.br,215689699,93
+French Polynesia,Polynésie française,689,OC,Papeetē,XPF,['fr'],🇵🇫,U+1F1F5 U+1F1EB,PF,PYF,258,FALSE,FALSE,FALSE,🇵🇫French Polynesia,OC,.pf,284113,
+Sudan,السودان,249,AF,Khartoum,SDG,"['ar', 'en']",🇸🇩,U+1F1F8 U+1F1E9,SD,SDN,729,FALSE,FALSE,FALSE,🇸🇩Sudan,AFRICA,.sd,45881124,
+Palau,Palau,680,OC,Ngerulmud,USD,['en'],🇵🇼,U+1F1F5 U+1F1FC,PW,PLW,585,FALSE,FALSE,FALSE,🇵🇼Palau,OC,,18278,
+New Caledonia,Nouvelle-Calédonie,687,OC,Nouméa,XPF,['fr'],🇳🇨,U+1F1F3 U+1F1E8,NC,NCL,540,FALSE,FALSE,FALSE,🇳🇨New Caledonia,OC,,273267,
+Andorra,Andorra,376,EU,Andorra la Vella,EUR,['ca'],🇦🇩,U+1F1E6 U+1F1E9,AD,AND,20,TRUE,TRUE,FALSE,🇦🇩Andorra,EU,,77469,1664
+Armenia,Հայաստան,374,AS,Yerevan,AMD,"['hy', 'ru']",🇦🇲,U+1F1E6 U+1F1F2,AM,ARM,51,TRUE,TRUE,FALSE,🇦🇲Armenia,CIS,,2975262,127
+Austria,Österreich,43,EU,Vienna,EUR,['de'],🇦🇹,U+1F1E6 U+1F1F9,AT,AUT,40,TRUE,TRUE,TRUE,🇦🇹Austria,EU,.at,8995940,62
+Bosnia and Herzegovina,Bosna i Hercegovina,387,EU,Sarajevo,BAM,"['bs', 'hr', 'sr']",🇧🇦,U+1F1E7 U+1F1E6,BA,BIH,70,TRUE,TRUE,FALSE,🇧🇦Bosnia and Herzegovina,EU,.ba,3235013,558
+Bulgaria,България,359,EU,Sofia,BGN,['bg'],🇧🇬,U+1F1E7 U+1F1EC,BG,BGR,100,TRUE,TRUE,TRUE,🇧🇬Bulgaria,EU,.bg,6840593,363
+Macao,澳門,853,AS,,MOP,"['zh', 'pt']",🇲🇴,U+1F1F2 U+1F1F4,MO,MAC,446,FALSE,FALSE,FALSE,🇲🇴Macao,ASIA,.mo,667140,134188
+Suriname,Suriname,597,SA,Paramaribo,SRD,['nl'],🇸🇷,U+1F1F8 U+1F1F7,SR,SUR,740,FALSE,FALSE,FALSE,🇸🇷Suriname,LATAM,,597354,
+Bangladesh,Bangladesh,880,AS,Dhaka,BDT,['bn'],🇧🇩,U+1F1E7 U+1F1E9,BD,BGD,50,FALSE,FALSE,FALSE,🇧🇩Bangladesh,ASIA,.bd,168017589,555
+Barbados,Barbados,1246,NA,Bridgetown,BBD,['en'],🇧🇧,U+1F1E7 U+1F1E7,BB,BRB,52,FALSE,FALSE,FALSE,🇧🇧Barbados,NA,.bb,288123,1270
+Belarus,Белару́сь,375,EU,Minsk,BYR,"['be', 'ru']",🇧🇾,U+1F1E7 U+1F1FE,BY,BLR,112,TRUE,TRUE,FALSE,🇧🇾Belarus,CIS,.by,9325213,453
+Belgium,België,32,EU,Brussels,EUR,"['nl', 'fr', 'de']",🇧🇪,U+1F1E7 U+1F1EA,BE,BEL,56,TRUE,TRUE,TRUE,🇧🇪Belgium,EU,.be,11679351,60
+Burkina Faso,Burkina Faso,226,AF,Ouagadougou,XOF,"['fr', 'ff']",🇧🇫,U+1F1E7 U+1F1EB,BF,BFA,854,FALSE,FALSE,FALSE,🇧🇫Burkina Faso,AFRICA,.bf,22047234,24876
+Myanmar [Burma],Myanma,95,AS,Naypyidaw,MMK,['my'],🇲🇲,U+1F1F2 U+1F1F2,MM,MMR,104,FALSE,FALSE,FALSE,🇲🇲Myanmar [Burma],ASIA,.mm,55100185,22873
+Burundi,Burundi,257,AF,Bujumbura,BIF,"['fr', 'rn']",🇧🇮,U+1F1E7 U+1F1EE,BI,BDI,108,FALSE,FALSE,FALSE,🇧🇮Burundi,AFRICA,,12602035,1187
+Cambodia,Kâmpŭchéa,855,AS,Phnom Penh,KHR,['km'],🇰🇭,U+1F1F0 U+1F1ED,KH,KHM,116,FALSE,FALSE,FALSE,🇰🇭Cambodia,ASIA,.kh,17190722,6582
+South Sudan,South Sudan,211,AF,Juba,SSP,['en'],🇸🇸,U+1F1F8 U+1F1F8,SS,SSD,728,FALSE,FALSE,FALSE,🇸🇸South Sudan,AFRICA,.ss,11392088,
+Brunei,Negara Brunei Darussalam,673,AS,Bandar Seri Begawan,BND,['ms'],🇧🇳,U+1F1E7 U+1F1F3,BN,BRN,96,FALSE,FALSE,FALSE,🇧🇳Brunei,ASIA,.bn,446103,
+Eritrea,ኤርትራ,291,AF,Asmara,ERN,"['ti', 'ar', 'en']",🇪🇷,U+1F1EA U+1F1F7,ER,ERI,232,FALSE,FALSE,FALSE,🇪🇷Eritrea,AFRICA,.er,3721111,
+Afghanistan,افغانستان,93,AS,Kabul,AFN,"['ps', 'uz', 'tk']",🇦🇫,U+1F1E6 U+1F1EB,AF,AFG,4,FALSE,FALSE,FALSE,🇦🇫Afghanistan,ASIA,.af,40683694,5796
+Algeria,الجزائر,213,AF,Algiers,DZD,['ar'],🇩🇿,U+1F1E9 U+1F1FF,DZ,DZA,12,FALSE,FALSE,FALSE,🇩🇿Algeria,AFRICA,.dz,45486083,2123
+Syria,سوريا,963,AS,Damascus,SYP,['ar'],🇸🇾,U+1F1F8 U+1F1FE,SY,SYR,760,FALSE,FALSE,FALSE,🇸🇾Syria,ASIA,.sy,17865850,
+Sint Maarten,Sint Maarten,1721,NA,Philipsburg,ANG,"['nl', 'en']",🇸🇽,U+1F1F8 U+1F1FD,SX,SXM,534,FALSE,FALSE,FALSE,🇸🇽Sint Maarten,NA,,40970,
+Angola,Angola,244,AF,Luanda,AOA,['pt'],🇦🇴,U+1F1E6 U+1F1F4,AO,AGO,24,FALSE,FALSE,FALSE,🇦🇴Angola,AFRICA,.ao,34907095,789
+Argentina,Argentina,54,SA,Buenos Aires,ARS,"['es', 'gn']",🇦🇷,U+1F1E6 U+1F1F7,AR,ARG,32,FALSE,FALSE,FALSE,🇦🇷Argentina,LATAM,.ar,46262829,72
+Australia,Australia,61,OC,Canberra,AUD,['en'],🇦🇺,U+1F1E6 U+1F1FA,AU,AUS,36,FALSE,FALSE,FALSE,🇦🇺Australia,OC,.au,26404128,68
+Bahamas,Bahamas,1242,NA,Nassau,BSD,['en'],🇧🇸,U+1F1E7 U+1F1F8,BS,BHS,44,FALSE,FALSE,FALSE,🇧🇸Bahamas,NA,.bs,400896,55940
+Bhutan,ʼbrug-yul,975,AS,Thimphu,"BTN,INR",['dz'],🇧🇹,U+1F1E7 U+1F1F9,BT,BTN,64,FALSE,FALSE,FALSE,🇧🇹Bhutan,ASIA,.bt,788928,
+Equatorial Guinea,Guinea Ecuatorial,240,AF,Malabo,XAF,"['es', 'fr']",🇬🇶,U+1F1EC U+1F1F6,GQ,GNQ,226,FALSE,FALSE,FALSE,🇬🇶Equatorial Guinea,AFRICA,.gq,1496981,
+Belize,Belize,501,NA,Belmopan,BZD,"['en', 'es']",🇧🇿,U+1F1E7 U+1F1FF,BZ,BLZ,84,FALSE,FALSE,FALSE,🇧🇿Belize,NA,.bz,412180,4905
+Botswana,Botswana,267,AF,Gaborone,BWP,"['en', 'tn']",🇧🇼,U+1F1E7 U+1F1FC,BW,BWA,72,FALSE,FALSE,FALSE,🇧🇼Botswana,AFRICA,.bw,2449278,6993
+Cameroon,Cameroon,237,AF,Yaoundé,XAF,"['en', 'fr']",🇨🇲,U+1F1E8 U+1F1F2,CM,CMR,120,FALSE,FALSE,FALSE,🇨🇲Cameroon,AFRICA,,27868973,897
+Canada,Canada,1,NA,Ottawa,CAD,"['en', 'fr']",🇨🇦,U+1F1E8 U+1F1E6,CA,CAN,124,TRUE,FALSE,FALSE,🇨🇦Canada,NA,.ca,38967455,147
+Cayman Islands,Cayman Islands,1345,NA,George Town,KYD,['en'],🇰🇾,U+1F1F0 U+1F1FE,KY,CYM,136,FALSE,FALSE,FALSE,🇰🇾Cayman Islands,NA,,67275,1347
+Central African Republic,Ködörösêse tî Bêafrîka,236,AF,Bangui,XAF,"['fr', 'sg']",🇨🇫,U+1F1E8 U+1F1EB,CF,CAF,140,FALSE,FALSE,FALSE,🇨🇫Central African Republic,AFRICA,.cf,4988112,23669
+Chile,Chile,56,SA,Santiago,"CLF,CLP",['es'],🇨🇱,U+1F1E8 U+1F1F1,CL,CHL,152,FALSE,FALSE,FALSE,🇨🇱Chile,LATAM,.cl,19532234,677
+China,中国,86,AS,Beijing,CNY,['zh'],🇨🇳,U+1F1E8 U+1F1F3,CN,CHN,156,FALSE,FALSE,FALSE,🇨🇳China,ASIA,.cn,1420192199,31
+Republic of the Congo,République du Congo,242,AF,Brazzaville,XAF,"['fr', 'ln']",🇨🇬,U+1F1E8 U+1F1EC,CG,COG,178,FALSE,FALSE,FALSE,🇨🇬Republic of the Congo,AFRICA,.cg,5790398,107678
+Ivory Coast,Côte d'Ivoire,225,AF,Yamoussoukro,XOF,['fr'],🇨🇮,U+1F1E8 U+1F1EE,CI,CIV,384,FALSE,FALSE,FALSE,🇨🇮Ivory Coast,AFRICA,.ci,27677202,884
+Croatia,Hrvatska,385,EU,Zagreb,HRK,['hr'],🇭🇷,U+1F1ED U+1F1F7,HR,HRV,191,TRUE,TRUE,TRUE,🇭🇷Croatia,EU,.hr,3999283,526
+Cyprus,Κύπρος,357,EU,Nicosia,EUR,"['el', 'tr', 'hy']",🇨🇾,U+1F1E8 U+1F1FE,CY,CYP,196,TRUE,TRUE,TRUE,🇨🇾Cyprus,EU,.cy,1225694,113
+Czech Republic,Česká republika,420,EU,Prague,CZK,"['cs', 'sk']",🇨🇿,U+1F1E8 U+1F1FF,CZ,CZE,203,TRUE,TRUE,TRUE,🇨🇿Czech Republic,EU,.cz,10768311,53
+North Korea,북한,850,AS,Pyongyang,KPW,['ko'],🇰🇵,U+1F1F0 U+1F1F5,KP,PRK,408,FALSE,FALSE,FALSE,🇰🇵North Korea,ASIA,.kp,26010329,24803
+Democratic Republic of the Congo,République démocratique du Congo,243,AF,Kinshasa,CDF,"['fr', 'ln', 'kg', 'sw', 'lu']",🇨🇩,U+1F1E8 U+1F1E9,CD,COD,180,FALSE,FALSE,FALSE,🇨🇩Democratic Republic of the Congo,AFRICA,.cd,103913549,5246
+Denmark,Danmark,45,EU,Copenhagen,DKK,['da'],🇩🇰,U+1F1E9 U+1F1F0,DK,DNK,208,TRUE,TRUE,TRUE,🇩🇰Denmark,EU,.dk,5873515,86
+Dominican Republic,República Dominicana,"180,918,291,849",NA,Santo Domingo,DOP,['es'],🇩🇴,U+1F1E9 U+1F1F4,DO,DOM,214,FALSE,FALSE,FALSE,🇩🇴Dominican Republic,NA,,11070287,515
+Ecuador,Ecuador,593,SA,Quito,USD,['es'],🇪🇨,U+1F1EA U+1F1E8,EC,ECU,218,FALSE,FALSE,FALSE,🇪🇨Ecuador,LATAM,.ec,18210495,2973
+Egypt,مصر‎,20,AF,Cairo,EGP,['ar'],🇪🇬,U+1F1EA U+1F1EC,EG,EGY,818,FALSE,FALSE,FALSE,🇪🇬Egypt,AFRICA,.eg,106256587,456
+El Salvador,El Salvador,503,NA,San Salvador,"SVC,USD",['es'],🇸🇻,U+1F1F8 U+1F1FB,SV,SLV,222,FALSE,FALSE,FALSE,🇸🇻El Salvador,NA,.sv,6551611,6023
+Estonia,Eesti,372,EU,Tallinn,EUR,['et'],🇪🇪,U+1F1EA U+1F1EA,EE,EST,233,TRUE,TRUE,TRUE,🇪🇪Estonia,EU,.ee,1340161,100
+Finland,Suomi,358,EU,Helsinki,EUR,"['fi', 'sv']",🇫🇮,U+1F1EB U+1F1EE,FI,FIN,246,TRUE,TRUE,TRUE,🇫🇮Finland,EU,.fi,5545786,49
+Gambia,Gambia,220,AF,Banjul,GMD,['en'],🇬🇲,U+1F1EC U+1F1F2,GM,GMB,270,FALSE,FALSE,FALSE,🇬🇲Gambia,AFRICA,.gm,2552305,25218
+Guinea,Guinée,224,AF,Conakry,GNF,"['fr', 'ff']",🇬🇳,U+1F1EC U+1F1F3,GN,GIN,324,FALSE,FALSE,FALSE,🇬🇳Guinea,AFRICA,.gn,13845748,12034
+American Samoa,American Samoa,1684,OC,Pago Pago,USD,"['en', 'sm']",🇦🇸,U+1F1E6 U+1F1F8,AS,ASM,16,FALSE,FALSE,FALSE,🇦🇸American Samoa,OC,,54922,135573
+Guinea-Bissau,Guiné-Bissau,245,AF,Bissau,XOF,['pt'],🇬🇼,U+1F1EC U+1F1FC,GW,GNB,624,FALSE,FALSE,FALSE,🇬🇼Guinea-Bissau,AFRICA,.gw,2061385,
+Honduras,Honduras,504,NA,Tegucigalpa,HNL,['es'],🇭🇳,U+1F1ED U+1F1F3,HN,HND,340,FALSE,FALSE,FALSE,🇭🇳Honduras,NA,.hn,10221678,12657
+Antigua and Barbuda,Antigua and Barbuda,1268,NA,Saint John's,XCD,['en'],🇦🇬,U+1F1E6 U+1F1EC,AG,ATG,28,FALSE,FALSE,FALSE,🇦🇬Antigua and Barbuda,NA,,99589,11288
+Bermuda,Bermuda,1441,NA,Hamilton,BMD,['en'],🇧🇲,U+1F1E7 U+1F1F2,BM,BMU,60,FALSE,FALSE,FALSE,🇧🇲Bermuda,NA,,63911,1211
+British Indian Ocean Territory,British Indian Ocean Territory,246,AS,Diego Garcia,USD,['en'],🇮🇴,U+1F1EE U+1F1F4,IO,IOT,86,FALSE,FALSE,FALSE,🇮🇴British Indian Ocean Territory,ASIA,,,18717
+British Virgin Islands,British Virgin Islands,1284,NA,Road Town,USD,['en'],🇻🇬,U+1F1FB U+1F1EC,VG,VGB,92,FALSE,FALSE,FALSE,🇻🇬British Virgin Islands,NA,,30682,1225
+Faroe Islands,Føroyar,298,EU,Tórshavn,DKK,['fo'],🇫🇴,U+1F1EB U+1F1F4,FO,FRO,234,TRUE,TRUE,FALSE,🇫🇴Faroe Islands,ROW,,49228,12912
+Georgia,საქართველო,995,AS,Tbilisi,GEL,['ka'],🇬🇪,U+1F1EC U+1F1EA,GE,GEO,268,TRUE,TRUE,FALSE,🇬🇪Georgia,CIS,.ge,3703593,2573
+Germany,Deutschland,49,EU,Berlin,EUR,['de'],🇩🇪,U+1F1E9 U+1F1EA,DE,DEU,276,TRUE,TRUE,TRUE,🇩🇪Germany,EU,.de,83611450,13
+Gibraltar,Gibraltar,350,EU,Gibraltar,GIP,['en'],🇬🇮,U+1F1EC U+1F1EE,GI,GIB,292,TRUE,TRUE,FALSE,🇬🇮Gibraltar,ROW,,33668,105463
+Greece,Ελλάδα,30,EU,Athens,EUR,['el'],🇬🇷,U+1F1EC U+1F1F7,GR,GRC,300,TRUE,TRUE,TRUE,🇬🇷Greece,EU,.gr,10692381,25
+Greenland,Kalaallit Nunaat,299,NA,Nuuk,DKK,['kl'],🇬🇱,U+1F1EC U+1F1F1,GL,GRL,304,FALSE,FALSE,FALSE,🇬🇱Greenland,NA,,56568,16854
+Bouvet Island,Bouvetøya,47,AN,,NOK,"['no', 'nb', 'nn']",🇧🇻,U+1F1E7 U+1F1FB,BV,BVT,74,FALSE,FALSE,FALSE,🇧🇻Bouvet Island,ROW,,,
+Heard Island and McDonald Islands,Heard Island and McDonald Islands,61,AN,,AUD,['en'],🇭🇲,U+1F1ED U+1F1F2,HM,HMD,334,FALSE,FALSE,FALSE,🇭🇲Heard Island and McDonald Islands,ROW,,,
+Bonaire,Bonaire,5997,NA,Kralendijk,USD,['nl'],🇧🇶,U+1F1E7 U+1F1F6,BQ,BES,535,FALSE,FALSE,FALSE,🇧🇶Bonaire,NA,,,
+Aruba,Aruba,297,NA,Oranjestad,AWG,"['nl', 'pa']",🇦🇼,U+1F1E6 U+1F1FC,AW,ABW,533,FALSE,FALSE,FALSE,🇦🇼Aruba,NA,,107697,
+Guam,Guam,1671,OC,Hagåtña,USD,"['en', 'ch', 'es']",🇬🇺,U+1F1EC U+1F1FA,GU,GUM,316,FALSE,FALSE,FALSE,🇬🇺Guam,OC,,171789,
+Kiribati,Kiribati,686,OC,South Tarawa,AUD,['en'],🇰🇮,U+1F1F0 U+1F1EE,KI,KIR,296,FALSE,FALSE,FALSE,🇰🇮Kiribati,OC,,122999,
+Dominica,Dominica,1767,NA,Roseau,XCD,['en'],🇩🇲,U+1F1E9 U+1F1F2,DM,DMA,212,FALSE,FALSE,FALSE,🇩🇲Dominica,NA,,72349,
+Nauru,Nauru,674,OC,Yaren,AUD,"['en', 'na']",🇳🇷,U+1F1F3 U+1F1F7,NR,NRU,520,FALSE,FALSE,FALSE,🇳🇷Nauru,OC,,11001,
+Guatemala,Guatemala,502,NA,Guatemala City,GTQ,['es'],🇬🇹,U+1F1EC U+1F1F9,GT,GTM,320,FALSE,FALSE,FALSE,🇬🇹Guatemala,NA,,17371423,629
+Guyana,Guyana,592,SA,Georgetown,GYD,['en'],🇬🇾,U+1F1EC U+1F1FE,GY,GUY,328,FALSE,FALSE,FALSE,🇬🇾Guyana,LATAM,,794116,8334
+Haiti,Haïti,509,NA,Port-au-Prince,"HTG,USD","['fr', 'ht']",🇭🇹,U+1F1ED U+1F1F9,HT,HTI,332,FALSE,FALSE,FALSE,🇭🇹Haiti,NA,,11682390,5682
+Hong Kong,香港,852,AS,City of Victoria,HKD,"['zh', 'en']",🇭🇰,U+1F1ED U+1F1F0,HK,HKG,344,FALSE,FALSE,FALSE,🇭🇰Hong Kong,ASIA,.hk,7532111,134160
+Hungary,Magyarország,36,EU,Budapest,HUF,['hu'],🇭🇺,U+1F1ED U+1F1FA,HU,HUN,348,TRUE,TRUE,TRUE,🇭🇺Hungary,EU,.hu,9724184,407
+India,भारत,91,AS,New Delhi,INR,"['hi', 'en']",🇮🇳,U+1F1EE U+1F1F3,IN,IND,356,FALSE,FALSE,FALSE,🇮🇳India,ASIA,.in,1407492911,97
+Indonesia,Indonesia,62,AS,Jakarta,IDR,['id'],🇮🇩,U+1F1EE U+1F1E9,ID,IDN,360,FALSE,FALSE,FALSE,🇮🇩Indonesia,ASIA,.id,279418046,609
+Iran,ایران,98,AS,Tehran,IRR,['fa'],🇮🇷,U+1F1EE U+1F1F7,IR,IRN,364,FALSE,FALSE,FALSE,🇮🇷Iran,ASIA,.ir,86199009,129
+Iraq,العراق,964,AS,Baghdad,IQD,"['ar', 'ku']",🇮🇶,U+1F1EE U+1F1F6,IQ,IRQ,368,FALSE,FALSE,FALSE,🇮🇶Iraq,ASIA,.iq,42005343,5867
+Ireland,Éire,353,EU,Dublin,EUR,"['ga', 'en']",🇮🇪,U+1F1EE U+1F1EA,IE,IRL,372,TRUE,TRUE,TRUE,🇮🇪Ireland,EU,.ie,5120453,70
+Isle of Man,Isle of Man,44,EU,Douglas,GBP,"['en', 'gv']",🇮🇲,U+1F1EE U+1F1F2,IM,IMN,833,TRUE,TRUE,FALSE,🇮🇲Isle of Man,ROW,,85984,469
+Israel,יִשְׂרָאֵל,972,AS,Jerusalem,ILS,"['he', 'ar']",🇮🇱,U+1F1EE U+1F1F1,IL,ISR,376,TRUE,FALSE,FALSE,🇮🇱Israel,EU,.il,9552089,42
+Italy,Italia,39,EU,Rome,EUR,['it'],🇮🇹,U+1F1EE U+1F1F9,IT,ITA,380,TRUE,TRUE,TRUE,🇮🇹Italy,EU,.it,58828028,11
+Jamaica,Jamaica,1876,NA,Kingston,JMD,['en'],🇯🇲,U+1F1EF U+1F1F2,JM,JAM,388,FALSE,FALSE,FALSE,🇯🇲Jamaica,NA,,2987848,699
+Japan,日本,81,AS,Tokyo,JPY,['ja'],🇯🇵,U+1F1EF U+1F1F5,JP,JPN,392,FALSE,FALSE,FALSE,🇯🇵Japan,ASIA,.jp,125182872,296
+Jersey,Jersey,44,EU,Saint Helier,GBP,"['en', 'fr']",🇯🇪,U+1F1EF U+1F1EA,JE,JEY,832,FALSE,FALSE,FALSE,🇯🇪Jersey,ROW,,,383
+Jordan,الأردن,962,AS,Amman,JOD,['ar'],🇯🇴,U+1F1EF U+1F1F4,JO,JOR,400,FALSE,FALSE,FALSE,🇯🇴Jordan,ASIA,.jo,10467879,247
+Kazakhstan,Қазақстан,"76,77",AS,Astana,KZT,"['kk', 'ru']",🇰🇿,U+1F1F0 U+1F1FF,KZ,KAZ,398,FALSE,FALSE,FALSE,🇰🇿Kazakhstan,CIS,.kz,19232287,439
+Kenya,Kenya,254,AF,Nairobi,KES,"['en', 'sw']",🇰🇪,U+1F1F0 U+1F1EA,KE,KEN,404,FALSE,FALSE,FALSE,🇰🇪Kenya,AFRICA,.ke,56142057,587
+Kosovo,Republika e Kosovës,"377,381,383,386",EU,Pristina,EUR,"['sq', 'sr']",🇽🇰,U+1F1FD U+1F1F0,XK,RKS,,TRUE,TRUE,FALSE,🇽🇰Kosovo,EU,,,2307
+Kuwait,الكويت,965,AS,Kuwait City,KWD,['ar'],🇰🇼,U+1F1F0 U+1F1FC,KW,KWT,414,FALSE,FALSE,FALSE,🇰🇼Kuwait,ASIA,.kw,4410295,915
+Laos,ສປປລາວ,856,AS,Vientiane,LAK,['lo'],🇱🇦,U+1F1F1 U+1F1E6,LA,LAO,418,FALSE,FALSE,FALSE,🇱🇦Laos,ASIA,,7490253,6580
+Lebanon,لبنان,961,AS,Beirut,LBP,"['ar', 'fr']",🇱🇧,U+1F1F1 U+1F1E7,LB,LBN,422,FALSE,FALSE,FALSE,🇱🇧Lebanon,ASIA,.lb,6816817,1119
+Lesotho,Lesotho,266,AF,Maseru,"LSL,ZAR","['en', 'st']",🇱🇸,U+1F1F1 U+1F1F8,LS,LSO,426,FALSE,FALSE,FALSE,🇱🇸Lesotho,AFRICA,,2176103,2126
+Liberia,Liberia,231,AF,Monrovia,LRD,['en'],🇱🇷,U+1F1F1 U+1F1F7,LR,LBR,430,FALSE,FALSE,FALSE,🇱🇷Liberia,AFRICA,.lr,5295223,16522
+Libya,‏ليبيا,218,AF,Tripoli,LYD,['ar'],🇱🇾,U+1F1F1 U+1F1FE,LY,LBY,434,FALSE,FALSE,FALSE,🇱🇾Libya,AFRICA,,7064668,1944
+Liechtenstein,Liechtenstein,423,EU,Vaduz,CHF,['de'],🇱🇮,U+1F1F1 U+1F1EE,LI,LIE,438,TRUE,TRUE,FALSE,🇱🇮Liechtenstein,EU,,38358,730
+Lithuania,Lietuva,370,EU,Vilnius,LTL,['lt'],🇱🇹,U+1F1F1 U+1F1F9,LT,LTU,440,TRUE,TRUE,TRUE,🇱🇹Lithuania,EU,.lt,2777440,90
+Madagascar,Madagasikara,261,AF,Antananarivo,MGA,"['fr', 'mg']",🇲🇬,U+1F1F2 U+1F1EC,MG,MDG,450,FALSE,FALSE,FALSE,🇲🇬Madagascar,AFRICA,.mg,29109702,12284
+Malawi,Malawi,265,AF,Lilongwe,MWK,"['en', 'ny']",🇲🇼,U+1F1F2 U+1F1FC,MW,MWI,454,FALSE,FALSE,FALSE,🇲🇼Malawi,AFRICA,,20107651,11103
+Malaysia,Malaysia,60,AS,Kuala Lumpur,MYR,['ms'],🇲🇾,U+1F1F2 U+1F1FE,MY,MYS,458,FALSE,FALSE,FALSE,🇲🇾Malaysia,ASIA,.my,33205917,55
+Maldives,Maldives,960,AS,Malé,MVR,['dv'],🇲🇻,U+1F1F2 U+1F1FB,MV,MDV,462,FALSE,FALSE,FALSE,🇲🇻Maldives,ASIA,.mv,568441,2240
+Mali,Mali,223,AF,Bamako,XOF,['fr'],🇲🇱,U+1F1F2 U+1F1F1,ML,MLI,466,FALSE,FALSE,FALSE,🇲🇱Mali,AFRICA,,21414484,13591
+Norfolk Island,Norfolk Island,672,OC,Kingston,AUD,['en'],🇳🇫,U+1F1F3 U+1F1EB,NF,NFK,574,FALSE,FALSE,FALSE,🇳🇫Norfolk Island,OC,,,
+Saint Pierre and Miquelon,Saint-Pierre-et-Miquelon,508,NA,Saint-Pierre,EUR,['fr'],🇵🇲,U+1F1F5 U+1F1F2,PM,SPM,666,FALSE,FALSE,FALSE,🇵🇲Saint Pierre and Miquelon,NA,,,
+Pitcairn Islands,Pitcairn Islands,64,OC,Adamstown,NZD,['en'],🇵🇳,U+1F1F5 U+1F1F3,PN,PCN,612,FALSE,FALSE,FALSE,🇵🇳Pitcairn Islands,ROW,,,
+Montserrat,Montserrat,1664,NA,Plymouth,XCD,['en'],🇲🇸,U+1F1F2 U+1F1F8,MS,MSR,500,FALSE,FALSE,FALSE,🇲🇸Montserrat,NA,,,
+Solomon Islands,Solomon Islands,677,OC,Honiara,SBD,['en'],🇸🇧,U+1F1F8 U+1F1E7,SB,SLB,90,FALSE,FALSE,FALSE,🇸🇧Solomon Islands,OC,,720817,
+Marshall Islands,M̧ajeļ,692,OC,Majuro,USD,"['en', 'mh']",🇲🇭,U+1F1F2 U+1F1ED,MH,MHL,584,FALSE,FALSE,FALSE,🇲🇭Marshall Islands,OC,,59961,12269
+Martinique,Martinique,596,NA,Fort-de-France,EUR,['fr'],🇲🇶,U+1F1F2 U+1F1F6,MQ,MTQ,474,FALSE,FALSE,FALSE,🇲🇶Martinique,NA,,,143379
+Mauritania,موريتانيا,222,AF,Nouakchott,MRO,['ar'],🇲🇷,U+1F1F2 U+1F1F7,MR,MRT,478,FALSE,FALSE,FALSE,🇲🇷Mauritania,AFRICA,,4894921,25881
+Mauritius,Maurice,230,AF,Port Louis,MUR,['en'],🇲🇺,U+1F1F2 U+1F1FA,MU,MUS,480,FALSE,FALSE,FALSE,🇲🇺Mauritius,AFRICA,.mu,1266387,580
+Mexico,México,52,NA,Mexico City,MXN,['es'],🇲🇽,U+1F1F2 U+1F1FD,MX,MEX,484,TRUE,FALSE,FALSE,🇲🇽Mexico,NA,.mx,131693599,269
+Mongolia,Монгол улс,976,AS,Ulan Bator,MNT,['mn'],🇲🇳,U+1F1F2 U+1F1F3,MN,MNG,496,FALSE,FALSE,FALSE,🇲🇳Mongolia,ASIA,,3387431,6719
+Morocco,المغرب,212,AF,Rabat,MAD,['ar'],🇲🇦,U+1F1F2 U+1F1E6,MA,MAR,504,FALSE,FALSE,FALSE,🇲🇦Morocco,AFRICA,,37795181,234
+Mozambique,Moçambique,258,AF,Maputo,MZN,['pt'],🇲🇿,U+1F1F2 U+1F1FF,MZ,MOZ,508,FALSE,FALSE,FALSE,🇲🇿Mozambique,AFRICA,.mz,33000322,6626
+Nepal,नपल,977,AS,Kathmandu,NPR,['ne'],🇳🇵,U+1F1F3 U+1F1F5,NP,NPL,524,FALSE,FALSE,FALSE,🇳🇵Nepal,ASIA,.np,30152340,506
+Netherlands,Nederland,31,EU,Amsterdam,EUR,['nl'],🇳🇱,U+1F1F3 U+1F1F1,NL,NLD,528,TRUE,TRUE,TRUE,🇳🇱Netherlands,EU,.nl,17648685,32
+New Zealand,New Zealand,64,OC,Wellington,NZD,"['en', 'mi']",🇳🇿,U+1F1F3 U+1F1FF,NZ,NZL,554,FALSE,FALSE,FALSE,🇳🇿New Zealand,OC,.nz,5265844,500
+Nicaragua,Nicaragua,505,NA,Managua,NIO,['es'],🇳🇮,U+1F1F3 U+1F1EE,NI,NIC,558,FALSE,FALSE,FALSE,🇳🇮Nicaragua,NA,.ni,6784110,1975
+Niger,Niger,227,AF,Niamey,XOF,['fr'],🇳🇪,U+1F1F3 U+1F1EA,NE,NER,562,FALSE,FALSE,FALSE,🇳🇪Niger,AFRICA,,25952015,17432
+Nigeria,Nigeria,234,AF,Abuja,NGN,['en'],🇳🇬,U+1F1F3 U+1F1EC,NG,NGA,566,FALSE,FALSE,FALSE,🇳🇬Nigeria,AFRICA,.ng,216346261,258
+Niue,Niuē,683,OC,Alofi,NZD,['en'],🇳🇺,U+1F1F3 U+1F1FA,NU,NIU,570,FALSE,FALSE,FALSE,🇳🇺Niue,OC,,,55945
+Northern Mariana Islands,Northern Mariana Islands,1670,OC,Saipan,USD,"['en', 'ch']",🇲🇵,U+1F1F2 U+1F1F5,MP,MNP,580,FALSE,FALSE,FALSE,🇲🇵Northern Mariana Islands,OC,,,135575
+Norway,Norge,47,EU,Oslo,NOK,"['no', 'nb', 'nn']",🇳🇴,U+1F1F3 U+1F1F4,NO,NOR,578,TRUE,TRUE,FALSE,🇳🇴Norway,EU,.no,5447553,201
+Oman,عمان,968,AS,Muscat,OMR,['ar'],🇴🇲,U+1F1F4 U+1F1F2,OM,OMN,512,FALSE,FALSE,FALSE,🇴🇲Oman,ASIA,.om,5394869,6323
+Pakistan,Pakistan,92,AS,Islamabad,PKR,"['en', 'ur']",🇵🇰,U+1F1F5 U+1F1F0,PK,PAK,586,FALSE,FALSE,FALSE,🇵🇰Pakistan,ASIA,.pk,229551955,120
+Palestine,فلسطين,970,AS,Ramallah,ILS,['ar'],🇵🇸,U+1F1F5 U+1F1F8,PS,PSE,275,FALSE,FALSE,FALSE,🇵🇸Palestine,ASIA,,5036203,115413
+Panama,Panamá,507,NA,Panama City,"PAB,USD",['es'],🇵🇦,U+1F1F5 U+1F1E6,PA,PAN,591,FALSE,FALSE,FALSE,🇵🇦Panama,NA,.pa,4453181,1569
+Papua New Guinea,Papua Niugini,675,OC,Port Moresby,PGK,['en'],🇵🇬,U+1F1F5 U+1F1EC,PG,PNG,598,FALSE,FALSE,FALSE,🇵🇬Papua New Guinea,OC,.pg,9286812,3889
+Paraguay,Paraguay,595,SA,Asunción,PYG,"['es', 'gn']",🇵🇾,U+1F1F5 U+1F1FE,PY,PRY,600,FALSE,FALSE,FALSE,🇵🇾Paraguay,LATAM,.py,7309338,3201
+Peru,Perú,51,SA,Lima,PEN,['es'],🇵🇪,U+1F1F5 U+1F1EA,PE,PER,604,FALSE,FALSE,FALSE,🇵🇪Peru,LATAM,,33978282,518
+Philippines,Pilipinas,63,AS,Manila,PHP,['en'],🇵🇭,U+1F1F5 U+1F1ED,PH,PHL,608,FALSE,FALSE,FALSE,🇵🇭Philippines,ASIA,,112516833,302
+Poland,Polska,48,EU,Warsaw,PLN,['pl'],🇵🇱,U+1F1F5 U+1F1F1,PL,POL,616,TRUE,TRUE,TRUE,🇵🇱Poland,EU,.pl,37932142,47
+Portugal,Portugal,351,EU,Lisbon,EUR,['pt'],🇵🇹,U+1F1F5 U+1F1F9,PT,PRT,620,TRUE,TRUE,TRUE,🇵🇹Portugal,EU,.pt,10315151,227
+Puerto Rico,Puerto Rico,"17,871,939",NA,San Juan,USD,"['es', 'en']",🇵🇷,U+1F1F5 U+1F1F7,PR,PRI,630,FALSE,FALSE,FALSE,🇵🇷Puerto Rico,NA,,3135926,134200
+Qatar,قطر,974,AS,Doha,QAR,['ar'],🇶🇦,U+1F1F6 U+1F1E6,QA,QAT,634,FALSE,FALSE,FALSE,🇶🇦Qatar,ASIA,.qa,2983667,508
+Réunion,La Réunion,262,AF,Saint-Denis,EUR,['fr'],🇷🇪,U+1F1F7 U+1F1EA,RE,REU,638,FALSE,FALSE,FALSE,🇷🇪Réunion,AFRICA,,,143376
+Romania,România,40,EU,Bucharest,RON,['ro'],🇷🇴,U+1F1F7 U+1F1F4,RO,ROU,642,TRUE,TRUE,TRUE,🇷🇴Romania,EU,.ro,19089022,152
+Russia,Россия,7,EU,Moscow,RUB,['ru'],🇷🇺,U+1F1F7 U+1F1FA,RU,RUS,643,TRUE,TRUE,FALSE,🇷🇺Russia,CIS,.ru,143804972,15
+Rwanda,Rwanda,250,AF,Kigali,RWF,"['rw', 'en', 'fr']",🇷🇼,U+1F1F7 U+1F1FC,RW,RWA,646,FALSE,FALSE,FALSE,🇷🇼Rwanda,AFRICA,.rw,13600622,5618
+Saint Kitts and Nevis,Saint Kitts and Nevis,1869,NA,Basseterre,XCD,['en'],🇰🇳,U+1F1F0 U+1F1F3,KN,KNA,659,FALSE,FALSE,FALSE,🇰🇳Saint Kitts and Nevis,NA,,53957,18826
+Saint Vincent and the Grenadines,Saint Vincent and the Grenadines,1784,NA,Kingstown,XCD,['en'],🇻🇨,U+1F1FB U+1F1E8,VC,VCT,670,FALSE,FALSE,FALSE,🇻🇨Saint Vincent and the Grenadines,NA,,111691,1274
+Taiwan,臺灣,886,AS,Taipei,TWD,['zh'],🇹🇼,U+1F1F9 U+1F1FC,TW,TWN,158,FALSE,FALSE,FALSE,🇹🇼Taiwan,ASIA,.tw,,102
+Vatican City,Vaticano,"39,066,379",EU,Vatican City,EUR,"['it', 'la']",🇻🇦,U+1F1FB U+1F1E6,VA,VAT,336,FALSE,FALSE,FALSE,🇻🇦Vatican City,ROW,,,
+Saint Helena,Saint Helena,290,AF,Jamestown,SHP,['en'],🇸🇭,U+1F1F8 U+1F1ED,SH,SHN,654,FALSE,FALSE,FALSE,🇸🇭Saint Helena,ROW,,,
+San Marino,San Marino,378,EU,City of San Marino,EUR,['it'],🇸🇲,U+1F1F8 U+1F1F2,SM,SMR,674,TRUE,TRUE,FALSE,🇸🇲San Marino,ROW,,34108,15787
+São Tomé and Príncipe,São Tomé e Príncipe,239,AF,São Tomé,STD,['pt'],🇸🇹,U+1F1F8 U+1F1F9,ST,STP,678,FALSE,FALSE,FALSE,🇸🇹São Tomé and Príncipe,AFRICA,,227237,16485
+Saudi Arabia,العربية السعودية,966,AS,Riyadh,SAR,['ar'],🇸🇦,U+1F1F8 U+1F1E6,SA,SAU,682,FALSE,FALSE,FALSE,🇸🇦Saudi Arabia,ASIA,.sa,35945430,329
+Senegal,Sénégal,221,AF,Dakar,XOF,['fr'],🇸🇳,U+1F1F8 U+1F1F3,SN,SEN,686,FALSE,FALSE,FALSE,🇸🇳Senegal,AFRICA,.sn,17629165,1084
+Serbia,Србија,381,EU,Belgrade,RSD,['sr'],🇷🇸,U+1F1F7 U+1F1F8,RS,SRB,688,TRUE,TRUE,FALSE,🇷🇸Serbia,EU,,6833371,197
+Seychelles,Seychelles,248,AF,Victoria,SCR,"['fr', 'en']",🇸🇨,U+1F1F8 U+1F1E8,SC,SYC,690,FALSE,FALSE,FALSE,🇸🇨Seychelles,AFRICA,,100193,2300
+Sierra Leone,Sierra Leone,232,AF,Freetown,SLL,['en'],🇸🇱,U+1F1F8 U+1F1F1,SL,SLE,694,FALSE,FALSE,FALSE,🇸🇱Sierra Leone,AFRICA,.sl,8303068,11271
+Singapore,Singapore,65,AS,Singapore,SGD,"['en', 'ms', 'ta', 'zh']",🇸🇬,U+1F1F8 U+1F1EC,SG,SGP,702,FALSE,FALSE,FALSE,🇸🇬Singapore,ASIA,.sg,5734208,40
+Slovakia,Slovensko,421,EU,Bratislava,EUR,['sk'],🇸🇰,U+1F1F8 U+1F1F0,SK,SVK,703,TRUE,TRUE,TRUE,🇸🇰Slovakia,EU,.sk,5471555,848
+Slovenia,Slovenija,386,EU,Ljubljana,EUR,['sl'],🇸🇮,U+1F1F8 U+1F1EE,SI,SVN,705,TRUE,TRUE,TRUE,🇸🇮Slovenia,EU,.si,2123865,416
+Somalia,Soomaaliya,252,AF,Mogadishu,SOS,"['so', 'ar']",🇸🇴,U+1F1F8 U+1F1F4,SO,SOM,706,FALSE,FALSE,FALSE,🇸🇴Somalia,AFRICA,,16767797,5214
+South Africa,South Africa,27,AF,Pretoria,ZAR,"['af', 'en', 'nr', 'st', 'ss', 'tn', 'ts', 've', 'xh', 'zu']",🇿🇦,U+1F1FF U+1F1E6,ZA,ZAF,710,FALSE,FALSE,FALSE,🇿🇦South Africa,AFRICA,.za,60835831,191
+South Korea,대한민국,82,AS,Seoul,KRW,['ko'],🇰🇷,U+1F1F0 U+1F1F7,KR,KOR,410,FALSE,FALSE,FALSE,🇰🇷South Korea,ASIA,.kr,52024636,494
+Spain,España,34,EU,Madrid,EUR,"['es', 'eu', 'ca', 'gl', 'oc']",🇪🇸,U+1F1EA U+1F1F8,ES,ESP,724,TRUE,TRUE,TRUE,🇪🇸Spain,EU,.es,47873207,28
+Sri Lanka,śrī laṃkāva,94,AS,Colombo,LKR,"['si', 'ta']",🇱🇰,U+1F1F1 U+1F1F0,LK,LKA,144,FALSE,FALSE,FALSE,🇱🇰Sri Lanka,ASIA,.lk,22213111,554
+Sweden,Sverige,46,EU,Stockholm,SEK,['sv'],🇸🇪,U+1F1F8 U+1F1EA,SE,SWE,752,TRUE,TRUE,TRUE,🇸🇪Sweden,EU,.se,10544293,20
+Switzerland,Schweiz,41,EU,Bern,"CHE,CHF,CHW","['de', 'fr', 'it']",🇨🇭,U+1F1E8 U+1F1ED,CH,CHE,756,TRUE,TRUE,FALSE,🇨🇭Switzerland,EU,.ch,8759998,18
+Tanzania,Tanzania,255,AF,Dodoma,TZS,"['sw', 'en']",🇹🇿,U+1F1F9 U+1F1FF,TZ,TZA,834,FALSE,FALSE,FALSE,🇹🇿Tanzania,AFRICA,.tz,63129521,1376
+Togo,Togo,228,AF,Lomé,XOF,['fr'],🇹🇬,U+1F1F9 U+1F1EC,TG,TGO,768,FALSE,FALSE,FALSE,🇹🇬Togo,AFRICA,.tg,8666511,17246
+Tonga,Tonga,676,OC,Nuku'alofa,TOP,"['en', 'to']",🇹🇴,U+1F1F9 U+1F1F4,TO,TON,776,FALSE,FALSE,FALSE,🇹🇴Tonga,OC,,108172,55950
+Trinidad and Tobago,Trinidad and Tobago,1868,NA,Port of Spain,TTD,['en'],🇹🇹,U+1F1F9 U+1F1F9,TT,TTO,780,FALSE,FALSE,FALSE,🇹🇹Trinidad and Tobago,NA,,1409566,9939
+Tunisia,تونس,216,AF,Tunis,TND,['ar'],🇹🇳,U+1F1F9 U+1F1F3,TN,TUN,788,FALSE,FALSE,FALSE,🇹🇳Tunisia,AFRICA,.tn,12074280,1369
+Turkey,Türkiye,90,AS,Ankara,TRY,['tr'],🇹🇷,U+1F1F9 U+1F1F7,TR,TUR,792,TRUE,TRUE,FALSE,🇹🇷Turkey,EU,.tr,86437666,17
+Turkmenistan,Türkmenistan,993,AS,Ashgabat,TMT,"['tk', 'ru']",🇹🇲,U+1F1F9 U+1F1F2,TM,TKM,795,FALSE,FALSE,FALSE,🇹🇲Turkmenistan,CIS,.tm,6212846,47142
+Tuvalu,Tuvalu,688,OC,Funafuti,AUD,['en'],🇹🇻,U+1F1F9 U+1F1FB,TV,TUV,798,FALSE,FALSE,FALSE,🇹🇻Tuvalu,OC,,12077,41104
+Uganda,Uganda,256,AF,Kampala,UGX,"['en', 'sw']",🇺🇬,U+1F1FA U+1F1EC,UG,UGA,800,FALSE,FALSE,FALSE,🇺🇬Uganda,AFRICA,.ug,48778061,1003
+Ukraine,Україна,380,EU,Kyiv,UAH,['uk'],🇺🇦,U+1F1FA U+1F1E6,UA,UKR,804,TRUE,TRUE,FALSE,🇺🇦Ukraine,CIS,.ua,43662555,357
+United Arab Emirates,دولة الإمارات العربية المتحدة,971,AS,Abu Dhabi,AED,['ar'],🇦🇪,U+1F1E6 U+1F1EA,AE,ARE,784,FALSE,FALSE,FALSE,🇦🇪United Arab Emirates,ASIA,.ae,10156075,289
+United Kingdom,United Kingdom,44,EU,London,GBP,['en'],🇬🇧,U+1F1EC U+1F1E7,GB,GBR,826,TRUE,TRUE,FALSE,🇬🇧United Kingdom,EU,.uk,67980913,9
+United States,United States,1,NA,Washington D.C.,"USD,USN,USS",['en'],🇺🇸,U+1F1FA U+1F1F8,US,USA,840,TRUE,FALSE,FALSE,🇺🇸United States,US,.us,332304762,23
+U.S. Virgin Islands,United States Virgin Islands,1340,NA,Charlotte Amalie,USD,['en'],🇻🇮,U+1F1FB U+1F1EE,VI,VIR,850,FALSE,FALSE,FALSE,🇻🇮U.S. Virgin Islands,NA,,105613,135572
+Uruguay,Uruguay,598,SA,Montevideo,"UYI,UYU",['es'],🇺🇾,U+1F1FA U+1F1FE,UY,URY,858,FALSE,FALSE,FALSE,🇺🇾Uruguay,LATAM,.uy,3498354,590
+Uzbekistan,O‘zbekiston,998,AS,Tashkent,UZS,"['uz', 'ru']",🇺🇿,U+1F1FA U+1F1FF,UZ,UZB,860,FALSE,FALSE,FALSE,🇺🇿Uzbekistan,CIS,.uz,35476677,584
+Venezuela,Venezuela,58,SA,Caracas,VEF,['es'],🇻🇪,U+1F1FB U+1F1EA,VE,VEN,862,FALSE,FALSE,FALSE,🇻🇪Venezuela,LATAM,.ve,27855980,772
+Mayotte,Mayotte,262,AF,Mamoudzou,EUR,['fr'],🇾🇹,U+1F1FE U+1F1F9,YT,MYT,175,FALSE,FALSE,FALSE,🇾🇹Mayotte,AFRICA,,,
+Saint Barthélemy,Saint-Barthélemy,590,NA,Gustavia,EUR,['fr'],🇧🇱,U+1F1E7 U+1F1F1,BL,BLM,652,FALSE,FALSE,FALSE,🇧🇱Saint Barthélemy,ROW,,,
+Åland,Åland,358,EU,Mariehamn,EUR,['sv'],🇦🇽,U+1F1E6 U+1F1FD,AX,ALA,248,FALSE,FALSE,FALSE,🇦🇽Åland,ROW,,,134147
+Anguilla,Anguilla,1264,NA,The Valley,XCD,['en'],🇦🇮,U+1F1E6 U+1F1EE,AI,AIA,660,FALSE,FALSE,FALSE,🇦🇮Anguilla,NA,,,19389
+France,France,33,EU,Paris,EUR,['fr'],🇫🇷,U+1F1EB U+1F1F7,FR,FRA,250,TRUE,TRUE,TRUE,🇫🇷France,EU,.fr,67698605,43
+Zambia,Zambia,260,AF,Lusaka,ZMK,['en'],🇿🇲,U+1F1FF U+1F1F2,ZM,ZMB,894,FALSE,FALSE,FALSE,🇿🇲Zambia,AFRICA,.zm,19408191,7011
+Zimbabwe,Zimbabwe,263,AF,Harare,ZWL,"['en', 'sn', 'nd']",🇿🇼,U+1F1FF U+1F1FC,ZW,ZWE,716,FALSE,FALSE,FALSE,🇿🇼Zimbabwe,AFRICA,.zw,15282667,5552
+Antarctica,Antarctica,672,AN,,,[],🇦🇶,U+1F1E6 U+1F1F6,AQ,ATA,10,FALSE,FALSE,FALSE,🇦🇶Antarctica,ROW,,,
+Cocos [Keeling] Islands,Cocos (Keeling) Islands,61,AS,West Island,AUD,['en'],🇨🇨,U+1F1E8 U+1F1E8,CC,CCK,166,FALSE,FALSE,FALSE,🇨🇨Cocos [Keeling] Islands,ASIA,,,
+Cook Islands,Cook Islands,682,OC,Avarua,NZD,['en'],🇨🇰,U+1F1E8 U+1F1F0,CK,COK,184,FALSE,FALSE,FALSE,🇨🇰Cook Islands,OC,,,
+Cape Verde,Cabo Verde,238,AF,Praia,CVE,['pt'],🇨🇻,U+1F1E8 U+1F1FB,CV,CPV,132,FALSE,FALSE,FALSE,🇨🇻Cape Verde,AFRICA,,568280,
+Djibouti,Djibouti,253,AF,Djibouti,DJF,"['fr', 'ar']",🇩🇯,U+1F1E9 U+1F1EF,DJ,DJI,262,FALSE,FALSE,FALSE,🇩🇯Djibouti,AFRICA,,1017207,
+Chad,Tchad,235,AF,N'Djamena,XAF,"['fr', 'ar']",🇹🇩,U+1F1F9 U+1F1E9,TD,TCD,148,FALSE,FALSE,FALSE,🇹🇩Chad,AFRICA,.td,17368168,25938
+Colombia,Colombia,57,SA,Bogotá,COP,['es'],🇨🇴,U+1F1E8 U+1F1F4,CO,COL,170,FALSE,FALSE,FALSE,🇨🇴Colombia,LATAM,,52167067,333
+Costa Rica,Costa Rica,506,NA,San José,CRC,['es'],🇨🇷,U+1F1E8 U+1F1F7,CR,CRI,188,FALSE,FALSE,FALSE,🇨🇷Costa Rica,NA,.cr,5189742,792
+Grenada,Grenada,1473,NA,St. George's,XCD,['en'],🇬🇩,U+1F1EC U+1F1E9,GD,GRD,308,FALSE,FALSE,FALSE,🇬🇩Grenada,NA,,113606,
+Cuba,Cuba,53,NA,Havana,"CUC,CUP",['es'],🇨🇺,U+1F1E8 U+1F1FA,CU,CUB,192,FALSE,FALSE,FALSE,🇨🇺Cuba,NA,.cu,11317155,143
+Curacao,Curaçao,5999,NA,Willemstad,ANG,"['nl', 'pa', 'en']",🇨🇼,U+1F1E8 U+1F1FC,CW,CUW,531,FALSE,FALSE,FALSE,🇨🇼Curacao,NA,,151280,142371
+Ethiopia,ኢትዮጵያ,251,AF,Addis Ababa,ETB,['am'],🇪🇹,U+1F1EA U+1F1F9,ET,ETH,231,FALSE,FALSE,FALSE,🇪🇹Ethiopia,AFRICA,,120682710,1513
+Micronesia,Micronesia,691,OC,Palikir,USD,['en'],🇫🇲,U+1F1EB U+1F1F2,FM,FSM,583,FALSE,FALSE,FALSE,🇫🇲Micronesia,OC,,117397,6358
+Fiji,Fiji,679,OC,Suva,FJD,"['en', 'fj', 'hi', 'ur']",🇫🇯,U+1F1EB U+1F1EF,FJ,FJI,242,FALSE,FALSE,FALSE,🇫🇯Fiji,OC,.fj,909199,6644
+French Guiana,Guyane française,594,SA,Cayenne,EUR,['fr'],🇬🇫,U+1F1EC U+1F1EB,GF,GUF,254,FALSE,FALSE,FALSE,🇬🇫French Guiana,LATAM,,,40609
+Gabon,Gabon,241,AF,Libreville,XAF,['fr'],🇬🇦,U+1F1EC U+1F1E6,GA,GAB,266,FALSE,FALSE,FALSE,🇬🇦Gabon,AFRICA,.ga,2332731,25598
+Christmas Island,Christmas Island,61,AS,Flying Fish Cove,AUD,['en'],🇨🇽,U+1F1E8 U+1F1FD,CX,CXR,162,FALSE,FALSE,FALSE,🇨🇽Christmas Island,ASIA,,,
+French Southern Territories,Territoire des Terres australes et antarctiques fr,262,AN,Port-aux-Français,EUR,['fr'],🇹🇫,U+1F1F9 U+1F1EB,TF,ATF,260,FALSE,FALSE,FALSE,🇹🇫French Southern Territories,ROW,,,
+Falkland Islands,Falkland Islands,500,SA,Stanley,FKP,['en'],🇫🇰,U+1F1EB U+1F1F0,FK,FLK,238,FALSE,FALSE,FALSE,🇫🇰Falkland Islands,LATAM,,,
+Ghana,Ghana,233,AF,Accra,GHS,['en'],🇬🇭,U+1F1EC U+1F1ED,GH,GHA,288,FALSE,FALSE,FALSE,🇬🇭Ghana,AFRICA,.gh,32375549,867
+Turks and Caicos Islands,Turks and Caicos Islands,1649,NA,Cockburn Town,USD,['en'],🇹🇨,U+1F1F9 U+1F1E8,TC,TCA,796,FALSE,FALSE,FALSE,🇹🇨Turks and Caicos Islands,NA,,39780,
+Guadeloupe,Guadeloupe,590,NA,Basse-Terre,EUR,['fr'],🇬🇵,U+1F1EC U+1F1F5,GP,GLP,312,FALSE,FALSE,FALSE,🇬🇵Guadeloupe,NA,,,143380
+Guernsey,Guernsey,44,EU,St. Peter Port,GBP,"['en', 'fr']",🇬🇬,U+1F1EC U+1F1EC,GG,GGY,831,FALSE,FALSE,FALSE,🇬🇬Guernsey,ROW,,,2322
+Iceland,Ísland,354,EU,Reykjavik,ISK,['is'],🇮🇸,U+1F1EE U+1F1F8,IS,ISL,352,TRUE,TRUE,FALSE,🇮🇸Iceland,EU,,381226,504
+South Georgia and the South Sandwich Islands,South Georgia,500,AN,King Edward Point,GBP,['en'],🇬🇸,U+1F1EC U+1F1F8,GS,SGS,239,FALSE,FALSE,FALSE,🇬🇸South Georgia and the South Sandwich Islands,ROW,,,
+Albania,Shqipëria,355,EU,Tirana,ALL,['sq'],🇦🇱,U+1F1E6 U+1F1F1,AL,ALB,8,TRUE,TRUE,FALSE,🇦🇱Albania,EU,,2812325,6597
+Swaziland,Swaziland,268,AF,Lobamba,SZL,"['en', 'ss']",🇸🇿,U+1F1F8 U+1F1FF,SZ,SWZ,748,FALSE,FALSE,FALSE,🇸🇿Swaziland,AFRICA,.sz,1183841,12066
+Yemen,اليَمَن,967,AS,Sana'a,YER,['ar'],🇾🇪,U+1F1FE U+1F1EA,YE,YEM,887,FALSE,FALSE,FALSE,🇾🇪Yemen,ASIA,.ye,31153355,
+East Timor,Timor-Leste,670,OC,Dili,USD,['pt'],🇹🇱,U+1F1F9 U+1F1F1,TL,TLS,626,FALSE,FALSE,FALSE,🇹🇱East Timor,OC,,1368679,
+Vanuatu,Vanuatu,678,OC,Port Vila,VUV,"['bi', 'en', 'fr']",🇻🇺,U+1F1FB U+1F1FA,VU,VUT,548,FALSE,FALSE,FALSE,🇻🇺Vanuatu,OC,,321598,
+Latvia,Latvija,371,EU,Riga,EUR,['lv'],🇱🇻,U+1F1F1 U+1F1FB,LV,LVA,428,TRUE,TRUE,TRUE,🇱🇻Latvia,EU,.lv,1874917,123
+Luxembourg,Luxembourg,352,EU,Luxembourg,EUR,"['fr', 'de', 'lb']",🇱🇺,U+1F1F1 U+1F1FA,LU,LUX,442,TRUE,TRUE,TRUE,🇱🇺Luxembourg,EU,.lu,656357,59
+Malta,Malta,356,EU,Valletta,EUR,"['mt', 'en']",🇲🇹,U+1F1F2 U+1F1F9,MT,MLT,470,TRUE,TRUE,TRUE,🇲🇹Malta,EU,.mt,564297,58
+Moldova,Moldova,373,EU,Chișinău,MDL,['ro'],🇲🇩,U+1F1F2 U+1F1E9,MD,MDA,498,TRUE,TRUE,FALSE,🇲🇩Moldova,CIS,,2531405,1378
+Monaco,Monaco,377,EU,Monaco,EUR,['fr'],🇲🇨,U+1F1F2 U+1F1E8,MC,MCO,492,TRUE,TRUE,FALSE,🇲🇨Monaco,EU,,39810,1803
+Montenegro,Црна Гора,382,EU,Podgorica,EUR,"['sr', 'bs', 'sq', 'hr']",🇲🇪,U+1F1F2 U+1F1EA,ME,MNE,499,TRUE,TRUE,FALSE,🇲🇪Montenegro,EU,,620524,60120
+Macedonia,Македонија,389,EU,Skopje,MKD,['mk'],🇲🇰,U+1F1F2 U+1F1F0,MK,MKD,807,TRUE,TRUE,FALSE,🇲🇰Macedonia,EU,.mk,2070426,24406
+Samoa,Samoa,685,OC,Apia,WST,"['sm', 'en']",🇼🇸,U+1F1FC U+1F1F8,WS,WSM,882,FALSE,FALSE,FALSE,🇼🇸Samoa,OC,,200527,23976
+Tajikistan,Тоҷикистон,992,AS,Dushanbe,TJS,"['tg', 'ru']",🇹🇯,U+1F1F9 U+1F1EF,TJ,TJK,762,FALSE,FALSE,FALSE,🇹🇯Tajikistan,CIS,.tj,9975406,5392
+Thailand,ประเทศไทย,66,AS,Bangkok,THB,['th'],🇹🇭,U+1F1F9 U+1F1ED,TH,THA,764,FALSE,FALSE,FALSE,🇹🇭Thailand,ASIA,.th,70186113,642
+Vietnam,Việt Nam,84,AS,Hanoi,VND,['vi'],🇻🇳,U+1F1FB U+1F1F3,VN,VNM,704,FALSE,FALSE,FALSE,🇻🇳Vietnam,ASIA,.vn,99152987,544
+Wallis and Futuna,Wallis et Futuna,681,OC,Mata-Utu,XPF,['fr'],🇼🇫,U+1F1FC U+1F1EB,WF,WLF,876,FALSE,FALSE,FALSE,🇼🇫Wallis and Futuna,OC,,,
+Tokelau,Tokelau,690,OC,Fakaofo,NZD,['en'],🇹🇰,U+1F1F9 U+1F1F0,TK,TKL,772,FALSE,FALSE,FALSE,🇹🇰Tokelau,OC,,,

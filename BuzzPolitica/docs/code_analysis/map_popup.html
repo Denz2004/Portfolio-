@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>BuzzPolitica – map_popup</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">BuzzPolitica</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-aim--background" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Aim &amp; Background</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-aim--background">    
+        <li>
+    <a class="dropdown-item" href="../index.html">
+ <span class="dropdown-text">Background</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../home.html">
+ <span class="dropdown-text">About us</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../output.html">
+ <span class="dropdown-text">Aim</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-approach" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Approach</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-approach">    
+        <li>
+    <a class="dropdown-item" href="../dev.html">
+ <span class="dropdown-text">Development</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../data.html">
+ <span class="dropdown-text">Data &amp; Code</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../analysis.html">
+ <span class="dropdown-text">Analysis</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-results" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Results</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-results">    
+        <li>
+    <a class="dropdown-item" href="../map.html">
+ <span class="dropdown-text">Electoral college</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../conclusion.html">
+ <span class="dropdown-text">Conclusion</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+
+
+
+<div id="cell-0" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Load the CSV file</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>file_path <span class="op">=</span> <span class="st">'../top_post_year.csv'</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(file_path)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating the dictionary for state data</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>state_data <span class="op">=</span> {}</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _, row <span class="kw">in</span> df.iterrows():</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    state_data[row[<span class="st">'state'</span>]] <span class="op">=</span> [</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        row[<span class="st">'name of top subreddit'</span>],</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"</span><span class="sc">{</span>row[<span class="st">'upvotes'</span>]<span class="sc">}</span><span class="ss">"</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"</span><span class="sc">{</span>row[<span class="st">'num_comments'</span>]<span class="sc">}</span><span class="ss">"</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"</span><span class="sc">{</span>row[<span class="st">'Topic 1'</span>]<span class="sc">}</span><span class="ss">"</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        <span class="ss">f"</span><span class="sc">{</span>row[<span class="st">'Topic 2'</span>]<span class="sc">}</span><span class="ss">"</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>         <span class="ss">f"</span><span class="sc">{</span>row[<span class="st">'Topic 3'</span>]<span class="sc">}</span><span class="ss">"</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Output the JavaScript code for stateData</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>js_code <span class="op">=</span> <span class="st">"const stateData = "</span> <span class="op">+</span> <span class="bu">str</span>(state_data) <span class="op">+</span> <span class="st">";"</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(js_code)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>const stateData = {'Alabama': ['Small-town police sued for planting drugs on drivers in north Alabama', '5166', '180', '0_alabama_state_library_al', '1_tuberville_tommy_senator_nominations', 'nan'], 'Alaska': ['My drive to work yesterday', '3795', '159', '-1_sexual_reddit_news_state', '0_moving_anchorage_snow_glacier', '1_amp_format_webp_redd'], 'Arizona': ['Arizona to end deal with Saudi farms sucking state water dry', '15965', '498', '-1_event_heat_night_phoenix', '0_canyon_creek_grand_lake', '1_trump_election_gop_electors'], 'Arkansas': ['White House Twitter account calls out our two senators for celebrating projects funded by the bill they voted against', '7556', '269', '-1_janikka_told_walmart_bradford', '0_sanders_huckabee_gov_podium', '1_https_arrested_edu_sheriff'], 'California': ["'Pretty staggering': Thousands of California police officers could be stripped of their badges under new law ‚Äî California‚Äôs police standards commission is bracing to decertify or suspend 3,000 to 3,500 police officers each year for serious misconduct under a new state law", '22567', '1155', '-1_oil_beach_traffic_wage', '0_lake_drought_hurricane_flooding', '1_feinstein_senate_voters_republicans'], 'Colorado': ['This view never gets old.', '3613', '167', '-1_mountain_rocky_home_boulder', '0_drought_canyon_project_dinosaur', '1_marijuana_legislature_cannabis_psychedelics'], 'Connecticut': ['My brother passed away today.', '1644', '194', '-1_today_ticks_museum_transgender', '0_connecticut_ct_profit_states', '1_cars_driving_traffic_lane'], 'Delaware': ['Woah now', '1870', '746', '-1_doug_land_com_castle', '0_delaware_state_marijuana_states', '1_wilmington_deer_blackbird_forest'], 'Florida': ['Wtf Florida. 4:45 AM.', '17034', '1983', '-1_https_pool_reporting_kids', '0_beach_lived_home_storm', '1_ron_desantis_campaign_biden'], 'Georgia': ['Georgia ranked worst state for health care, study finds', '2434', '316', '-1_children_job_housing_cameras', '0_walk_amp_atlanta_ga', '1_victim_cop_police_videos'], 'Hawaii': ['I‚Äôm a little tired of how I‚Äôm seeing this disaster framed', '2058', '293', '-1_beach_maui_waipahu_hawaii', '0_shark_hawaii_hawaiian_surfer', '1_driving_rail_parking_pedestrian'], 'Idaho': ['A real photo of Heather Scott, a woman who should not hold office in the state of Idaho', '4064', '715', '-1_going_com_spanish_https', '0_abortion_mortality_maternal_law', '1_towns_houses_south_farms'], 'Illinois': ["Sen. John Kennedy (R-LA): ‚ÄúWhy do you think that Chicago has become America's largest outdoor shooting range?‚Äù Dr. Megan Ranney of the Yale School of Public Health: ‚ÄúMississippi, Louisiana, and Missouri actually have higher firearm death rates.‚Äù", '4562', '127', '-1_healthcare_million_care_solar', '0_illinois_state_chicago_town', '1_pritzker_signs_governor_nuclear'], 'Indiana': ["Visiting Mishawaka this week as my dad recovers from back surgery. I came across this lovely display on a bike ride. I'm past the disappointment phase. \uf8ffüòÇ I just feel truly sad for these individuals at this point.", '3477', '940', '-1_gary_todd_state_daylight', '0_cannabis_marijuana_legalization_hemp', '1_unemployment_wages_employers_skills'], 'Iowa': ['We have a politician trending again...', '4402', '601', '-1_abortion_state_anthem_news', '0_vote_iowa_gop_lived', '1_power_sub_mad_mistakes'], 'kansas': ['Farmer surprises wife with 80 acres of sunflowers for 50th wedding anniversary', '6791', '491', '-1_foster_lgbtq_bills_library', '0_town_day_walking_walk', '1_police_judge_patrol_copies'], 'Kentucky': ['Associated Press: "Democratic Gov. Andy Beshear reelected to second term in Kentucky, overcoming state‚Äôs GOP dominance"', '2634', '225', '-1_veterans_bets_insurance_patton', '0_ky_kentucky_walking_louisville', '1_county_madison_abandoned_clay'], 'Louisiana': ['Moms For Liberty - East Baton Rouge Parish is now listed as a hate group by the Southern Poverty Law Center.', '11611', '961', '-1_infant_rates_prison_mortality', '0_worst_orleans_lake_live', '1_landry_jeff_ag_immigration'], 'Maine': ['2 Active Shooter incidents in Lewiston', '9742', '12309', '-1_alex_portland_leo_leonard', '0_lewiston_com_shooting_victims', '1_maine_hike_massachusetts_kitty'], 'Maryland': ['Please get off my ass', '9592', '907', '-1_city_homes_baltimore_movers', '0_bay_miss_maryland_chesapeake', '1_abortion_law_congress_recreational'], 'Massachusetts': ['States in America where gay marriage was legal 15 years ago', '2926', '142', '-1_amp_flag_information_students', '0_ma_massachusetts_springfield_towns', '1_massachusetts_ban_marijuana_psychedelics'], 'Michigan': ['The Satanic Temple congregations set up Yule Goat at Michigan Capitol', '8223', '1000', '-1_jewish_colleagues_hamas_neighbors', '0_michigan_whitmer_detroit_trump', '1_satanic_capitol_temple_congregations'], 'Minnesota': ["It's official: Minnesota is the 23rd state to legalize recreational marijuana", '28608', '1274', '-1_contact_uber_niagara_bottling', '0_minnesota_state_mn_states', '1_flag_star_revisions_committee'], 'Mississippi': ['Maybe I‚Äôm out of the loop‚Ä¶', '3985', '676', '-1_obtain_police_cops_ms', '0_mississippi_presley_reeves_tate', '1_arrested_amp_png_police'], 'Missouri': ["I'm a Republican. And I Cannot Vote For Trump", '36908', '4575', '-1_basye_webber_bar_rural', '0_transgender_trans_gender_minors', '1_ozarks_trail_river_kc'], 'Montana': ['Restaurant‚Äôs sushi roll blamed for poisoning 41 and killing 2 in Montana', '1132', '454', '-1_amp_gt_bridge_charge', '0_montana_state_butte_city', '1_lake_glacier_creek_hike'], 'Nebraska': ['Brain Drain', '18411', '1086', '-1_lincoln_crime_sen_nebraska', '0_omaha_nebraskans_nebraska_visit', '1_abortion_ban_abortions_congress'], 'Nevada': ['Nevada Is Investigating the 2020 Fake Trump Electors Scheme', '1991', '96', '-1_fisher_stadium_oakland_mlb', '0_primary_election_electors_ballot', '1_ely_trip_road_lake'], 'New Hampshire': ['Should New Hampshire follow?', '11054', '1153', '-1_sam_truck_hampshire_day', '0_marijuana_republicans_legalize_senate', '1_lake_turtles_beach_winnipesaukee'], 'New Jersey': ["New Jersey Governor Declares State a 'Safe Haven' for Gender-Affirming Care", '2485', '297', '0_jersey_nj_state_time', '1_kim_menendez_senator_murphy', 'nan'], 'New Mexico': ['Navajo president drops in at new skatepark in the Navajo Nation!', '3672', '142', '-1_university_albuquerque_humanitarian_research', '0_chile_red_spanish_mexican', '1_gila_wilderness_mountains_canyon'], 'New York': ['Democrats overtake Monroe County Legislature for first time in nearly three decades', '1991', '90', '-1_amp_png_https_preview', '0_employees_law_tax_divorce', '1_recommendations_places_trip_upstate'], 'North Carolina': ['After I said that the angriest voices in Congress are faking their anger just to get onto certain news shows, this news show decided to prove the point. - Rep. Jeff Jackson', '84530', '2963', '-1_public_gender_schools_robinson', '0_beach_north_cars_raleigh', '1_jackson_speaker_amendment_debt'], 'North Dakota': ["Republican North Dakota state senator Ray Holmberg has been indicted for possessing child porn and for traveling to the Czech Republic from 2011-2016 to rape women under 18. He is a Christian Nationalist and is ND's longest-serving state senator in history.", '10825', '520', '-1_workers_jamestown_job_000', '0_employment_unemployment_dakota_north', '1_fargo_comedy_events_cellar'], 'Ohio': ['The governor right now \uf8ffüòù', '20875', '1795', '-1_trump_amendment_election_ballot', '0_weather_snow_pictures_lake', '1_marijuana_legalization_recreational_cannabis'], 'Oklahoma': ['Oklahoma‚Äôs Abortion Ban Forced Woman to Spend Thousands to Travel to New Mexico for Life-Saving Care', '2829', '381', '-1_plan_internet_mbps_mullin', '0_city_park_restaurant_moved', '1_charter_schools_catholic_public'], 'Oregon': ['I am so jealous of Colorado right now', '17570', '1982', '-1_amp_salem_state_000', '0_meek_umatilla_plague_tribe', '1_observatory_views_forest_butte'], 'Pennsylvania': ['If I were a congressmen I would wear the exact same outfits as Fetterman', '5605', '1019', '0_pennsylvania_pa_state_county', '1_fetterman_menendez_senator_committee', 'nan'], 'Rhode Island': ['Spotted at Lincoln Woods', '886', '442', '-1_spotify_playlist_dogs_news', '0_beach_painting_narragansett_newport', '1_rhode_island_states_percent'], 'South Carolina': ['Lindsay Graham, You have been in the Senate for 20 f**king years and we have never seen any actual legislation from you specifying what border and immigration actions you want. All you do is bitch, complain and vote against legislation.', '2219', '253', '-1_scott_tim_cancer_fees', '0_charleston_beach_myrtle_walking', '1_pastor_arrested_prison_rcsd'], 'South Dakota': ["BREAKING: MAGA Governor Kristi Noem is embroiled in a seedy scandal as it's revealed that she has been having an extramarital affair with top Trump advisor Corey Lewandowski ‚Äî who is also married and is an alleged sexual predator.", '6692', '397', '-1_sioux_com_state_dakota', '0_lewandowski_corey_affair_trump', '1_cannabis_legalization_ballot_petition'], 'Tennessee': ["Allie Phillips, a Clarksville woman whose story of pregnancy loss under Tennessee's abortion ban drew national attention, is running for the state House.", '5877', '109', '-1_manifesto_book_children_blackburn', '0_preview_width_format_area', '1_abortion_lawsuit_lee_pregnancy'], 'Texas': ['Texas Representative Dan Crenshaw failed in his boycott attempt of Bud Light by posting a video of his fridge full of Karbach ‚Äì which is owned by the same company.', '33750', '1416', '-1_kids_border_campaign_indoctrination', '0_police_shooting_arrest_mccauley', '1_schools_public_teachers_voucher'], 'Utah': ['Utah‚Äôs ridiculous porn laws in action.', '2401', '503', '0_utah_state_lake_salt', '1_flag_pride_flags_lgbtq', 'nan'], 'Vermont': ['You‚Äôll never believe this', '1302', '98', '-1_peeped_14_montpelier_10', '0_vermont_lived_burlington_places', '1_road_truck_driving_headlights'], 'Virginia': ['What could go wrong?', '8686', '726', '-1_com_americanindependent_tiktok_campaign', '0_want_road_map_traffic', '1_teacher_queer_books_policies'], 'Washington': ['New State Flag idea', '3608', '508', '-1_tribes_deli_sunrise_yellow', '0_tax_office_ballot_governor', '1_cascades_highway_glaciers_glacier'], 'West Virginia': ["r/leopardsatemyface unleash the hate on the folks dead and dying in Indian Creek. But they've got some points.", '1686', '353', '-1_reddit_stop_https_com', '0_roads_pa_county_morgantown', '1_virginia_debt_kennedy_marvel'], 'Wisconsin': ['In 4-3 ruling, Wisconsin Supreme Court orders new legislative maps before 2024 election', '6855', '410', '-1_baldwin_wisconsin_www_state', '0_wi_snow_culver_highway', '1_johnson_electors_fake_trump'], 'Wyoming': ["The woman who torched Wyoming's lone, full-service abortion clinic is about to be sentenced", '2278', '120', '-1_texas_border_federal_summer', '0_photo_pic_amp_wyomingest', '1_accent_youtu_midwest_brokeback']};</code></pre>
+</div>
+</div>
+
+
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item">
+      <i class="bi bi-hypnotize" role="img">
+</i> 
+ Buzz Politica
+  </li>  
+</ul>
+    </div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/orgs/lse-ds105/teams/my-team">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

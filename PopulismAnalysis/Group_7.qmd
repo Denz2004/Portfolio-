@@ -1,0 +1,2726 @@
+---
+title: Group 7 Project
+author: <40294 46146 39109 42044 40503>
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    number-sections: true
+    theme: journal 
+    code-fold: true
+output: html
+self-contained: true
+jupyter: python3
+engine: jupyter
+editor:
+  render-on-save: true
+  preview: true
+---
+
+
+```{python}
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
+from matplotlib.patches import Patch
+from matplotlib.lines import Line2D
+import statsmodels.api as sm
+# Data & arrays
+import pandas as pd
+import numpy as np
+
+# Modeling & preprocessing
+from sklearn.model_selection import train_test_split, RandomizedSearchCV
+from sklearn.preprocessing import StandardScaler
+from xgboost import XGBClassifier
+from sklearn.linear_model import LogisticRegression
+!pip install dominate
+
+# Evaluation metrics
+from sklearn.metrics import (
+    accuracy_score, precision_score, recall_score, f1_score, roc_auc_score,
+    balanced_accuracy_score, confusion_matrix, ConfusionMatrixDisplay
+)
+
+# Visualization (matplotlib, seaborn, SHAP)
+import matplotlib.pyplot as plt
+import seaborn as sns
+import shap
+
+# Table formatting (for markdown report-style output)
+from pytablewriter import MarkdownTableWriter
+
+# ggplot-style plots using plotnine
+from plotnine import (
+    ggplot, aes, geom_tile, geom_text, scale_fill_gradient2, labs, theme,
+    element_text, theme_minimal, ggtitle, xlab, ylab, scale_fill_gradient
+)
+
+import lets_plot
+lets_plot.LetsPlot.setup_html()
+from lets_plot import *
+from lets_plot.plot import gggrid
+from catboost import CatBoostClassifier
+from sklearn.model_selection import RandomizedSearchCV, StratifiedKFold
+from sklearn.metrics import make_scorer, balanced_accuracy_score
+
+from catboost import CatBoostClassifier, Pool
+from sklearn.model_selection import GridSearchCV, StratifiedKFold
+from sklearn.metrics import make_scorer, roc_auc_score
+from catboost import CatBoostClassifier
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import make_scorer, roc_auc_score
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split, RandomizedSearchCV
+from sklearn.preprocessing import StandardScaler
+from xgboost import XGBClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import (
+    accuracy_score, precision_score, recall_score, f1_score, roc_auc_score,
+    balanced_accuracy_score, confusion_matrix, ConfusionMatrixDisplay,classification_report
+)
+from catboost import CatBoostClassifier, Pool
+from sklearn.model_selection import RandomizedSearchCV, StratifiedKFold
+from sklearn.metrics import make_scorer, f1_score
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import shap
+from pytablewriter import MarkdownTableWriter
+from plotnine import (
+    ggplot, aes, geom_tile, geom_text, scale_fill_gradient2, labs, theme,
+    element_text, theme_minimal, ggtitle, xlab, ylab, scale_fill_gradient
+)
+import lets_plot
+lets_plot.LetsPlot.setup_html()
+from lets_plot import *
+from lets_plot.plot import gggrid
+import sweetviz as sweet
+
+from imblearn.under_sampling import RandomUnderSampler
+from catboost import CatBoostClassifier
+from sklearn.model_selection import RandomizedSearchCV, TimeSeriesSplit
+from sklearn.metrics import make_scorer, roc_auc_score
+from sklearn.model_selection import GridSearchCV
+
+from catboost import CatBoostClassifier
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import make_scorer, balanced_accuracy_score
+
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.impute import SimpleImputer
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score
+```
+
+# Introduction
+
+### Are economic conditions primarily responsible for the support of radical right-wing populist parties?
+
+The recent resurgence of populism in established democracies has provoked renewed academic interest in its drivers and implications. While the roots of populist mobilisation stretch back to agrarian movements in late 19th-century America, the contemporary wave, particularly evident in the 2000s and 2010s, has seen radical populist parties gain significant traction in national parliaments and presidential offices, especially across Western Europe. The political success of figures such as Donald Trump in the United States and the Brexit vote in the United Kingdom, both reaching a critical point in 2016 (often dubbed *"the year of the populists"* (Conley, 2020)), has captured public attention and media discourse. However, such a focus risks myopia by ignoring the broader trends of academic populist literature.
+
+### Conceptual Clarification
+
+Firstly, it is worth clarifying the conceptual scope of populism. Although scholars disagree on whether populism is best understood as an ideology, a political style, or a form of mobilisation, most agree on its core feature: an antagonistic division between *“the pure people”* and *“the corrupt elite”* (Canovan 1999, Laclau 2005, Mudde and Rovira Kaltwasser 2012).
+
+Populism, as defined above, still exhibits significant differences across a range of factors—this section will briefly consider some of these and then situate this research project within these debates.
+
+### Geographical Distinction
+
+Populism has reared its head across many geographical locales—however, these are often considered to be quite different in terms of causes and manifestations. For example, whilst there are still country-level distinctions, it is broadly the case that populism in Latin America looks significantly distinct from populism in Europe or North America. In Europe, the most prevalent and popular form of populism seems to be *radical right-wing* populism, with the rise of parties such as the French *Rassemblement National*, Italy’s *Lega*, and Germany’s *AfD* underscoring the salience of this phenomenon in Western and Central Europe.
+
+Given the availability of harmonised cross-national data through the European Social Survey (ESS), which captures individual-level perceptions across multiple rounds and countries, this study focuses on the European region as a strategic case for analysing the contemporary drivers of radical right-wing populism.
+
+### Distinction Between Left-Wing and Right-Wing Populism
+
+A second key distinction concerns the ideological orientation of populist parties. While both left- and right-wing variants share an antagonistic logic between *“the people”* and *“the elite”* (Laclau 2005; Mudde and Rovira Kaltwasser 2012), they diverge in their treatment of outsiders and minority groups. Left-wing populists often target economic elites and advocate redistribution, whereas right-wing populists construct exclusionary definitions of national belonging and direct hostility toward immigrants, supranational institutions, and cultural minorities.
+
+Given the greater visibility and electoral success of radical right-wing populist parties in contemporary Europe, this project focuses primarily on this strand of populism. Nonetheless, at times, left-wing populism is included as a point of comparison in order to assess whether distinct causal mechanisms are at play across the ideological spectrum.
+
+### Distinction in Drivers of Populism
+
+The final and most contentious distinction in the literature concerns the drivers of populist support: are they primarily economic, political, or cultural?
+
+-   **Economic explanations** point to the dislocations of globalisation, labour market insecurity, and rising inequality as key sources of populist appeal. Scholars such as Rodrik (2021) argue that economic grievances—particularly in regions affected by trade shocks or deindustrialisation—create fertile ground for anti-establishment politics. Yet others caution that economic accounts alone may not explain who turns to populist parties and why, as many economically insecure voters do not make this political turn.
+
+-   **Cultural explanations**, by contrast, argue that populist support stems from anxieties around immigration, multiculturalism, and the erosion of traditional values. Norris and Inglehart (2019) advance the “cultural backlash” thesis, suggesting that older, white, and less-educated citizens feel alienated by the perceived dominance of liberal cultural norms. Sides et al. (2018) and Margalit (2019) similarly emphasise identity-based threats, noting that in Europe, aversion to Muslim and African immigrants has been a central feature of radical right mobilisation.
+
+-   **Political explanations** focus on institutional trust, political efficacy, and the perception of elite unresponsiveness. According to Mudde and Rovira Kaltwasser (2012), populist rhetoric thrives in contexts where mainstream parties are perceived as detached from everyday concerns. In such settings, populists can position themselves as the authentic voice of the people, exploiting the gap between citizens and institutions.
+
+These competing explanations raise important methodological and theoretical questions. For instance, Naoi (2020) notes that observational studies often favour economic arguments, while experimental evidence from surveys tends to support cultural accounts. Moreover, Margalit (2019) highlights a crucial conceptual distinction: economic conditions may explain levels of support, but cultural or political shocks may account for changes in support over time.
+
+### Project Contribution and Methodological Approach
+
+This project enters the debate by leveraging micro-level survey data to examine how **perceptions** of economic insecurity, rather than objective indicators alone, relate to populist preferences of voters. Building on research that shows political behaviour is shaped more by beliefs than by economic reality (Gidron and Hall 2017), we test how individuals’ economic, political, and cultural perceptions interact in shaping support for right-wing populist parties.
+
+To this end, we adopt a multi-method empirical strategy. We begin with exploratory data analysis to visualise distributions and identify potential relationships between attitudinal, socio-economic, and political variables. These preliminary findings suggest that many key predictors—such as immigration attitudes, trust in politicians, and views on traditional values—exhibit categorical or ordinal patterns, underscoring the relevance of non-linear modelling techniques.
+
+We then estimate a baseline logistic regression model to assess the relative contribution of different explanatory dimensions. This model suggests that cultural attitudes—particularly restrictive immigration preferences and low support for minority rights—are among the most consistent predictors of radical right-wing populist (RRWP) support. Economic variables, by contrast, show weaker and more inconsistent effects, although perceived financial difficulty in childhood and low economic satisfaction emerge as relevant in some contexts.
+
+Recognising the limitations of linear models in capturing complex interactions, we implement CatBoost (a gradient boosting model optimised for categorical data) and interpret its output using SHAP values to understand feature importance. This approach confirms the primacy of cultural and institutional attitudes, while revealing greater heterogeneity in the role of economic variables. Notably, SHAP analysis uncovers interactions—such as between distrust in political institutions and economic dissatisfaction—that are not apparent in logistic regression models.
+
+In addition to pooled models, we estimate country-specific models to uncover how the drivers of populist support vary across national contexts. These models reveal important differences: in France, identity-based attitudes and Euroscepticism are dominant, while in Italy, economic dissatisfaction and political disaffection are more predictive. Such findings suggest that while certain themes (e.g. distrust and cultural threat) recur, their salience and form are shaped by national political cultures. This allows us to test the generalisability of common hypotheses and assess whether different combinations of economic, cultural, and political factors predominate in different political contexts. These modelling choices are grounded in the recognition that context shapes how grievances translate into support for radical alternatives.
+
+
+
+### Future Research Directions
+
+While the ESS provides a rich cross-sectional snapshot, future work may build on these findings through longitudinal analysis, allowing for exploration of how changes in real macro-economic conditions affect populist support—offering a richer understanding of how economic realities and subjective experiences intersect in shaping political behaviour. It can also be extended by exploring regional differences—for example, applying this methodology to Latin American countries to see whether similar or contrasting patterns emerge.
+
+
+# Exploratory Data Analysis
+
+### Data Overview 
+
+This project uses cross-sectional survey data from Round 11 of the European Social Survey (ESS), conducted during 2023/24, in conjunction with party classification data from The PopuList 3.0 database (2023). It investigates the relationship between economic insecurity, cultural attitudes, and political trust and support for radical right-wing populist parties across five countries: Hungary, Italy, France, Germany, and Spain.
+
+Round 11 is particularly suitable for this research, as it includes updated post-pandemic measures of economic security and trust, which are highly relevant to current populist dynamics.
+
+In merging the two datasets, two key things were accounted for: (1) Party Name Harmonisation - since party names differed across sources, ESS party codes were recoded to match PopuList naming conventions. (2) Retention of Non-Populist Parties: rather than dropping non-matching parties, those not listed in The PopuList were retained as a necessary comparison group. These were relabelled using the ESS codebook to serve as the non-populist reference categories
+
+### 1. Sample Characteristics and Descriptive Overview
+
+We begin with a summary of the sample characteristics and populist support distribution by country.
+
+```{python}
+df_rightwing = pd.read_csv("final_df_with_populist_splits.csv")
+
+cols_to_drop = [
+    'vote_x', 'vote_y', 'vote_code',  # NOTE: comma was missing between vote_code and eurosceptic
+    'eurosceptic', 'in_parliament', 'partyfacts_id', 'parlgov_id', 'ess_round'
+]
+df_rightwing = df_rightwing.drop(columns=[col for col in cols_to_drop if col in df_rightwing.columns])
+
+# Shape and head
+print(f"Shape of cleaned df_rightwing: {df_rightwing.shape}")
+display(df_rightwing.head())
+
+# Info and missing values
+df_rightwing.info()
+print("\nMissing values per column:")
+print(df_rightwing.isnull().sum())
+
+# Summary statistics
+display(df_rightwing.describe())
+
+# Column types
+print("\nColumn type counts:")
+print(df_rightwing.dtypes.value_counts())
+print("\nFull dtypes:")
+print(df_rightwing.dtypes)
+
+# Unique values for object columns
+print("\nUnique values in object columns:")
+for col in df_rightwing.select_dtypes(include='object').columns:
+    print(f"{col}: {df_rightwing[col].nunique()} unique values")
+
+    # Histograms for all numeric columns
+df_rightwing.hist(bins=30, figsize=(18, 12))
+plt.suptitle("Histograms of Numeric Features", fontsize=16)
+plt.tight_layout()
+plt.show()
+```
+
+This histogram matrix demonstrates that the dataset contains a mix of continuous and categorical variables, with many features—such as binary indicators for populist support, immigration attitudes, discrimination experiences, and political trust—exhibiting discrete or limited integer values. Generally, there is a predominance of categorical data. This aligns witht survey approach whcih ranks many characteristics on 1-5 scale. Understanding these characteristics will be essential for variable as well as model selection. 
+
+#### Variable Selection and Categorisation
+
+To investigate whether economic conditions are primarily responsible for the support of radical right-wing populist parties, this study requires a structured approach informed by the literature, distinguishing between economic, political, and cultural explanatory mechanisms (Rodrik 2021; Inglehart and Norris 2019). Variables were selected from the ESS to reflect these three categories:
+
+**Economic variables** were chosen to reflect both current and formative experiences of economic (in)security: - employment status - income decile - income perceptions - economic satisfaction - financial difficulty
+
+These allow assessment of both objective economic precarity and subjective perceptions of economic vulnerability.
+
+**Political variables** were selected to capture trust in institutions, political efficacy, and ideological positioning: - institutional trust (parties, politicians, parliament) - political efficacy and engagement (interest, perceived influence) - views on EU and national vs. supranational governance
+
+These reflect disaffection, alienation, and ideological leanings potentially driving support for anti-establishment parties.
+
+**Cultural variables** focus on values, identity, and attitudes toward out-groups: - immigration attitudes - social conservatism and value orientation - ethnic/national identity - religion
+
+These capture cultural anxiety, conservatism, and perceived group threat as potential influences on populist sympathies.
+
+As can be seen in the summary statistics above, there are no missing values across our key variables. This is because we omit these in our merging and cleaning of the data.
+
+In order to not reduce the size of our dataset, variables that had many missing values were not included in our categories above. This enables us to have a rich dataset of 10283 rows. Some potentially informative variables were dropped (e.g., detailed regional identifiers, niche attitudinal items, religious signifers and certain unemployment measures) but we maintain more than enough to have highly informative infindings.
+
+#### Outcome Variable and Country Selection
+
+To measure support for radical right-wing populist parties, ESS vote choice variables (e.g., `prtvtdxx`) were merged with party-level classifications from *The PopuList* – an expert-coded dataset of populist, far-left, and far-right parties in 31 European countries (Rooduijn et al., 2023). The PopuList applies a qualitative comparative classification method (EiQCC) for cross-national consistency.
+
+Each party is classified as populist, and whether it is far-left or far-right. Respondents reporting a vote for a classified far-right populist party were coded as supporters. If a party was not listed in The PopuList, it was assumed to be non-populist and non-radical.
+
+The scope of analysis was narrowed to countries with prominent far-right populist parties, adequate sample sizes, and complete vote data. Included countries: - Hungary - Italy - France - Germany - Spain
+
+```{python}
+# Correlation heatmap (numeric only)
+plt.figure(figsize=(14, 10))
+sns.heatmap(df_rightwing.corr(numeric_only=True), cmap='coolwarm', annot=False)
+plt.title('Correlation Heatmap (Numeric Columns)')
+plt.tight_layout()
+plt.show()
+```
+
+This correlation heatmap provides a high-level overview of relationships between numeric variables in the dataset. While most correlations are weak (indicated by the dominance of light blue), there are clusters of moderate correlations — particularly among immigration attitudes, cultural values (e.g. tradition, obedience), and trust variables. This supports the use of multivariate models in later stages and helps identify potential multicollinearity issues. As part of the exploratory data analysis, it offers initial insight into how attitudinal and demographic factors may group together in shaping support for radical right-wing populism.
+
+#### Final Sample Description
+
+The final merged dataset includes 10,283 respondents across five countries, balancing geographic spread and data completeness. All selected variables are free of missing data.
+
+Percentage of Populist, Populist Far-Left, and Populist Far-Right Respondents by Country 
+
+| Country | \% Populist | \% Populist Far-Left | \% Populist Far-Right |
+|---------|-------------|----------------------|-----------------------|
+| Hungary | 57.5%       | 0.0%                 | 57.5%                 |
+| Italy   | 53.2%       | 0.0%                 | 35.9%                 |
+| France  | 48.4%       | 29.1%                | 19.3%                 |
+| Germany | 10.4%       | 5.0%                 | 5.4%                  |
+| Spain   | 8.5%        | 2.5%                 | 6.0%                  |
+
+### Summary
+
+In sum, the data strategy combines robust party-level ideological classification with individual-level attitudinal data, allowing us to test support for radical right-wing populism in relation to perceived economic insecurity, political disaffection, and cultural threat.
+
+This study is thus well-positioned to assess the relative importance of these three explanatory dimensions and contributes directly to ongoing debates in the literature on populism’s roots (Margalit 2019; Gidron and Hall 2017; Sides et al. 2018).
+
+### 2. Descriptive statistics for populist characteristics
+
+```{python}
+df = pd.read_csv('final_df_with_populist_splits.csv')
+
+def create_vote_comparison_chart(df):
+    populist_by_country = df.groupby('country_name')['is_populist'].mean() * 100
+    non_populist_by_country = 100 - populist_by_country
+    far_right_by_country = df.groupby('country_name')['populist_and_farright'].mean() * 100
+    far_left_by_country = df.groupby('country_name')['populist_and_farleft'].mean() * 100
+    vote_df = pd.DataFrame({
+        'Populist': populist_by_country,
+        'Non-Populist': non_populist_by_country,
+        'Far-Right Populist': far_right_by_country,
+        'Far-Left Populist': far_left_by_country
+    }).sort_values(by='Populist', ascending=False)
+    fig, ax = plt.subplots(figsize=(14, 10))
+    x = np.arange(len(vote_df.index))
+    width = 0.35
+    other_populist = vote_df['Populist'] - vote_df['Far-Right Populist'] - vote_df['Far-Left Populist']
+    other_populist = other_populist.clip(lower=0)
+    populist_total = vote_df['Populist']
+    non_populist_total = vote_df['Non-Populist']
+    bars1 = ax.bar(x - width/2, non_populist_total, width, label='Non-Populist', color='#3498DB')
+    bars2_far_right = ax.bar(x + width/2, vote_df['Far-Right Populist'], width, label='Far-Right Populist', color='#C0392B')
+    bars2_far_left = ax.bar(x + width/2, vote_df['Far-Left Populist'], width, bottom=vote_df['Far-Right Populist'], label='Far-Left Populist', color='#27AE60')
+    bars2_other = ax.bar(x + width/2, other_populist, width, bottom=vote_df['Far-Right Populist'] + vote_df['Far-Left Populist'], label='Other Populist', color='#F39C12')
+    ax.axhline(y=50, color='black', linestyle='-', alpha=0.5)
+    ax.text(len(vote_df)-1, 51, 'Majority Threshold (50%)', ha='right', va='bottom', color='black')
+    ax.set_title('Populist vs. Non-Populist Vote Share by Country', fontsize=20, pad=20)
+    ax.set_xlabel('Country', fontsize=16, labelpad=10)
+    ax.set_ylabel('Percentage of Votes (%)', fontsize=16, labelpad=10)
+    ax.set_xticks(x)
+    ax.set_xticklabels(vote_df.index, rotation=0, fontsize=14)
+    ax.set_ylim(0, 100)
+    ax.grid(axis='y', linestyle='--', alpha=0.7)
+    def add_total_labels(bars, values):
+        for i, (bar, value) in enumerate(zip(bars, values)):
+            height = value
+            ax.annotate(f'{height:.1f}%', xy=(bar.get_x() + bar.get_width()/2, height), xytext=(0, 3), textcoords="offset points", ha='center', va='bottom', fontsize=11, fontweight='bold')
+    add_total_labels(bars1, non_populist_total)
+    add_total_labels(bars2_far_right, populist_total)
+    annotations = []
+    countries = vote_df.index.tolist()
+    if 'Hungary' in countries:
+        annotations.append((countries.index('Hungary'), 80, "Populist majority"))
+    if 'Italy' in countries:
+        annotations.append((countries.index('Italy'), 85, "Populist majority with\nstrong far-right component"))
+    if 'France' in countries:
+        annotations.append((countries.index('France'), 75, "Near balance of\npopulist vs. non-populist"))
+    if 'Germany' in countries:
+        annotations.append((countries.index('Germany'), 90, "Strong non-populist majority"))
+    for idx, y_pos, text in annotations:
+        ax.axvline(x=idx, color='red', linestyle='--', alpha=0.6)
+        ax.text(idx, y_pos, text, ha='center', va='center', color='red', bbox=dict(facecolor='white', alpha=0.8, edgecolor='red', boxstyle='round,pad=0.5'))
+    ax.legend(loc='upper center', fontsize=12, bbox_to_anchor=(0.5, -0.05), ncol=4)
+    plt.figtext(0.1, 0.01, 'Source: "European Social Survey Round 11 Data"', ha='left', fontsize=10, style='italic')
+    plt.tight_layout()
+    plt.subplots_adjust(bottom=0.15)
+    return fig
+```
+
+```{python}
+def create_trust_comparison_chart(df):
+    trust_by_country = df.groupby(['country_name', 'is_populist'])['trust_politicians'].mean().unstack()
+    trust_by_country = trust_by_country.rename(columns={0: 'Non-Populist', 1: 'Populist'})
+    trust_by_country['Gap'] = trust_by_country.get('Populist', 0) - trust_by_country.get('Non-Populist', 0)
+    trust_by_country_sorted = trust_by_country.sort_values('Gap')
+    fig, ax = plt.subplots(figsize=(14, 10))
+    x = np.arange(len(trust_by_country_sorted.index))
+    width = 0.35
+    bars1 = ax.bar(x - width/2, trust_by_country_sorted['Non-Populist'], width, color='#3498DB', label='Non-Populist Voters')
+    bars2 = ax.bar(x + width/2, trust_by_country_sorted['Populist'], width, color='#E74C3C', label='Populist Voters')
+    ax.axhline(y=5, color='black', linestyle='-', alpha=0.5)
+    ax.text(len(trust_by_country_sorted)-1, 5.2, 'Midpoint of Trust Scale (5)', ha='right', va='bottom', color='black')
+    ax.set_title('Trust in Politicians: Populist vs. Non-Populist Voters', fontsize=20, pad=20)
+    ax.set_xlabel('Country', fontsize=16)
+    ax.set_ylabel('Trust Level (0-10 Scale)', fontsize=16)
+    ax.set_xticks(x)
+    ax.set_xticklabels(trust_by_country_sorted.index, rotation=0, fontsize=14)
+    ax.set_ylim(0, 10)
+    ax.grid(axis='y', linestyle='--', alpha=0.7)
+    def add_labels(bars):
+        for bar in bars:
+            height = bar.get_height()
+            ax.annotate(f'{height:.2f}', xy=(bar.get_x() + bar.get_width()/2, height), xytext=(0, 3), textcoords="offset points", ha='center', va='bottom', fontsize=10)
+    add_labels(bars1)
+    add_labels(bars2)
+    ax2 = ax.twinx()
+    ax2.plot(x, trust_by_country_sorted['Gap'], 'o-', color='#9B59B6', linewidth=2, label='Trust Gap (Populist - Non-Populist)')
+    ax2.axhline(y=0, color='#9B59B6', linestyle='--', alpha=0.5)
+    ax2.set_ylim(-2, 2)
+    ax2.set_ylabel('Trust Gap (Populist - Non-Populist)', fontsize=16, color='#9B59B6')
+    ax2.tick_params(axis='y', colors='#9B59B6')
+    annotations = []
+    countries = trust_by_country_sorted.index.tolist()
+    if 'Hungary' in countries:
+        annotations.append((countries.index('Hungary'), trust_by_country_sorted.loc['Hungary', 'Gap'] + 0.3, "Populist voters trust\npoliticians MORE", 'right'))
+    min_gap_idx = trust_by_country_sorted['Gap'].abs().idxmin()
+    annotations.append((countries.index(min_gap_idx), trust_by_country_sorted.loc[min_gap_idx, 'Gap'] + 0.3, "Minimal trust gap", 'right'))
+    if trust_by_country_sorted['Gap'].min() < 0:
+        max_neg_idx = trust_by_country_sorted['Gap'].idxmin()
+        annotations.append((countries.index(max_neg_idx), trust_by_country_sorted.loc[max_neg_idx, 'Gap'] - 0.3, "Largest negative\ntrust gap", 'left'))
+    for idx, y_pos, text, align in annotations:
+        ax2.annotate(text, xy=(idx, trust_by_country_sorted['Gap'].iloc[idx]), xytext=(idx + (0.2 if align == 'right' else -0.2), y_pos), arrowprops=dict(arrowstyle='->', color='#9B59B6'), ha=align, va='center', color='#9B59B6', bbox=dict(facecolor='white', alpha=0.8, edgecolor='#9B59B6', boxstyle='round,pad=0.3'))
+    for i in range(len(trust_by_country_sorted.index)):
+        ax.axvline(x=i, color='red', linestyle='--', alpha=0.2)
+    lines1, labels1 = ax.get_legend_handles_labels()
+    lines2, labels2 = ax2.get_legend_handles_labels()
+    ax.legend(lines1 + lines2, labels1 + labels2, loc='upper center', fontsize=12, bbox_to_anchor=(0.5, -0.05), ncol=3)
+    plt.figtext(0.1, 0.01, 'Source: "European Social Survey Round 11 Data"', ha='left', fontsize=10, style='italic')
+    plt.figtext(0.1, 0.03, 'Trust in politicians measured on a 0-10 scale (0 = no trust at all, 10 = complete trust)', ha='left', fontsize=10, style='italic')
+    plt.tight_layout()
+    plt.subplots_adjust(bottom=0.15)
+    return fig
+```
+
+```{python}
+# Create a time-series style chart comparing attitudes across multiple dimensions
+def create_attitudes_comparison_chart(df):
+    # Select a wide range of attitudinal variables to compare
+    attitude_cols = {
+        'eu_integration': 'EU Integration',
+        'immig_same_ethnic': 'Immigration (Same Ethnic)',
+        'immig_diff_ethnic': 'Immigration (Different Ethnic)',
+        'immig_poor_nonEU': 'Immigration (Poor Non-EU)',
+        'gay_rights_freedom': 'Gay Rights Freedom',
+        'gay_adoption_rights': 'Gay Adoption Rights',
+        'tradition_important': 'Tradition Important',
+        'child_obedience': 'Child Obedience',
+        'leader_loyalty': 'Leader Loyalty'
+    }
+    
+    # Calculate means by populist status
+    populist_attitudes = df[df['is_populist'] == 1][attitude_cols.keys()].mean()
+    non_populist_attitudes = df[df['is_populist'] == 0][attitude_cols.keys()].mean()
+    
+    # Create a DataFrame for plotting
+    attitude_df = pd.DataFrame({
+        'Populist': populist_attitudes,
+        'Non-Populist': non_populist_attitudes
+    })
+    
+    # Calculate the gap
+    attitude_df['Gap'] = attitude_df['Populist'] - attitude_df['Non-Populist']
+    
+    # Rename the index for better labels
+    attitude_df.index = [attitude_cols[col] for col in attitude_df.index]
+    
+    # Sort by the absolute gap for better visualization
+    attitude_df = attitude_df.sort_values(by='Gap', key=abs, ascending=False)
+    
+    # Create figure and axis
+    fig, ax = plt.subplots(figsize=(14, 10))
+    
+    # Set up x positions
+    x = np.arange(len(attitude_df.index))
+    
+    # Create colormap for the gap values
+    colors = ['#C0392B' if gap > 0 else '#27AE60' for gap in attitude_df['Gap']]
+    
+    # Plot the gap as a vertical bar chart
+    bars = ax.barh(x, attitude_df['Gap'], color=colors, alpha=0.7)
+    
+    # Add a vertical line at zero
+    ax.axvline(x=0, color='black', linestyle='-', alpha=0.7)
+    
+    # Customize the chart
+    ax.set_title('Attitudinal Differences: Populist vs. Non-Populist Voters', fontsize=20, pad=20)
+    ax.set_xlabel('Gap (Populist - Non-Populist)', fontsize=16, labelpad=10)
+    ax.set_yticks(x)
+    ax.set_yticklabels(attitude_df.index, fontsize=14)
+    
+    # Set x-axis limits for better visualization
+    max_gap = max(abs(attitude_df['Gap'].min()), abs(attitude_df['Gap'].max())) + 0.2
+    ax.set_xlim(-max_gap, max_gap)
+    ax.grid(axis='x', linestyle='--', alpha=0.7)
+    
+    # Add data labels for the gap bars
+    for bar in bars:
+        width = bar.get_width()
+        label_x = width + 0.05 if width >= 0 else width - 0.05
+        label_alignment = 'left' if width >= 0 else 'right'
+        
+        ax.annotate(f'{width:.2f}',
+                   xy=(label_x, bar.get_y() + bar.get_height()/2),
+                   xytext=(0, 0),
+                   textcoords="offset points",
+                   ha=label_alignment, va='center', fontsize=10,
+                   color='black')
+    
+    # Add the actual values for each group
+    for i, (idx, row) in enumerate(attitude_df.iterrows()):
+        # Add Non-Populist value on the left
+        ax.text(-max_gap + 0.1, i, f"NP: {row['Non-Populist']:.2f}", 
+                ha='left', va='center', fontsize=9, color='#3498DB',
+                bbox=dict(facecolor='white', alpha=0.7, edgecolor=None, boxstyle='round,pad=0.2'))
+        
+        # Add Populist value on the right
+        ax.text(max_gap - 0.1, i, f"P: {row['Populist']:.2f}", 
+                ha='right', va='center', fontsize=9, color='#E74C3C',
+                bbox=dict(facecolor='white', alpha=0.7, edgecolor=None, boxstyle='round,pad=0.2'))
+    
+    # Add annotations for significant gaps (similar to UK inflation chart style)
+    annotations = []
+    
+    # Find the largest positive and negative gaps
+    max_pos_idx = attitude_df['Gap'].idxmax()
+    max_neg_idx = attitude_df['Gap'].idxmin()
+    
+    max_pos_position = list(attitude_df.index).index(max_pos_idx)
+    max_neg_position = list(attitude_df.index).index(max_neg_idx)
+    
+    annotations.append((max_pos_position, "Largest positive gap\n(Populists higher)", attitude_df['Gap'][max_pos_idx] + 0.05))
+    annotations.append((max_neg_position, "Largest negative gap\n(Non-populists higher)", attitude_df['Gap'][max_neg_idx] - 0.05))
+    
+    # Add horizontal lines and annotations for key insights
+    for idx, text, x_pos in annotations:
+        ax.axhline(y=idx, color='red', linestyle='--', alpha=0.6, xmin=0.4, xmax=0.9)
+        ax.text(x_pos, idx, text, ha='center', va='center', color='red',
+                bbox=dict(facecolor='white', alpha=0.8, edgecolor='red', boxstyle='round,pad=0.3'))
+    
+    # Add legend for the two groups
+    populist_patch = Patch(color='#E74C3C', label='Populist Voters')
+    non_populist_patch = Patch(color='#3498DB', label='Non-Populist Voters')
+    positive_gap = Line2D([0], [0], color='#C0392B', lw=4, alpha=0.7, label='Populists Score Higher')
+    negative_gap = Line2D([0], [0], color='#27AE60', lw=4, alpha=0.7, label='Non-Populists Score Higher')
+    
+    ax.legend(handles=[populist_patch, non_populist_patch, positive_gap, negative_gap],
+             loc='upper center', bbox_to_anchor=(0.5, -0.05), ncol=2, fontsize=12)
+    
+    # Add explanatory notes
+    plt.figtext(0.1, 0.01, 'Source: "European Social Survey Round 11 Data"', 
+                ha='left', fontsize=10, style='italic')
+    
+    # Add a note explaining the scales
+    scale_note = """
+    Scale meanings vary by question:
+    - EU Integration: 0 (unification gone too far) to 10 (unification go further)
+    - Immigration questions: 1 (allow many) to 4 (allow none)
+    - Gay rights: 1 (agree strongly) to 5 (disagree strongly)
+    - Tradition/obedience/loyalty: 1 (very much like me) to 6 (not like me at all)
+    """
+    plt.figtext(0.1, 0.03, scale_note, ha='left', fontsize=8)
+    
+    plt.tight_layout()
+    plt.subplots_adjust(bottom=0.2)
+    return fig
+```
+
+```{python}
+if __name__ == "__main__":
+    fig1 = create_vote_comparison_chart(df)
+    plt.savefig('populist_vs_nonpopulist_vote_share.png', dpi=300, bbox_inches='tight')
+    fig2 = create_trust_comparison_chart(df)
+    plt.savefig('trust_comparison.png', dpi=300, bbox_inches='tight')
+    fig3 = create_attitudes_comparison_chart(df)
+    plt.savefig('attitudes_comparison.png', dpi=300, bbox_inches='tight')
+    plt.show()
+    print("\nSummary Statistics by Country (Populist vs Non-Populist):")
+    country_stats = df.groupby('country_name').agg({
+        'is_populist': 'mean',
+        'populist_and_farright': 'mean',
+        'populist_and_farleft': 'mean',
+        'respondent_id': 'count'
+    }).rename(columns={'respondent_id': 'total_respondents'})
+    country_stats['non_populist'] = 1 - country_stats['is_populist']
+    for col in ['is_populist', 'populist_and_farright', 'populist_and_farleft', 'non_populist']:
+        country_stats[col] = country_stats[col] * 100
+    country_stats = country_stats.rename(columns={
+        'is_populist': 'populist_percent',
+        'populist_and_farright': 'farright_percent',
+        'populist_and_farleft': 'farleft_percent',
+        'non_populist': 'non_populist_percent'
+    })
+    print(country_stats.round(2))
+    print("\nAttitudinal Differences by Populist Status:")
+    attitude_cols = [
+        'eu_integration', 'immig_same_ethnic', 'immig_diff_ethnic', 'immig_poor_nonEU',
+        'gay_rights_freedom', 'gay_adoption_rights', 'tradition_important',
+        'child_obedience', 'leader_loyalty', 'europe_attachment', 'country_attachment'
+    ]
+    attitude_stats = df.groupby('is_populist')[attitude_cols].mean()
+    attitude_stats.index = ['Non-Populist', 'Populist']
+    attitude_gap = attitude_stats.loc['Populist'] - attitude_stats.loc['Non-Populist']
+    attitude_stats = attitude_stats.T
+    attitude_stats['Gap'] = attitude_gap
+    print(attitude_stats.round(2))
+    print("\nLargest Attitudinal Differences (Absolute Gap):")
+    attitude_stats['Abs_Gap'] = attitude_stats['Gap'].abs()
+    print(attitude_stats.sort_values('Abs_Gap', ascending=False).round(2))
+```
+
+```{python}
+
+
+economic_vars = {
+    'income_decile': 'Household Income Decile',
+    'income_feeling': 'Income Feeling',
+    'econ_satisfaction': 'Economic Satisfaction',
+    'financial_difficulty_childhood': 'Childhood Financial Difficulty',
+    'paid_work': 'Paid Work (Last 7 Days)'
+}
+
+institutional_vars = {
+    'trust_politicians': 'Trust in Politicians',
+    'trust_parties': 'Trust in Parties',
+    'trust_parliament': 'Trust in Parliament',
+    'influence_on_politics': 'Perceived Influence on Politics',
+    'confident_participation': 'Confidence in Participation',
+    'active_politics_role': 'Active Political Role',
+    'political_interest': 'Political Interest',
+    'party_closeness': 'Party Closeness'
+}
+
+def plot_gap_chart(df, vars_dict, title):
+    pop = df[df['is_populist'] == 1][list(vars_dict.keys())].mean()
+    non_pop = df[df['is_populist'] == 0][list(vars_dict.keys())].mean()
+    gap = pop - non_pop
+    max_abs_gap = gap.abs().max()
+    gap_normalized = gap / max_abs_gap
+    df_plot = pd.DataFrame({
+        'Gap': gap_normalized,
+        'Raw Gap': gap,
+        'Populist': pop,
+        'Non-Populist': non_pop,
+        'Label': [vars_dict[v] for v in gap.index]
+    }).sort_values(by='Gap', key=abs, ascending=False)
+
+    fig, ax = plt.subplots(figsize=(14, 10))
+    x = np.arange(len(df_plot))
+    colors = ['#C0392B' if g > 0 else '#27AE60' for g in df_plot['Gap']]
+    bars = ax.barh(x, df_plot['Gap'], color=colors, alpha=0.7)
+    ax.axvline(0, color='black', linestyle='--', lw=1)
+
+    ax.set_yticks(x)
+    ax.set_yticklabels(df_plot['Label'], fontsize=14)
+    ax.set_xlabel('Normalized Gap (Populist – Non-Populist)', fontsize=16)
+    ax.set_title(f'{title} Differences: Populist vs. Non-Populist Voters', fontsize=20, pad=20)
+
+    for i, bar in enumerate(bars):
+        width = bar.get_width()
+        ax.text(width + (0.03 if width > 0 else -0.03),
+                bar.get_y() + bar.get_height()/2,
+                f'{width:.2f}',
+                ha='left' if width > 0 else 'right',
+                va='center', fontsize=10)
+
+        ax.text(-1.1, i, f"{df_plot.iloc[i]['Non-Populist']:.2f}", ha='left', va='center',
+                fontsize=9, color='#3498DB', bbox=dict(facecolor='white', alpha=0.7))
+        ax.text(1.1, i, f"{df_plot.iloc[i]['Populist']:.2f}", ha='right', va='center',
+                fontsize=9, color='#E74C3C', bbox=dict(facecolor='white', alpha=0.7))
+
+    ax.set_xlim(-1.2, 1.2)
+    ax.grid(axis='x', linestyle='--', alpha=0.6)
+
+    max_pos = df_plot['Gap'].idxmax()
+    max_neg = df_plot['Gap'].idxmin()
+
+    ax.axhline(y=df_plot.index.get_loc(max_pos), color='red', linestyle='--', xmin=0.1, xmax=0.9)
+    ax.text(1.05, df_plot.index.get_loc(max_pos), "Largest positive gap", color='red',
+            ha='left', va='center', bbox=dict(facecolor='white', edgecolor='red', alpha=0.7))
+
+    ax.axhline(y=df_plot.index.get_loc(max_neg), color='red', linestyle='--', xmin=0.1, xmax=0.9)
+    ax.text(-1.05, df_plot.index.get_loc(max_neg), "Largest negative gap", color='red',
+            ha='right', va='center', bbox=dict(facecolor='white', edgecolor='red', alpha=0.7))
+
+    ax.legend(handles=[
+        Patch(color='#E74C3C', label='Populist Voters'),
+        Patch(color='#3498DB', label='Non-Populist Voters'),
+        Line2D([0], [0], color='#C0392B', lw=4, alpha=0.7, label='Populists Score Higher'),
+        Line2D([0], [0], color='#27AE60', lw=4, alpha=0.7, label='Non-Populists Score Higher')
+    ], loc='upper center', bbox_to_anchor=(0.5, -0.07), ncol=2, fontsize=12)
+
+    plt.figtext(0.1, 0.01, 'Source: "European Social Survey Round 11 Data"',
+                ha='left', fontsize=10, style='italic')
+    plt.tight_layout()
+    plt.subplots_adjust(bottom=0.15)
+    return fig
+```
+
+```{python}
+economic_vars = {
+    'income_decile': 'Household Income Decile',
+    'income_feeling': 'Income Feeling',
+    'econ_satisfaction': 'Economic Satisfaction',
+    'financial_difficulty_childhood': 'Childhood Financial Difficulty',
+    'paid_work': 'Paid Work (Last 7 Days)'
+}
+
+institutional_vars = {
+    'trust_politicians': 'Trust in Politicians',
+    'trust_parties': 'Trust in Parties',
+    'trust_parliament': 'Trust in Parliament',
+    'influence_on_politics': 'Perceived Influence on Politics',
+    'confident_participation': 'Confidence in Participation',
+    'active_politics_role': 'Active Political Role',
+    'political_interest': 'Political Interest',
+    'party_closeness': 'Party Closeness'
+}
+
+
+def plot_gap_chart(df, vars_dict, title):
+    pop = df[df['is_populist'] == 1][list(vars_dict.keys())].mean()
+    non_pop = df[df['is_populist'] == 0][list(vars_dict.keys())].mean()
+    gap = pop - non_pop
+
+    df_plot = pd.DataFrame({
+        'Gap': gap,
+        'Populist': pop,
+        'Non-Populist': non_pop,
+        'Label': [vars_dict[v] for v in gap.index]
+    }).sort_values(by='Gap', key=abs, ascending=False)
+
+    fig, ax = plt.subplots(figsize=(14, 10))
+    x = np.arange(len(df_plot))
+    colors = ['#C0392B' if g > 0 else '#27AE60' for g in df_plot['Gap']]
+    bars = ax.barh(x, df_plot['Gap'], color=colors, alpha=0.7)
+    ax.axvline(0, color='black', linestyle='--', lw=1)
+
+    ax.set_yticks(x)
+    ax.set_yticklabels(df_plot['Label'], fontsize=14)
+    ax.set_xlabel('Gap (Populist – Non-Populist)', fontsize=16)
+    ax.set_title(f'{title} Differences: Populist vs. Non-Populist Voters', fontsize=20, pad=20)
+
+    for i, bar in enumerate(bars):
+        width = bar.get_width()
+        ax.text(width + (0.03 if width > 0 else -0.03),
+                bar.get_y() + bar.get_height()/2,
+                f'{width:.2f}',
+                ha='left' if width > 0 else 'right',
+                va='center', fontsize=10)
+
+        ax.text(ax.get_xlim()[0] + 0.1, i, f"{df_plot.iloc[i]['Non-Populist']:.2f}", ha='left', va='center',
+                fontsize=9, color='#3498DB', bbox=dict(facecolor='white', alpha=0.7))
+        ax.text(ax.get_xlim()[1] - 0.1, i, f"{df_plot.iloc[i]['Populist']:.2f}", ha='right', va='center',
+                fontsize=9, color='#E74C3C', bbox=dict(facecolor='white', alpha=0.7))
+
+    gap_range = df_plot['Gap'].abs().max() + 0.2
+    ax.set_xlim(-gap_range, gap_range)
+    ax.grid(axis='x', linestyle='--', alpha=0.6)
+
+    max_pos = df_plot['Gap'].idxmax()
+    max_neg = df_plot['Gap'].idxmin()
+
+    ax.axhline(y=df_plot.index.get_loc(max_pos), color='red', linestyle='--', xmin=0.1, xmax=0.9)
+    ax.text(gap_range - 0.05, df_plot.index.get_loc(max_pos), "Largest positive gap", color='red',
+            ha='right', va='center', bbox=dict(facecolor='white', edgecolor='red', alpha=0.7))
+
+    ax.axhline(y=df_plot.index.get_loc(max_neg), color='red', linestyle='--', xmin=0.1, xmax=0.9)
+    ax.text(-gap_range + 0.05, df_plot.index.get_loc(max_neg), "Largest negative gap", color='red',
+            ha='left', va='center', bbox=dict(facecolor='white', edgecolor='red', alpha=0.7))
+
+    ax.legend(handles=[
+        Patch(color='#E74C3C', label='Populist Voters'),
+        Patch(color='#3498DB', label='Non-Populist Voters'),
+        Line2D([0], [0], color='#C0392B', lw=4, alpha=0.7, label='Populists Score Higher'),
+        Line2D([0], [0], color='#27AE60', lw=4, alpha=0.7, label='Non-Populists Score Higher')
+    ], loc='upper center', bbox_to_anchor=(0.5, -0.07), ncol=2, fontsize=12)
+
+    plt.figtext(0.1, 0.01, 'Source: "European Social Survey Round 11 Data"',
+                ha='left', fontsize=10, style='italic')
+    plt.tight_layout()
+    plt.subplots_adjust(bottom=0.15)
+    return fig
+
+fig1 = plot_gap_chart(df_rightwing, economic_vars, "Economic")
+fig2 = plot_gap_chart(df_rightwing, institutional_vars, "Institutional Distrust & Alienation")
+plt.show()
+```
+
+### Key Takeaways from Comparative Populism Charts
+
+#### Electoral Patterns
+
+-   Populist support varies sharply by country: Hungary and Italy show clear populist majorities, while Germany and Spain remain strongly non-populist.
+-   France stands out with a near-equal populist and non-populist vote share, suggesting a politically divided electorate.
+
+#### Trust in Institutions
+
+-   Populist voters consistently express lower trust in politicians—except in Hungary, where they report higher trust, likely due to alignment with governing parties.
+-   The largest trust gaps appear in Germany and Spain, indicating deeper alienation from mainstream elites in these contexts.
+
+#### Cultural Attitudes
+
+-   Populists express significantly lower support for immigration, gay rights, and EU integration.
+-   Non-populists show markedly higher support for EU integration, suggesting that identity and sovereignty are key dividing lines.
+
+#### Economic Perceptions
+
+-   Economic differences are present but less pronounced; populists report more financial difficulty and less satisfaction.
+-   The strongest economic gaps concern subjective income feeling and childhood financial hardship—supporting insecurity-based, rather than purely materialist, explanations.
+
+#### Institutional Alienation
+
+-   Populists feel less influential in politics, less represented, and less engaged—highlighting perceived exclusion from democratic processes.
+-   Despite this, trust in specific institutions like parties shows smaller gaps, hinting at the growing legitimacy of some populist actors.
+
+#### Analytical Implications
+
+-   Further analysis could explore interaction effects (e.g., economic hardship × institutional trust) and clustering across countries.
+-   Outliers like Hungary may indicate regime consolidation effects, warranting deeper investigation into context-specific dynamics.
+
+## 3. OLS model analysis: statistically significant and influential variables by country
+
+```{python}
+drop_cols = {
+    'populist_and_farleft',
+    'is_populist',
+    'respondent_id',
+    'left_right_scale',
+    'farleft',
+    'farright',
+    'populist_group',
+    'party_name',
+    'country_name'
+}
+
+for country in df_rightwing['country_name'].unique():
+    print(f"\n=== {country.upper()} ===")
+
+
+    df_country = df_rightwing[df_rightwing['country_name'] == country]
+
+
+    df_numeric = df_country.select_dtypes(include=['int64', 'float64'])
+
+    df_model = df_numeric.drop(columns=[col for col in drop_cols if col in df_numeric.columns], errors='ignore')
+
+  
+    df_model = df_model.dropna()
+
+
+    if df_model.shape[0] < 20:
+        print("Not enough data. Skipping...")
+        continue
+
+
+    y = df_model['populist_and_farright']
+    X = df_model.drop(columns=['populist_and_farright'])
+
+
+    X = sm.add_constant(X)
+
+
+    model = sm.OLS(y, X).fit()
+
+
+    print(model.summary())
+
+
+    significant = model.pvalues[(model.pvalues < 0.05) & (model.pvalues.index != 'const')]
+
+    if significant.empty:
+        print("No significant predictors.")
+        continue
+
+    
+    sig_coefs = model.params[significant.index].abs().sort_values(ascending=True)
+
+  
+    plt.figure(figsize=(8, 5))
+    plt.barh(sig_coefs.index, sig_coefs.values)
+    plt.title(f"Significant Predictors of Far-Right Populism in {country}")
+    plt.xlabel("Absolute Coefficient Value")
+    plt.tight_layout()
+    plt.show()
+```
+
+### Overview: Interpretation of OLS Models by Country to see most importnat variables and variation by country in more depth
+
+**Dependent Variable:** `populist_and_farright`
+
+#### 1. Overall Fit
+
+Model fit is modest across countries (R-squared ranges from 3% in Italy to 12% in Hungary), as expected with attitudinal survey data. Germany and Hungary show comparatively stronger ideological structuring of far-right support.
+
+#### 2. Cross-National Patterns
+
+-   **EU integration**: Negative and statistically significant in France, Germany, and Italy. This confirms Euroscepticism as a consistent predictor of far-right support.\
+-   **Discrimination (ethnicity/race)**: Significant but directionally mixed, negative in France and Germany (suggesting backlash), positive in Spain (possibly mobilisation).\
+-   **Gender**: Male respondents are more likely to support the far right (France, Spain).\
+-   **Born in country**: Positive and significant in France only — suggests nativism has greater salience there.
+
+#### 3. Country-Specific Highlights
+
+-   **France**: Cultural and trust-based predictors dominate (e.g. gay rights, EU, trust in parties).\
+-   **Germany**: Identity and cultural values matter, leader loyalty, tradition, and religion attendance all significant.\
+-   **Hungary**: Economic satisfaction and institutional trust are key; trust in parliament is positively associated.\
+-   **Italy**: Weak model fit; EU integration is one of the only strong predictor, suggests diffuse populist appeal. Only in Italy does income decline become important. In other countries, income decile this was not an important variable.
+-   **Spain**: National attachment and ethnic discrimination are positive predictors, nationalism and identity may drive support.
+
+#### 4. Variables Generally Not Significant
+
+Education, income, party closeness, political interest, and distrust in politicians are rarely significant, suggesting that far-right support is not clearly stratified by class or political engagement.
+
+This overview motivates the next step in the EDA: a structured breakdown of economic, political, and cultural predictors across countrie, investigating the values that I found to be statistically significant in more depth
+
+#### 5. Country-Level Comparisons and Justification
+
+Based on the above patterns:
+
+-   **Hungary and Italy** show strong alignment between economic dissatisfaction and far-right support.
+-   **France** exhibits mixed left- and right-populism, providing internal variation.
+-   **Germany** shows cultural drivers despite lower radical support.
+-   **Spain** provides a low-support baseline for contrast.
+
+This confirms the value of including these five countries in comparative analysis.
+
+#### 6. Next Steps and Modelling Preparation
+
+Based on this EDA, the following steps are proposed: - Model support for radical right populism using logistic regression. - Include variables across all three dimensions. - Test for interaction effects - Evaluate robustness with country fixed effects or EU attitudes.
+
+This provides a foundation for assessing whether perceived economic factors are *primary* drivers of radical right-wing populist support.
+
+
+# Modelling
+
+### Modeling Approach and Justification
+
+We formulated this research as a binary classification problem to identify voters as either supporting far-right populist parties or not. This approach was carefully chosen over several alternatives for both theoretical and practical reasons.
+
+**Why Classification Rather Than Regression?**
+
+Political Theory Alignment: Populist voting can be viewed as a discrete phenomenon - voters either cross the threshold of supporting populist parties or they don't. This binary framing aligns with established political science literature that treats populist support as a categorical political identity rather than a continuous scale.
+
+Practical Research Applications: Binary classification directly addresses key research questions in political science: Which demographic groups are most likely to support populist parties? What factors predict populist voting? How can campaigns or researchers identify potential populist supporters?
+
+Data Characteristics: Our target variable populist_and_farright is naturally binary, reflecting actual voting behaviour (voting for populist parties vs. other parties). This avoids artificial ordinalisation that might introduce measurement error.
+
+Real-World Utility: Classification models provide clear, actionable insights - identifying specific voters as likely populist supporters has direct applications for electoral research, campaign strategy, and understanding democratic dynamics.
+
+**Model Selection: CatBoost as Primary Algorithm**
+
+We selected CatBoost (Categorical Boosting) as our primary algorithm after establishing a logistic regression baseline, driven by several considerations.
+
+**Categorical Data Optimisation**
+
+Our dataset contains an exceptional proportion of categorical features (28 out of 37 features, representing 76% of our feature space). Traditional machine learning algorithms require extensive preprocessing of categorical data through one-hot encoding, leading to dimensionality explosion and potential information loss. CatBoost addresses this through its innovative ordered target encoding scheme, which processes categorical features natively without explicit encoding and preserves ordinal relationships in categorical variables.
+
+**Political Behavior Complexity**
+
+Far-right populist voting behaviour involves complex interactions between socioeconomic, cultural, and political factors. CatBoost's gradient boosting captures these nuances through:
+
+- Non-linear Pattern Detection: Political attitudes rarely follow simple linear relationships. For instance, the interaction between economic dissatisfaction and immigration concerns may have non-additive effects on populist support.
+- Automatic Feature Interaction Discovery: Unlike logistic regression, which requires manual specification of interaction terms, CatBoost automatically detects meaningful combinations of features (e.g., low institutional trust + high national attachment).
+- Robustness to Outliers: Political survey data often contains extreme responses that are both common and meaningful. Tree-based methods handle these naturally without requiring data transformation.
+
+**Class Imbalance Management**
+
+Our dataset exhibits a 72:28 split between non-populist and populist voters. CatBoost provides sophisticated built-in mechanisms for handling this imbalance.
+
+- Automatic class weighting through auto_class_weights='Balanced'
+- Loss functions optimised for imbalanced classification
+- Early stopping based on validation performance to prevent overfitting to the majority class
+
+**Validation Approach**
+
+Our stratified split by country ensures that model performance estimates remain valid across different European political contexts, addressing concerns about model generalisability across diverse political systems.
+
+This methodological framework positions our analysis to capture the complex, multifaceted nature of far-right populist voting behaviour whilst maintaining scientific rigour and practical applicability to political science research.
+
+```{python}
+merged = pd.read_csv('final_df_with_populist_splits.csv')
+print(merged.columns.tolist())
+```
+
+### Checking Class Imbalance
+
+```{python}
+# Plot class distribution from merged dataframe
+plt.figure(figsize=(6, 4))
+sns.countplot(x=merged["populist_and_farright"], palette=["#4575b4", "#d73027"])
+plt.title("Class Distribution: Populist and Far-Right (Target)")
+plt.xlabel("Class")
+plt.ylabel("Count")
+plt.xticks([0, 1], ["Not Far-Right Populist", "Far-Right Populist"])
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.tight_layout()
+plt.show()
+```
+
+"Not Far-Right Populist": approximately 7,300 samples
+"Far-Right Populist": approximately 2,800 samples
+
+There's a significant class imbalance in the dataset, with roughly 72% of the data belonging to the "Not Far-Right Populist" class and only about 28% belonging to the "Far-Right Populist" class. This represents more than 2.5 times as many non-far-right populist voters as far-right populist voters in the dataset.
+Implications for Modeling
+This class imbalance has several important implications for the modeling approach:
+
+Biased predictions: Without addressing the imbalance, most machine learning algorithms will naturally bias toward the majority class (Not Far-Right Populist), potentially missing the minority class patterns.
+
+This has implications for our choice of evaluation metric. Accuracy would be a misleading metric since a model could achieve ~72% accuracy by simply predicting the majority class for all samples. We will focus on F1 score and confusion matrices.
+
+### Defining Features and Target Variable
+
+The target variable we want to predict is **populist and far right** and the feature selection rationale is explained above
+
+```{python}
+# 🎯 Define features and target
+features = [
+'income_decile', 'income_feeling', 'paid_work', 
+'econ_satisfaction', 'unemp_3m', 'years_education', 'financial_difficulty_childhood', 
+'immig_same_ethnic', 'immig_diff_ethnic', 'gay_rights_freedom', 
+'gay_adoption_rights', 'eu_integration', 'europe_attachment', 'country_attachment', 
+'child_obedience', 'leader_loyalty', 'tradition_important', 'pleasure_important', 
+'trust_politicians', 'trust_parliament', 'influence_on_politics', 
+'confident_participation', 'active_politics_role', 'political_interest',
+'party_closeness', 'ess_round', 'age', 'gender', 'ethnic_majority_identity', 'disc_nationality', 
+'disc_race', 'disc_ethnicity', 'born_in_country', 'how_religious', 'religion_belonging', 
+'religion_attendance'
+]
+target = 'populist_and_farright'
+```
+
+# Baseline Model - Logistic Regression
+
+Logistic regression is a statistical method used for binary classification problems where the goal is to predict one of two possible outcomes. This is appropriate for our problem as we are classifying whether a voter is populist right wing or not.
+
+Logistic regression serves as an appropriate baseline model for several reasons:
+
+Interpretability: The coefficients in logistic regression directly indicate the influence of each feature on the probability of a voter supporting far-right populist parties. This interpretability is valuable for understanding the political factors driving support.
+
+Simplicity: As a baseline model, logistic regression provides a straightforward benchmark that more complex models like CatBoost should aim to outperform.
+
+Handles CLass Imbalance: We add class weights to handle the class imbalance
+
+The comparison between the baseline logistic regression and the more advanced CatBoost model will demonstrate whether the additional complexity of CatBoost yields meaningful improvements in classifying far-right populist voters.
+
+**Categorical Feature Handling**
+
+We explicitly define categorical features because logistic regression requires numerical input. These categorical variables represent discrete categories (e.g., gender, country-specific factors, ordinal scales) that need special encoding. We use one-hot encoding to convert each categorical variable into binary features, ensuring the model can interpret these non-numerical data points properly.
+
+**Preprocessing Pipeline**
+
+The preprocessing pipeline employs different strategies for numerical and categorical features:
+
+Numerical features: Missing values are imputed with median values (robust to outliers), then standardized using StandardScaler to ensure all features have comparable scales
+Categorical features: Missing values are filled with the most frequent category, then one-hot encoded to create binary indicator variables
+
+The ColumnTransformer efficiently applies these transformations in parallel to their respective feature types.
+
+**Stratified Split**
+
+We stratify the train-test split by country to ensure proportional representation of each country in both training and test sets. This is crucial for our analysis since political attitudes and populist support can vary significantly between countries. Without stratification, we might end up with certain countries over-represented in the training set and under-represented in the test set, leading to biased performance estimates.
+The final pipeline combines preprocessing and modeling into a single object, ensuring consistent transformations across training and testing phases. We set class_weight='balanced' to handle the class imbalance between far-right populist and non-populist voters.
+
+```{python}
+# Define target and copy relevant columns
+df = merged[features + [target, 'country_name']].copy()
+
+# Drop rows with missing target (if applicable)
+df = df.dropna(subset=[target])
+
+# Define the categorical features subset
+cats = [
+    'income_decile', 'income_feeling', 'paid_work', 'unemp_3m', 'financial_difficulty_childhood',
+    'immig_same_ethnic', 'immig_diff_ethnic', 'gay_rights_freedom',
+    'gay_adoption_rights', 'child_obedience', 'leader_loyalty', 'tradition_important', 'pleasure_important', 'influence_on_politics',
+    'confident_participation', 'active_politics_role', 'political_interest',
+    'party_closeness', 'ess_round', 'gender', 'ethnic_majority_identity', 'disc_nationality',
+    'disc_race', 'disc_ethnicity', 'born_in_country','religion_belonging',
+    'religion_attendance'
+]
+
+# Identify numerical features (all features that are not in cats)
+nums = [col for col in features if col not in cats]
+
+# Separate X and y
+X = df.drop(columns=[target, 'country_name'])
+y = df[target]
+groups = df['country_name']  # for stratification
+
+# Define preprocessing for numerical features
+numeric_transformer = Pipeline(steps=[
+    ('imputer', SimpleImputer(strategy='median')),
+    ('scaler', StandardScaler())
+])
+
+# Define preprocessing for categorical features
+categorical_transformer = Pipeline(steps=[
+    ('imputer', SimpleImputer(strategy='most_frequent')),
+    ('onehot', OneHotEncoder(handle_unknown='ignore', sparse_output=False))
+])
+
+# Combine preprocessing steps
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('num', numeric_transformer, nums),
+        ('cat', categorical_transformer, cats)
+    ])
+
+# Create the preprocessing and modeling pipeline
+model_pipeline = Pipeline(steps=[
+    ('preprocessor', preprocessor),
+    ('classifier', LogisticRegression(max_iter=1000, class_weight='balanced'))  # Added class_weight to handle imbalance
+])
+
+# ✂️ Stratified split by country
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42, stratify=groups
+)
+
+# 🚀 Train baseline logistic regression with preprocessed features
+model_pipeline.fit(X_train, y_train)
+
+# 🔍 Predict
+y_train_pred = model_pipeline.predict(X_train)
+y_test_pred = model_pipeline.predict(X_test)
+y_test_proba = model_pipeline.predict_proba(X_test)[:, 1]  # Probability of far-right populist class
+y_train_proba = model_pipeline.predict_proba(X_train)[:, 1]
+```
+
+## Optimising Decision Threshold
+
+Before diving into threshold optimization, it's important to understand our evaluation metric, F1 score. F1-score is the harmonic mean of precision and recall:
+
+F1 = 2 × (Precision × Recall) / (Precision + Recall)
+
+Precision = True Positives / (True Positives + False Positives)
+
+Recall = True Positives / (True Positives + False Negatives)
+
+In our context:
+
+- False Positive: A voter classified as far-right populist who is actually not far-right populist
+- False Negative: A voter classified as not far-right populist who is actually far-right populist
+
+### Why F1-Score for Our Problem?
+
+Given our political classification task, we care about both false positives and false negatives equally.
+
+- Balanced cost of errors: Misclassifying a non-populist as populist (false positive) is as problematic as missing a true populist supporter (false negative). Both errors have implications for understanding voter behavior and political trends.
+
+- Class imbalance considerations: With only 28% far-right populist voters in our dataset, accuracy alone would be misleading. F1-score accounts for this imbalance by considering both precision and recall.
+Political implications: In political science, both types of errors matter equally - we want to accurately identify populist supporters without incorrectly labeling mainstream voters as populist.
+
+### How do we optimise
+
+The decision threshold determines how we convert predicted probabilities into binary classifications. Optimizing this threshold allows us to:
+
+- Balance precision and recall: A lower threshold (e.g., 0.3) increases recall (identifying more true populist voters) but may decrease precision (more false positives). A higher threshold (e.g., 0.7) does the opposite.
+- Account for class imbalance: With imbalanced classes, the default 0.5 threshold often favors the majority class. Adjusting the threshold helps achieve better performance on the minority class (far-right populist voters).
+
+We systematically test thresholds from 0.1 to 0.9 in 0.01 increments, calculating the F1-score for each threshold. The threshold that maximizes F1-score provides the best balance between precision and recall for our specific dataset and problem.
+
+```{python}
+# Try different thresholds
+thresholds = np.arange(0.1, 0.9, 0.01)
+f1_scores = []
+
+for t in thresholds:
+    # Apply threshold to probabilities to get predictions
+    y_pred_at_threshold = (y_test_proba > t).astype(int)
+    
+    # Calculate F1 score at this threshold
+    f1 = f1_score(y_test, y_pred_at_threshold)
+    f1_scores.append(f1)
+
+# Convert to numpy array for easier manipulation
+f1_scores = np.array(f1_scores)
+
+# Find best threshold
+best_thresh_idx = np.argmax(f1_scores)
+best_thresh = thresholds[best_thresh_idx]
+best_f1 = f1_scores[best_thresh_idx]
+
+print(f"Best threshold for F1: {best_thresh:.2f} with F1 score: {best_f1:.4f}")
+
+# Plot the threshold vs F1 score curve
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(10, 6))
+plt.plot(thresholds, f1_scores)
+plt.axvline(x=best_thresh, color='r', linestyle='--', label=f'Best threshold: {best_thresh:.2f}')
+plt.axhline(y=best_f1, color='g', linestyle='--', label=f'Best F1: {best_f1:.4f}')
+plt.axhline(y=f1_score(y_test, y_test_pred), color='b', linestyle=':', 
+            label=f'Default F1 (0.5): {f1_score(y_test, y_test_pred):.4f}')
+plt.xlabel('Threshold')
+plt.ylabel('F1 Score')
+plt.title('F1 Score vs. Threshold')
+plt.legend()
+plt.grid(True)
+plt.show()
+```
+
+### Evaluating Model Performance
+
+```{python}
+# 1. Apply best threshold to existing probability predictions
+y_train_pred_opt = (y_train_proba > best_thresh).astype(int)
+y_test_pred_opt = (y_test_proba > best_thresh).astype(int)
+
+# 2. Compute evaluation metrics
+bal_accuracy_train = round(balanced_accuracy_score(y_train, y_train_pred_opt), 2)
+bal_accuracy_test = round(balanced_accuracy_score(y_test, y_test_pred_opt), 2)
+
+f1_train = round(f1_score(y_train, y_train_pred_opt), 3)
+f1_test = round(f1_score(y_test, y_test_pred_opt), 3)
+
+roc_auc_train = round(roc_auc_score(y_train, y_train_proba), 3)
+roc_auc_test = round(roc_auc_score(y_test, y_test_proba), 3)
+
+precision_train = round(precision_score(y_train, y_train_pred_opt), 2)
+precision_test = round(precision_score(y_test, y_test_pred_opt), 2)
+
+recall_train = round(recall_score(y_train, y_train_pred_opt), 2)
+recall_test = round(recall_score(y_test, y_test_pred_opt), 2)
+
+# 3. Create and print the Markdown table
+writer = MarkdownTableWriter()
+writer.table_name = f"Logistic Regression Performance (Threshold = {best_thresh:.2f})"
+writer.headers = ["Metric", "Training Set", "Test Set", "Drop (Train → Test)"]
+writer.value_matrix = [
+    ["Balanced Accuracy", f"{bal_accuracy_train:.2f}", f"{bal_accuracy_test:.2f}", f"{(bal_accuracy_train - bal_accuracy_test)*100:.0f}%"],
+    ["Precision", f"{precision_train:.2f}", f"{precision_test:.2f}", f"{(precision_train - precision_test)*100:.0f}%"],
+    ["Recall", f"{recall_train:.2f}", f"{recall_test:.2f}", f"{(recall_train - recall_test)*100:.0f}%"],
+    ["F1 Score", f"{f1_train}", f"{f1_test}", f"{(f1_train - f1_test)*100:.0f}%"],
+    ["ROC AUC", f"{roc_auc_train}", f"{roc_auc_test}", f"{(roc_auc_train - roc_auc_test)*100:.0f}%"],
+]
+
+# Display table
+writer
+```
+
+### Logistic Regression Performance Analysis
+
+**Overall Model Performance**
+
+The logistic regression baseline model achieved reasonable performance for predicting far-right populist voting patterns, with an optimized decision threshold of 0.41 (lower than the default 0.5, reflecting adjustment for class imbalance).
+
+**Key Metrics Interpretation**
+- Balanced Accuracy (58.0% test set): This metric accounts for both classes equally and shows the model performs moderately better than random guessing (50%). Given the 72:28 class imbalance, this suggests the model learned some meaningful patterns rather than simply predicting the majority class.
+- Precision (32.0% test set): Of all voters predicted as far-right populist, only 33% actually are. This relatively low precision indicates many false positives - the model is quite liberal in classifying voters as populist, which makes sense given the lowered threshold (0.41).
+- Recall (75.0% test set): The model successfully identifies 75% of true far-right populist voters. This high recall, combined with low precision, confirms the threshold was optimized to catch more populist voters at the cost of increased false positives.
+- F1 Score (45.4% test set): This balanced metric reflects the trade-off between precision and recall. An F1 of 0.455 suggests the model provides moderate discriminative ability.
+- ROC AUC (63.2% test set): This indicates the model's ability to distinguish between classes is reasonable but not exceptional.
+
+**Train Test Performance**
+
+The drops between training and test performance are minimal. These small gaps suggest the model is not overfitting and generalizes well to unseen data. This is particularly impressive given the rich feature set (37 features) including diverse socioeconomic, political, and demographic variables. The logistic regression's regularisation and the class balancing have prevented the model from memorising training-specific patterns.
+
+This baseline provides a solid foundation for comparison with the more complex CatBoost model.
+
+## Plotting Confusion Matrix
+
+```{python}
+# Helper function for long-format confusion matrix
+def confusion_matrix_long(y_true, y_pred, dataset_name):
+    conf_matrix = confusion_matrix(y_true, y_pred)
+    conf_matrix_df = pd.DataFrame(
+        conf_matrix, 
+        columns=["Predicted 0", "Predicted 1"], 
+        index=["Actual 0", "Actual 1"]
+    )
+    conf_matrix_long = conf_matrix_df.reset_index().melt(
+        id_vars="index", value_vars=["Predicted 0", "Predicted 1"]
+    )
+    conf_matrix_long.columns = ["Actual", "Predicted", "Count"]
+    conf_matrix_long['Dataset'] = dataset_name
+
+    label_map = {
+        ("Actual 0", "Predicted 0"): "TN",
+        ("Actual 0", "Predicted 1"): "FP",
+        ("Actual 1", "Predicted 0"): "FN",
+        ("Actual 1", "Predicted 1"): "TP",
+    }
+
+    conf_matrix_long['Annotation'] = conf_matrix_long.apply(
+        lambda row: f"{label_map[(row['Actual'], row['Predicted'])]}: {row['Count']}", axis=1
+    )
+    return conf_matrix_long
+
+# Apply to your logistic regression threshold-optimized predictions
+conf_matrix_long_train = confusion_matrix_long(y_train, y_train_pred_opt, "Train")
+conf_matrix_long_test  = confusion_matrix_long(y_test, y_test_pred_opt, "Test")
+
+# Plot training confusion matrix
+conf_matrix_plot = (
+    ggplot(conf_matrix_long_train, aes(x='Predicted', y='Actual', fill='Count'))
+    + geom_tile()
+    + geom_text(aes(label='Annotation'), size=10, color='black', vjust=0.5, hjust=0.5)
+    + scale_fill_gradient(low='#ffeee0', high='#00A693') 
+    + ggtitle('Confusion Matrix (Training Set)')
+    + xlab('Predicted')
+    + ylab('Actual')
+    + coord_fixed(ratio=1)
+    + theme_minimal()
+    + theme(legend_position='right', plot_margin=0)
+)
+
+# Plot test confusion matrix
+conf_matrix_plot_test = (
+    ggplot(conf_matrix_long_test, aes(x='Predicted', y='Actual', fill='Count'))
+    + geom_tile()
+    + geom_text(aes(label='Annotation'), size=10, color='black', vjust=0.5, hjust=0.5)
+    + scale_fill_gradient(low='#ffeee0', high='#00A693') 
+    + ggtitle('Confusion Matrix (Test Set)')
+    + xlab('Predicted')
+    + ylab('Actual')
+    + coord_fixed(ratio=1)
+    + theme_minimal()
+    + theme(legend_position='right', plot_margin=0)
+)
+
+# Display side-by-side
+gggrid([conf_matrix_plot, conf_matrix_plot_test], ncol=2)
+```
+
+### Performance Analysis
+# Training Set Performance:
+True Negatives (2,279): Successfully identified 43.5% of actual non-populist voters
+True Positives (1,543): Successfully identified 78.8% of actual far-right populist voters
+False Positives (2,962): Incorrectly labelled 56.5% of non-populist voters as populist
+False Negatives (414): Missed 21.2% of actual populist voters
+
+# Test Set Performance:
+True Negatives (928): Successfully identified 41.3% of actual non-populist voters
+True Positives (634): Successfully identified 75.5% of actual far-right populist voters
+False Positives (1,317): Incorrectly labelled 58.7% of non-populist voters as populist
+False Negatives (206): Missed 24.5% of actual populist voters
+
+
+
+**Key Observations**
+
+- High False Positive Rate: The model's main weakness is its tendency to over-classify voters as far-right populist. With 58% of non-populist voters incorrectly labelled as populist (test set), this reflects the optimised threshold (0.41) prioritising recall over precision.
+- Good Recall, Poor Precision: The model successfully identifies 75% of actual populist voters (high recall) but accuracy for positive predictions is only 33% (low precision). This trade-off is typical when optimising for F1 score with imbalanced data.
+- Consistent Performance: The training and test confusion matrices show remarkably similar patterns, with only minor differences in percentages. This consistency reinforces that the model isn't overfitting and generalises well.
+- Class Imbalance Impact: The stark difference between the two diagonal elements (TN and TP) reflects the 72:28 class split in the data. The model correctly identifies more non-populist voters in absolute numbers but achieves higher percentage accuracy for the populist class.
+
+**Strategic Implications**
+
+The confusion matrices reveal that this logistic regression baseline errs on the side of caution when identifying populist voters - it would rather incorrectly flag a non-populist voter than miss a true populist supporter. This conservative approach to false negatives makes sense when the cost of missing populist voters (for research or campaign targeting) might be higher than the cost of false alarms.
+
+## Feature Importance Analysis: Understanding Drivers of Far-Right Populist Support
+
+This code cell extracts, processes, and visualizes feature importance from our logistic regression model to directly address our central research question: **Are economic conditions primarily responsible for the support of radical right-wing populist parties?**
+
+### Methodological Approach
+
+We employ a sophisticated feature importance analysis that:
+
+1. **Extracts raw coefficients** from the logistic regression model, showing each feature's influence on far-right populist support
+2. **Reconstitutes categorical variables** by grouping the one-hot encoded features back to their original form
+3. **Calculates overall importance** by summing the absolute coefficients for each original feature
+4. **Preserves directional information** using color coding (blue for positive association with populist support, red for negative)
+
+This approach offers several advantages over simpler coefficient analysis:
+
+- **Handles categorical features appropriately**: By aggregating the coefficients of one-hot encoded features, we can compare the total influence of categorical variables against numerical ones
+- **Distinguishes direction from magnitude**: The visualization separates the strength of association (bar length) from its direction (color)
+- **Ranks features objectively**: By using absolute coefficient sums, we see which features have the strongest overall impact regardless of direction
+
+### Why Feature Importance is Crucial for Our Research Question
+
+This analysis directly addresses our research question by:
+
+1. **Ranking economic vs. non-economic factors**: If economic conditions are primary drivers, we would expect economic variables (income, employment, economic satisfaction) to dominate the top positions
+2. **Providing comparative evidence**: The visualization allows us to directly compare the influence of economic variables against cultural and political alternatives
+3. **Revealing nuanced relationships**: The direction of coefficients shows whether economic hardship or prosperity correlates with populist support
+
+### Contribution to Research Framework
+
+This feature importance analysis complements our other methodological approaches by:
+
+1. Providing a direct, intuitive visualization of which factors matter most in predicting far-right populist support
+2. Offering a statistical basis for comparing economic, cultural, and political explanations
+3. Moving beyond theoretical claims to empirical evidence of what actually predicts populist voting behavior
+
+The results from this visualization will contribute to our assessment of whether economic conditions can indeed be considered primary drivers of far-right populist support, or whether a more complex interplay of factors is at work.
+
+```{python}
+# Get feature importances from logistic regression
+feature_names = model_pipeline.named_steps['preprocessor'].get_feature_names_out()
+logreg_coefficients = model_pipeline.named_steps['classifier'].coef_[0]
+
+# Create DataFrame with absolute coefficients for importance ranking
+lr_feat_imp = pd.DataFrame({
+    'Feature': feature_names,
+    'Coefficient': logreg_coefficients,
+    'Importance': np.abs(logreg_coefficients)
+}).sort_values('Importance', ascending=False).reset_index(drop=True)
+
+# Extract original feature names by removing prefixes and suffixes
+lr_feat_imp['Original_Feature'] = lr_feat_imp['Feature'].str.replace('cat__', '').str.replace('num__', '')
+# Remove the one-hot encoding suffixes (e.g., _0, _1, _2, etc.)
+lr_feat_imp['Original_Feature'] = lr_feat_imp['Original_Feature'].str.replace(r'_\d+$', '', regex=True)
+
+# Group by original feature and sum the absolute coefficients
+grouped_importance = lr_feat_imp.groupby('Original_Feature').agg({
+    'Importance': 'sum',  # Sum absolute coefficients for each original feature
+    'Coefficient': lambda x: x.iloc[np.argmax(np.abs(x))]  # Keep coefficient of most important category
+}).reset_index()
+
+# Sort by importance and get top 20
+grouped_importance = grouped_importance.sort_values('Importance', ascending=False).head(20)
+
+# Clean feature names for display
+grouped_importance['Feature_clean'] = grouped_importance['Original_Feature'].str.replace('_', ' ').str.title()
+
+# Plot
+plt.figure(figsize=(12, 8))
+colors = ['red' if coef < 0 else 'blue' for coef in grouped_importance['Coefficient']]
+plt.barh(range(len(grouped_importance)), grouped_importance['Importance'], alpha=0.8, color=colors)
+plt.yticks(range(len(grouped_importance)), grouped_importance['Feature_clean'])
+plt.xlabel('Total Importance (Sum of |Coefficients|)')
+plt.title('Top 20 Feature Importances (Logistic Regression) - Grouped')
+plt.gca().invert_yaxis()
+
+# Add legend
+from matplotlib.patches import Patch
+legend_elements = [Patch(facecolor='blue', label='Positive coefficient'),
+                   Patch(facecolor='red', label='Negative coefficient')]
+plt.legend(handles=legend_elements, loc='lower right')
+plt.tight_layout()
+plt.show()
+```
+
+## Feature Importance Analysis: Logistic Regression Model
+
+The visualization above displays the most influential predictors of far-right populist support based on our logistic regression model. The length of each bar indicates the overall importance of the feature (magnitude of impact), while the color indicates the direction of the relationship: blue bars represent features that increase the likelihood of supporting far-right populist parties, while red bars indicate features that decrease this likelihood.
+
+### Primary Drivers of Far-Right Populist Support
+
+The most influential factors, in descending order of importance:
+
+1. **Income Decile** (negative) - Higher household income is associated with lower support for far-right populism, suggesting economic position is relevant but not dominant.
+2. . **Pleasure Important** (negative) - Valuing pleasure and enjoyment in life correlates with lower far-right populist support.
+3. **Religion Attendance** (positive) - More frequent religious service attendance predicts greater support for far-right populist parties.
+4.  **Gay Adoption Rights** (negative) - Opposition to gay adoption rights correlates with increased support for far-right populism.
+5. **Immigration (different ethnic groups)** (positive)- Negative attitudes toward immigrants of different ethnic backgrounds
+correlated with support for the far right.
+
+
+### Immigration Attitudes
+
+Immigration attitudes feature prominently in our model:
+- **Immigration from Different Ethnic Groups** (positive) - Restrictive attitudes toward ethnically different immigrants predict greater far-right populist support.
+- **Immigration from Same Ethnic Groups** (positive) - Similarly, restrictive attitudes toward ethnically similar immigrants also predict populist support, though with slightly less strength.
+
+### Cultural Values 
+
+Several traditional value indicators show significant influence:
+- **Child Obedience** (positive) - Valuing child obedience predicts higher support for far-right populism.
+- **Tradition Important** (negative) - The general importance placed on tradition shows a negative coefficient.
+- **Leader Loyalty** (positive) - Valuing loyalty to leaders predicts greater populist support.
+
+### Economic Factors
+
+While economic variables are present, they don't dominate the top predictors:
+- **Income Feeling** (positive) - Subjective feelings of income inadequacy predict greater populist support.
+- **Financial Difficulty Childhood** (negative) - Childhood financial difficulty shows a negative association with populist support.
+
+### EU and Identity Politics
+
+- **EU Integration** (negative) - Opposition to further EU integration correlates with greater populist support.
+- **Discrimination by Nationality** (negative) - Perceived discrimination based on nationality is associated with lower populist support.
+
+### Key Insights on Our Research Question
+
+Regarding our central research question of whether economic conditions primarily drive far-right populist support:
+
+1. **Mixed Economic Evidence**: Economic factors show important but not dominant influence. Income decile ranks second in importance, but other economic measures appear lower in the ranking.
+
+2. **Cultural Prominence**: The substantial presence of immigration attitudes, religious participation, and social values among top predictors suggests cultural factors may be equally or more important than economic ones.
+
+3. **Political Trust and Identity**: Political engagement factors and attitudes toward institutions appear in the middle range of importance, suggesting these factors complement economic and cultural explanations.
+
+This analysis suggests that far-right populist support is better characterized as emerging from a complex interplay of cultural, political, and economic factors, rather than being primarily driven by economic conditions alone.
+
+# Catboost Model
+
+### Justification for CatBoost Selection
+
+Given our research objective of predicting far-right populist voting behaviour, we selected CatBoost (Categorical Boosting) as our primary model after establishing the logistic regression baseline. This choice was driven by several key factors that make CatBoost particularly well-suited to our political science application.
+
+**Technical Superiority for Categorical Data**
+
+Our dataset contains a substantial proportion of categorical features (28 out of 37 features, representing 76% of our feature space). These include ordinal variables like political interest and active participation scales, nominal variables such as gender and country identity, and complex categorical features including party closeness and religious attendance patterns. Traditional machine learning algorithms, including logistic regression, typically require extensive preprocessing of categorical data through one-hot encoding, which can lead to exponential increase in dimensionality (curse of dimensionality)
+
+CatBoost addresses these limitations through its innovative approach to categorical feature handling. As Prokhorenkova et al. (2018) demonstrate, CatBoost uses an ordered target encoding scheme that processes categorical features without the need for explicit encoding, thereby preserving the information content whilst avoiding overfitting that typically plagues naive target encoding approaches. This is particularly advantageous for our data where categorical variables often capture nuanced social and political attitudes that would be diluted by traditional preprocessing methods.
+
+**Gradient Boosting Advantages for Complex Political Patterns**
+
+Tree-based ensemble methods like CatBoost offer several advantages over linear models for political behaviour prediction:
+
+- Non-linear Pattern Recognition: Political attitudes rarely follow linear relationships. The interaction between economic dissatisfaction and immigration concerns, for instance, may have non-additive effects on populist support. CatBoost can capture these complex, non-linear relationships through its ensemble of decision trees.
+- Feature Interaction Detection: Unlike logistic regression, which assumes feature independence unless explicitly modelled, CatBoost automatically detects and exploits feature interactions. This is crucial when studying political behaviour, where combinations of attitudes (e.g., low trust in politicians coupled with strong national attachment) may be more predictive than individual factors.
+- Robustness to Outliers: Tree-based methods are inherently more robust to outliers than linear models. In political surveys, extreme responses are common and meaningful, and CatBoost can handle these without requiring data transformation.
+- Class Imbalance Handling: CatBoost includes built-in mechanisms for handling imbalanced datasets, crucial given our 72:28 class distribution. The auto_class_weights='Balanced' parameter automatically adjusts for class imbalance during training.
+
+**Why Tree-Based Methods Excel for Political Prediction**
+
+- Conditional Decision-Making: Political behaviour often involves conditional logic (e.g., "If trust in parliament is low AND economic satisfaction is poor, THEN likelihood of populist support increases"). Tree-based methods naturally model these conditional relationships.
+- Hierarchical Feature Importance: CatBoost provides interpretable feature importance scores, crucial for understanding which factors drive populist support in our model.
+- Regularisation and Overfitting Prevention: CatBoost includes advanced regularisation techniques and early stopping mechanisms that prevent overfitting whilst maximising predictive power.
+
+```{python}
+# Define target and copy relevant columns
+df = merged[features + [target, 'country_name']].copy()
+
+# Drop rows with missing target (if applicable)
+df = df.dropna(subset=[target])
+
+# Separate X and y
+X = df.drop(columns=[target, 'country_name'])
+y = df[target]
+groups = df['country_name']  # for stratification
+
+# Get indices of categorical features for CatBoost
+cat_feature_indices = [X.columns.get_loc(col) for col in cats]
+
+# Train/test split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42, stratify=groups
+)
+
+# Wrap in CatBoost Pool objects
+train_pool = Pool(X_train, y_train, cat_features=cat_feature_indices)
+test_pool = Pool(X_test, cat_features=cat_feature_indices)
+
+# Train model with minimal settings for faster execution
+model = CatBoostClassifier(
+    # Keep it simple for speed
+    iterations=500,           
+    max_depth=4,              
+    learning_rate=0.1,       
+    
+    # Handle class imbalance simply
+    auto_class_weights='Balanced',
+    
+    # Minimal settings
+    random_seed=42,
+    verbose=False,             
+    thread_count=1,           
+    early_stopping_rounds=50   
+)
+
+# Train model
+model.fit(train_pool)
+
+# Predict
+y_pred = model.predict(test_pool)
+y_proba = model.predict_proba(test_pool)[:, 1]
+
+print("CatBoost Results:")
+print(classification_report(y_test, y_pred))
+print(f"ROC AUC: {roc_auc_score(y_test, y_proba):.4f}")
+print(f"F1 Score: {f1_score(y_test, y_pred):.4f}")
+```
+
+## Initial CatBoost Model Results
+
+Our initial CatBoost model with basic configuration shows promising but moderate performance in predicting far-right populist support:
+
+### Classification Performance
+
+- **Accuracy**: 63% overall accuracy, significantly better than the baseline majority-class classifier (~72% would be achieved by always predicting "not far-right populist")
+- **Precision for Far-Right Populism (Class 1)**: 38% - Of voters predicted to support far-right populist parties, only about 38% actually do
+- **Recall for Far-Right Populism (Class 1)**: 55% - The model successfully identifies 55% of actual far-right populist voters
+- **F1 Score for Far-Right Populism**: 0.45 - Indicates moderate balanced performance between precision and recall
+- **ROC AUC**: 0.648 - Shows the model has reasonable discriminative ability, substantially better than random guessing (0.5)
+
+### Class Imbalance Handling
+
+The results highlight the challenge of our 72:28 class imbalance:
+- The model achieves higher precision for the majority class (80%) but struggles with precision for the minority class (38%)
+- Despite using `auto_class_weights='Balanced'`, there remains room for improvement in minority class detection
+
+### Implications for Our Research Question
+
+These initial results suggest that our features do contain signal for predicting far-right populist support, but the moderate performance (F1 of 0.45) indicates that the relationship between our predictors and populist voting is complex. 
+
+The recall of 55% for far-right populist voters tells us that our model, even with basic settings, can detect over half of populist voters based on our feature set, which includes economic, cultural, and political variables. However, the relatively low precision suggests that the model over-predicts populist support, potentially indicating that the profile of populist voters shares characteristics with some non-populist voters.
+
+To improve these results and better address our research question about whether economic conditions primarily drive populist support, we'll proceed with:
+
+1. Hyperparameter tuning to optimize model performance
+2. Threshold optimization to better balance precision and recall
+3. Feature importance analysis to determine which factors (economic or otherwise) are most predictive
+
+### Hyperparameter Tuning
+
+**Why Hyperprameter Tuning is Essential**
+
+Hyperparameters are configuration settings that aren't learnt by the model during training but must be specified beforehand. Unlike model parameters (such as feature weights), hyperparameters control the learning process itself. For CatBoost, hyperparameter tuning is crucial because:
+
+- Model Complexity Control: Hyperparameters directly influence the model's capacity to learn patterns versus its tendency to overfit
+- Performance Optimisation: Different hyperparameter combinatons can dramatically affect predictive performance
+- Computational Efficiency: Some settings trade accuracy for training speed
+- Problem-Specific Adaptation: Optimal hyperparameters vary depending on dataset characteristics and the specific task
+
+**Hyperparameters** 
+
+- Iterations: Controls how many decision trees are built. More iterations can improve performance but risk overfitting
+- Depth: Determines tree complexity. Deeper trees capture more intricate patterns but may overfit
+- Learning Rate: Controls how much each tree contributes to the final prediction. Lower rates require more iterations but often achieve better performance
+- L2 Leaf Regularisation: Prevents overfitting by adding a penalty term for complex trees
+
+**RandomizedSearchCV**
+
+- Random Sampling: Instead of testing all possible combinations, it randomly samples 10 combinations which is more efficient
+- Cross-Validation Integration: Each hyperparameter combination is evaluated using 3-fold stratified cross-validation, ensuring robust performance estimates across different data splits.
+- Scoring Optimisation: The search optimises for F1-score, aligning with our balanced approach to precision and recall for the imbalanced dataset.
+- Stratified Sampling: The cross-validation maintains the country-wise stratification, ensuring each fold represents all countries proportionally.
+
+**Process**
+
+1. Model Instantiation: Creates a base CatBoost model with fixed parameters (loss function, categorical features, class balancing)
+2. Parameter Sampling: Randomly selects 10 hyperparameter combinations from the grid
+3. Cross-Validation Evaluation: For each combination:
+
+- Trains the model 3 times using different train/validation splits
+- Evaluates performance using F1-score
+- Computes average performance across folds
+
+```{python}
+# Define hyperparameter grid
+param_grid = {
+    "iterations": [500, 750, 1000],
+    "depth": [4, 6, 8],
+    "learning_rate": [0.01, 0.05],
+    "l2_leaf_reg": [1, 5, 10],
+}
+
+# Create CatBoost model
+catboost_model = CatBoostClassifier(
+    loss_function="Logloss",
+    cat_features=cat_feature_indices,
+    verbose=0,
+    random_seed=42,
+    auto_class_weights="Balanced",
+    eval_metric='F1',
+)
+
+# Use the built-in F1 scorer
+f1_scorer = make_scorer(f1_score)
+
+# Cross-validation strategy
+cv = StratifiedKFold(n_splits=3, shuffle=True, random_state=42)
+
+# Randomized Search
+search = RandomizedSearchCV(
+    estimator=catboost_model,
+    param_distributions=param_grid,
+    scoring=f1_scorer,
+    cv=cv,
+    n_iter=10,
+    n_jobs=1,
+    verbose=1,
+    random_state=42
+)
+
+# Run hyperparameter tuning
+print("Starting hyperparameter tuning with F1 optimization...")
+search.fit(X_train, y_train)
+
+# Print results
+print("✅ Best Hyperparameters:", search.best_params_)
+print("📊 Best F1 Score:", search.best_score_)
+
+# Get the best model
+best_model = search.best_estimator_
+
+# Make predictions with the best model
+y_pred = best_model.predict(X_test)
+y_proba = best_model.predict_proba(X_test)[:, 1]
+
+# Evaluate
+from sklearn.metrics import classification_report, roc_auc_score
+
+print("\nBest Model Performance:")
+print(f"F1 Score: {f1_score(y_test, y_pred):.4f}")
+print(f"ROC AUC: {roc_auc_score(y_test, y_proba):.4f}")
+print("\nDetailed Classification Report:")
+print(classification_report(y_test, y_pred))
+
+```
+
+## Threshold Optimisation
+
+With our 72:28 class distribution (non-populist vs populist), the default 0.5 threshold often favours the majority class. Finding an optimal threshold helps balance precision and recall for the minority class. Our approach finds the threshold that maximizes F1 score, balancing both precision and recall.
+
+This optimization ensures that our final CatBoost model performs optimally for identifying far-right populist voters, going beyond just finding good hyperparameters to also optimising the decision-making process itself.
+
+```{python}
+# Now apply threshold optimization to the best model
+# Try different thresholds for F1 optimization
+thresholds = np.arange(0.1, 0.9, 0.01)
+f1_scores = []
+
+for t in thresholds:
+    y_pred_at_threshold = (y_proba > t).astype(int)
+    f1 = f1_score(y_test, y_pred_at_threshold)
+    f1_scores.append(f1)
+
+# Convert to numpy array
+f1_scores = np.array(f1_scores)
+
+# Find best threshold
+best_thresh_idx = np.argmax(f1_scores)
+best_thresh = thresholds[best_thresh_idx]
+best_f1 = f1_scores[best_thresh_idx]
+
+print(f"\nThreshold Optimization:")
+print(f"Best threshold for F1: {best_thresh:.2f} with F1 score: {best_f1:.4f}")
+print(f"Default threshold (0.5) F1 score: {f1_score(y_test, y_pred):.4f}")
+```
+
+### Plotting the Optimal F1 Score
+
+```{python}
+# Plot the threshold vs F1 score curve
+plt.figure(figsize=(10, 6))
+plt.plot(thresholds, f1_scores, linewidth=2, color='blue')
+
+# Mark the best threshold
+plt.axvline(x=best_thresh, color='red', linestyle='--', linewidth=2, 
+            label=f'Best threshold: {best_thresh:.2f}')
+plt.axhline(y=best_f1, color='green', linestyle='--', linewidth=2, 
+            label=f'Best F1: {best_f1:.4f}')
+
+# Mark the default threshold performance
+default_f1 = f1_score(y_test, y_pred)
+plt.axhline(y=default_f1, color='orange', linestyle=':', linewidth=2, 
+            label=f'Default F1 (0.5): {default_f1:.4f}')
+
+# Highlight the best point
+plt.scatter([best_thresh], [best_f1], color='red', s=100, zorder=5)
+
+# Customize the plot
+plt.xlabel('Decision Threshold', fontsize=12)
+plt.ylabel('F1 Score', fontsize=12)
+plt.title('F1 Score vs. Decision Threshold for CatBoost Model', fontsize=14)
+plt.grid(True, alpha=0.3)
+plt.legend(fontsize=11)
+
+# Set axis limits for better visualization
+plt.xlim(0.1, 0.9)
+plt.ylim(min(f1_scores) - 0.01, max(f1_scores) + 0.01)
+
+# Save the plot
+plt.tight_layout()
+plt.savefig('catboost_threshold_f1_optimization.png', dpi=300, bbox_inches='tight')
+plt.show()
+
+# Optional: Print some statistics about the optimization
+print(f"\nThreshold Optimization Statistics:")
+print(f"Threshold range tested: {thresholds[0]:.2f} to {thresholds[-1]:.2f}")
+print(f"Best threshold: {best_thresh:.2f}")
+print(f"F1 improvement over default: {best_f1 - default_f1:.4f}")
+print(f"Percentage improvement: {((best_f1 - default_f1) / default_f1) * 100:.2f}%")
+```
+
+## Model Evaluation Metrics
+
+```{python}
+# Apply threshold to get optimized predictions
+y_test_pred_opt = (y_proba > best_thresh).astype(int)
+y_train_pred_opt = (y_train_proba > best_thresh).astype(int)
+
+# Compute all metrics using the optimized threshold
+bal_accuracy_test = round(balanced_accuracy_score(y_test, y_test_pred_opt), 2)
+bal_accuracy_train = round(balanced_accuracy_score(y_train, y_train_pred_opt), 2)
+
+f1_test = round(f1_score(y_test, y_test_pred_opt), 3)
+f1_train = round(f1_score(y_train, y_train_pred_opt), 3)
+
+roc_auc_test = round(roc_auc_score(y_test, y_proba), 3)
+roc_auc_train = round(roc_auc_score(y_train, y_train_proba), 3)
+
+precision_test = round(precision_score(y_test, y_test_pred_opt), 2)
+precision_train = round(precision_score(y_train, y_train_pred_opt), 2)
+
+recall_test = round(recall_score(y_test, y_test_pred_opt), 2)
+recall_train = round(recall_score(y_train, y_train_pred_opt), 2)
+
+# Markdown table with threshold
+writer = MarkdownTableWriter()
+writer.table_name = f"Catboost Performance (Threshold = {best_thresh:.2f})"
+writer.headers = ["Metric", "Training Set", "Test Set", "Drop (Train → Test)"]
+writer.value_matrix = [
+    ["Balanced Accuracy", f"{bal_accuracy_train:.2f}", f"{bal_accuracy_test:.2f}", f"{(bal_accuracy_train - bal_accuracy_test)*100:.0f}%"],
+    ["Precision", f"{precision_train:.2f}", f"{precision_test:.2f}", f"{(precision_train - precision_test)*100:.0f}%"],
+    ["Recall", f"{recall_train:.2f}", f"{recall_test:.2f}", f"{(recall_train - recall_test)*100:.0f}%"],
+    ["F1 Score", f"{f1_train}", f"{f1_test}", f"{(f1_train - f1_test)*100:.0f}%"],
+    ["ROC AUC", f"{roc_auc_train}", f"{roc_auc_test}", f"{(roc_auc_train - roc_auc_test)*100:.0f}%"],
+]
+
+# Display the table
+writer
+```
+
+## CatBoost Performance Analysis and Comparison with Baseline
+
+**Key Metrics Interpretation**
+
+- Balanced Accuracy (60.0% test set): The CatBoost model achieves slightly better balanced accuracy than the logistic regression baseline, showing modest improvement in overall classification across both classes whilst accounting for the 72:28 class imbalance.
+- Precision (34.0% test set): Of all voters predicted as far-right populist, 34% actually are. This represents a marginal improvement over logistic regression (33%), indicating the model produces slightly fewer false positives whilst maintaining the threshold optimization strategy.
+- Recall (71.0% test set): The model successfully identifies 71% of true far-right populist voters, slightly lower than logistic regression's 75%. This suggests CatBoost strikes a more balanced trade-off between precision and recall, though it may miss slightly more true populist voters.
+- F1 Score (46.4% test set): With an F1 score of 0.464, CatBoost outperforms the logistic regression baseline (0.455) by 2%, indicating better overall balance between precision and recall. This improvement, whilst modest, demonstrates the value of the more sophisticated algorithm.
+ROC AUC (64.9% test set): The AUC score of 0.649 surpasses logistic regression's 0.633, indicating superior discriminative ability. This suggests CatBoost better captures the complex patterns that distinguish populist from non-populist voters.
+
+**Training-Test Performance Analysis**
+
+The drops between training and test performance are concerning, ranging from 6% to 11% across metrics.
+
+- Recall drop (11%): The largest performance gap, suggesting the model may have learned some training-specific patterns for identifying populist voters
+- ROC AUC drop (11%): Indicates the model's discriminative ability decreases notably on unseen data
+- F1 Score drop (7%): Shows the balanced performance metric is less stable than in logistic regression
+
+These larger gaps suggest potential overfitting, despite the regularisation parameters. The more complex nature of CatBoost, with its ability to capture non-linear relationships and feature interactions, may have led to some memorization of training patterns, which has led to overfitting of the model on the training data.
+
+**Model Comparison**
+
+Whilst CatBoost achieves modest improvements over logistic regression (1-2% in key metrics), it comes with increased complexity and signs of overfitting. The similar performance levels suggest that the additional complexity of CatBoost provides marginal gains but may not justify the increased risk of overfitting compared to the more stable logistic regression baseline.
+
+1. Data Characteristics Don't Favour Complex Models
+
+The similar performance between linear and non-linear models indicates that far-right populist voting behaviour in our dataset may be characterised by predominantly linear relationships factors like distrust in institutions, immigration attitudes, and economic dissatisfaction appear to have straightforward, additive effects on populist support. Political attitudes may not require capturing intricate non-linear patterns.
+
+2. The Predictive Signal May Be Inherently Limited
+
+The modest F1 scores for both models (around 0.45-0.46) suggest a fundamental limitation. Human behaviour is complex and political votin depends on numerous unmeasurable factors (personal experiences, momentary emotions, social pressures) not captured in survey data.
+
+3. Feature Engineering Already Captured Relevant Patterns
+
+The fact that logistic regression performs competitively suggests that perhaps linear combination are sufficient for prediction.
+
+4. Sample Size and Complexity Trade-off
+
+Sufficient but not massive data: While we have enough data for robust estimation, it may not be large enough to reliably estimate the many parameters in a complex model like CatBoost
+Overfitting risk: The larger training-test gap in CatBoost indicates it's learning patterns that don't generalise, while logistic regression's simpler form prevents this
+
+5. Political Science Domain Specificity
+
+This phenomenon may be specific to political science applications:
+
+Established theory: Political science has well-developed theories about voting behaviour that translate into effective linear predictors
+Survey constraints: Traditional political surveys may not capture the type of data (e.g., behavioural traces, network effects) where tree-based methods excel
+Interpretability requirements: Political science often prioritises understanding why voters behave as they do, favouring simpler, more interpretable models
+
+### Confusion Matrix
+
+```{python}
+# Generate confusion matrices using optimal threshold
+# For train set - need to generate predictions with optimal threshold
+y_train_proba = best_model.predict_proba(X_train)[:, 1]
+y_train_pred_optimized = (y_train_proba > best_thresh).astype(int)
+
+# Apply the best threshold to get final predictions
+final_predictions = (y_proba > best_thresh).astype(int)
+
+# For test set - use the final_predictions you already calculated
+y_test_pred_optimized = final_predictions
+
+# Generate confusion matrices
+conf_matrix_train = confusion_matrix(y_train, y_train_pred_optimized)
+conf_matrix_test = confusion_matrix(y_test, y_test_pred_optimized)
+
+# Function to convert to long format
+def confusion_matrix_long(cm, dataset_name):
+    cm_df = pd.DataFrame(cm, columns=["Predicted 0", "Predicted 1"], 
+                         index=["Actual 0", "Actual 1"])
+    cm_long = cm_df.reset_index().melt(id_vars="index", 
+                                       value_vars=["Predicted 0", "Predicted 1"])
+    cm_long.columns = ["Actual", "Predicted", "Count"]
+    cm_long["Dataset"] = dataset_name
+    return cm_long
+
+# Convert both matrices
+conf_matrix_long_train = confusion_matrix_long(conf_matrix_train, "Train")
+conf_matrix_long_test = confusion_matrix_long(conf_matrix_test, "Test")
+
+# Train set plot
+train_conf_plot = (
+    ggplot(conf_matrix_long_train, aes(x="Predicted", y="Actual", fill="Count"))
+    + geom_tile()
+    + geom_text(aes(label="Count"), size=10, color="black", va="center", ha="center")
+    + scale_fill_gradient(low="#ffeee0", high="#00A693") 
+    + ggtitle(f"Confusion Matrix (Train Set) - Threshold: {best_thresh:.2f}")
+    + xlab("Predicted")
+    + ylab("Actual")
+    + theme_minimal()
+)
+
+# Test set plot
+test_conf_plot = (
+    ggplot(conf_matrix_long_test, aes(x="Predicted", y="Actual", fill="Count"))
+    + geom_tile()
+    + geom_text(aes(label="Count"), size=10, color="black", va="center", ha="center")
+    + scale_fill_gradient(low="#ffeee0", high="#00A693")
+    + ggtitle(f"Confusion Matrix (Test Set) - Threshold: {best_thresh:.2f}")
+    + xlab("Predicted")
+    + ylab("Actual")
+    + theme_minimal()
+)
+
+# Side-by-side confusion matrices
+gggrid([train_conf_plot, test_conf_plot], ncol=2)
+```
+
+**Key Insights**
+
+False Positive Problem
+- The model's most significant weakness is its tendency to over-classify voters as populist. Over half of non-populist voters are incorrectly identified as populist (51% on test set)
+
+Good Recall for Populist Class
+- The model successfully identifies 71% of actual populist voters on the test set, demonstrating reasonable sensitivity to the minority class.
+
+While the pattern remains consistent between training and test sets, performance degrades
+- Recall drops from 82% to 71% (11% decrease)
+- Precision for True Negatives drops from 54% to 49% (5% decrease)
+
+The stark difference in absolute numbers between True Negatives (1,107) and True Positives (597) reflects the 72:28 class distribution, with the model correctly identifying more non-populist voters in absolute terms but achieving better percentage accuracy for the populist class.
+
+**Model Behaviour Analysis**
+
+The confusion matrices confirm that CatBoost, like the logistic regression baseline, errs on the side of caution when identifying populist voters. The model would rather incorrectly flag a non-populist voter than miss a true populist supporter. This conservative approach to false negatives makes sense when the research objective is to comprehensively identify potential populist voters, even at the cost of increased false alarms.
+
+The notable performance drop between training and test sets, particularly in recall (11% decrease), provides further evidence of overfitting and suggests that the model has learned some training-specific patterns that don't generalize well to unseen data.
+
+## CatBoost Feature Importance Analysis: Revealing Key Predictors of Far-Right Populist Support
+
+This code cell extracts and visualizes feature importances from our optimized CatBoost model to provide a complementary perspective on our research question: **Are economic conditions primarily responsible for the support of radical right-wing populist parties?**
+
+### Methodological Approach
+
+Unlike the logistic regression analysis, CatBoost calculates feature importance using a different methodology:
+
+1. **Tree-based importance calculation**: CatBoost measures how often each feature is used for splitting across all trees in the ensemble and how much each split improves prediction
+2. **Native handling of categorical variables**: No need to reconstruct one-hot encoded features, as CatBoost natively handles categorical variables through its target encoding mechanism
+3. **Non-linear pattern detection**: CatBoost can capture complex, non-linear relationships between features and populist support that might be missed by logistic regression
+
+This approach complements our logistic regression analysis by:
+
+- Detecting potentially more complex, non-linear patterns in the data
+- Capturing interaction effects between variables without explicit specification
+- Handling categorical variables in their original form, potentially preserving more information
+
+### Why This Additional Feature Importance Analysis is Valuable
+
+This second feature importance visualization serves several crucial purposes for our research:
+
+1. **Methodological triangulation**: Comparing feature importances across different model types (linear vs. tree-based) strengthens our confidence in consistent patterns
+2. **Capturing non-linear relationships**: Economic factors might influence populist support in non-linear ways (e.g., extreme income values having disproportionate effects) that CatBoost can better detect
+3. **Model-agnostic verification**: If both models identify similar drivers despite their different mathematical foundations, this provides stronger evidence for our conclusions
+
+### Contribution to Our Research Question
+
+The CatBoost feature importance directly addresses our research question by:
+
+1. Ranking the influence of economic variables relative to cultural and political factors
+2. Revealing whether economic predictors gain importance when non-linear patterns are considered
+3. Providing an alternative statistical perspective on what drives far-right populist support
+
+By comparing these results with our logistic regression findings, we can more confidently assess whether economic conditions are truly the primary drivers of far-right populist support, or whether they play a more nuanced role alongside cultural and political factors.
+
+This dual-model approach strengthens the robustness of our conclusions about the factors driving populist support across European democracies.
+
+```{python}
+# Pull names & importances from the best model
+feature_names = X_train.columns
+importances   = best_model.feature_importances_
+
+# Build & sort DataFrame
+feat_imp = pd.DataFrame({
+    'Feature'   : feature_names,
+    'Importance': importances
+}).sort_values('Importance', ascending=False).reset_index(drop=True)
+
+# Plot top 20
+top_n = 20
+top = feat_imp.head(top_n)
+
+# Replace underscores with spaces for better labels
+top['Feature_clean'] = top['Feature'].str.replace('_', ' ').str.title()
+
+plt.figure(figsize=(10, 8))
+plt.barh(range(len(top)), top['Importance'], alpha=0.8)
+
+# Use the cleaned feature names for y-axis labels
+plt.yticks(range(len(top)), top['Feature_clean'])
+
+plt.xlabel('Importance')
+plt.title('Top 20 Feature Importances (CatBoost)')
+plt.gca().invert_yaxis()
+plt.tight_layout()
+plt.show()
+
+print("\nTop 10 Most Important Features:")
+top_display = top[['Feature_clean', 'Importance']].head(10)
+top_display.columns = ['Feature', 'Importance']
+print(top_display.to_string(index=False))
+```
+
+## Interpreting CatBoost Feature Importance Results
+
+The CatBoost feature importance visualization reveals which variables are most influential in predicting far-right populist support according to our tree-based model. Unlike the logistic regression results, these importances don't indicate direction (positive or negative association), but rather the overall magnitude of influence.
+
+### Top Predictors in the CatBoost Model
+
+1. **Years of Education** - Education emerges as the single most important predictor, significantly outranking other features. This suggests educational attainment has a strong relationship with populist support.
+
+2. **Immigration from Different Ethnic Groups** - Attitudes toward ethnically different immigrants rank second, reinforcing the cultural dimension of populist support identified in our logistic regression.
+
+3. **Gay Adoption Rights** - Views on gay adoption remain highly influential, similar to the logistic regression findings.
+
+4. **EU Integration** - Attitudes toward European integration rank much higher in the CatBoost model (4th) than in the logistic regression model (17th), suggesting this relationship may be more complex or non-linear.
+
+5. **Age** - Age appears as a top-5 predictor in the CatBoost model but was not among the top 20 in the logistic regression, indicating potential non-linear age effects.
+
+### Economic Factors in Context
+
+Economic variables show mixed importance in the CatBoost model:
+
+- **Income Decile** ranks 7th, appearing in the upper half but not dominating
+- **Economic Satisfaction** ranks 8th, similarly important but not primary
+- **Financial Difficulty in Childhood** ranks relatively low (18th)
+
+This pattern aligns with our logistic regression findings in suggesting that economic factors matter but aren't clearly dominant over cultural and political variables.
+
+### Comparison with Logistic Regression Results
+
+Several notable differences between the models:
+
+1. **Different top predictors**: While logistic regression identified citizenship status as the top predictor, CatBoost highlights education. This suggests different aspects of the social hierarchy may be captured by different modeling approaches.
+
+2. **EU integration importance**: This variable jumps from a low rank in logistic regression to 4th in CatBoost, potentially indicating a non-linear relationship with populist support.
+
+3. **Consistency in cultural variables**: Both models rank immigration attitudes and social values (gay adoption rights, traditional values) highly, reinforcing the cultural dimension of populist support.
+
+4. **Age emerges in CatBoost**: The tree-based model identifies age as highly influential, possibly capturing generational effects that weren't apparent in the linear model.
+
+5. **Religion variables**: Religious attendance ranks lower in CatBoost than in logistic regression, though religiosity still appears in the top 20.
+
+### Implications for Our Research Question
+
+The CatBoost results provide additional evidence on our central question about economic drivers of populist support:
+
+1. **Economic factors show moderate importance**: Income and economic satisfaction appear in positions 7-8, indicating relevance but not dominance.
+
+2. **Cultural factors remain prominent**: Immigration attitudes, social values on LGBT rights, and traditional values all rank highly, reinforcing the cultural dimension.
+
+3. **Educational divide stands out**: Education's top ranking suggests a social stratification that may combine economic, cultural, and status elements in ways that go beyond purely economic explanations.
+
+Overall, the CatBoost feature importance analysis reinforces our logistic regression findings that far-right populist support is driven by a combination of factors, with cultural and social dimensions appearing at least as important as purely economic conditions. The consistency across very different modeling approaches strengthens our conclusion that economic conditions alone cannot be considered the primary driver of far-right populist support.
+
+## SHAP Analysis: Uncovering the Nuances of Far-Right Populist Support
+
+This code implements a SHAP (SHapley Additive exPlanations) analysis to provide deeper insights into our research question: **Are economic conditions primarily responsible for the support of radical right-wing populist parties?**
+
+### What SHAP Analysis Does
+
+While our previous feature importance analyses identified *which* features are most influential in predicting populist support, SHAP analysis takes this a crucial step further by revealing:
+
+1. **Direction and magnitude of influence** for each feature on each individual prediction
+2. **How specific feature values** (high or low) affect predictions
+3. **Feature interactions** and non-linear effects that simple importance rankings miss
+4. **Consistency of effects** across different voter profiles
+
+### Methodological Implementation
+
+This code performs several key steps:
+
+1. **Create a SHAP explainer** specific to our tree-based CatBoost model
+2. **Calculate SHAP values** for each feature and each voter in our test set
+3. **Process the SHAP values** to ensure they're in the correct format
+4. **Prepare a clean visualization** with readable feature names
+5. **Generate a beeswarm plot** showing how each feature influences predictions
+
+### Why SHAP Analysis Is Critical for Our Research Question
+
+SHAP analysis addresses our research question in ways that basic feature importance cannot:
+
+1. **Color-coding reveals value impacts**: The plot shows whether high values (red) or low values (blue) of each feature increase or decrease populist support, offering nuanced insight into how economic conditions operate
+2. **Distribution of dots shows consistency**: We can see if economic factors consistently push predictions in one direction across all voters, or if their effect varies
+3. **Feature value context**: Rather than just knowing economic variables matter, we can see precisely *how* they matter - whether economic hardship or prosperity correlates with populist support
+4. **Individual-level insights**: SHAP allows us to understand how economic, cultural, and political factors combine at the individual voter level
+
+### Advancing Beyond Simple Feature Importance
+
+This analysis moves our research beyond simply ranking variables to understanding the complex mechanisms behind populist support:
+
+1. **Identifying threshold effects**: Do economic variables influence populist support only at extreme values?
+2. **Differentiating between similar features**: Do different economic indicators (objective income vs. subjective satisfaction) operate similarly?
+3. **Revealing interactions**: Does economic insecurity operate differently depending on cultural attitudes?
+
+The resulting SHAP visualization provides our most sophisticated insight into whether economic conditions drive far-right populist support, revealing not just if economic factors matter, but precisely how they influence voting patterns across different segments of the electorate.
+
+```{python}
+# 1) Build a TreeExplainer using the best model
+explainer = shap.TreeExplainer(best_model)  # Changed from model to best_model
+
+# 2) Compute SHAP values on your test set
+sv = explainer.shap_values(X_test)
+
+# 3) Normalize into a 2D array of shape (n_samples, n_features)
+if isinstance(sv, list):
+    # multiclass/binary returns [sv_class0, sv_class1]
+    shap_mat = sv[1]              # pick the positive class
+elif isinstance(sv, np.ndarray) and sv.ndim == 3:
+    # some versions return (n_classes, n_samples, n_features)
+    shap_mat = sv[1]
+elif isinstance(sv, np.ndarray) and sv.ndim == 2:
+    # already (n_samples, n_features)
+    shap_mat = sv
+else:
+    raise ValueError(f"Unexpected shap_values format: {type(sv)} with shape {getattr(sv, 'shape', None)}")
+
+# 4) Create a copy of X_test with cleaned column names
+X_test_display = X_test.copy()
+X_test_display.columns = X_test_display.columns.str.replace('_', ' ').str.title()
+
+# 5) Plot the summary beeswarm with cleaned feature names
+shap.summary_plot(
+    shap_mat,
+    X_test_display, 
+    feature_names=X_test_display.columns,
+    max_display=20,
+    show=False 
+)
+
+# Add title and show
+plt.title('SHAP Summary Plot - Top 20 Features (CatBoost)', fontsize=14, pad=20)
+plt.tight_layout()
+plt.show()
+```
+
+## SHAP Analysis Results: Nuanced Drivers of Far-Right Populist Support
+
+The SHAP summary plot provides our most detailed view of how different features influence far-right populist support, revealing not just which factors matter, but how their values affect predictions.
+
+### Top Influential Features and Their Effects
+
+1. **Gay Adoption Rights**
+  - Higher values (red dots to the right) increase probability of populist support
+  - Lower values (blue dots to the left) decrease probability
+  - The clear separation shows this social value consistently predicts voting behavior
+
+2. **Immigration from Different Ethnic Groups**
+  - Higher restrictiveness (red dots to the right) strongly increases populist support
+  - The extended red dots far to the right indicate extreme anti-immigration views have outsized influence
+  - This cultural factor shows one of the clearest and strongest relationships
+
+3. **EU Integration**
+  - Lower support for EU integration (red dots to the left) increases populist support
+  - Higher support (blue dots to the right) decreases populist support
+  - The pattern shows strong Euroscepticism is a key predictor
+
+4. **Years of Education**
+  - The complex distribution shows a non-linear relationship
+  - Generally, lower education (red dots to the left) increases populist support
+  - Higher education (blue dots to the right) decreases it
+  - The wide spread indicates education interacts with other factors
+
+5. **Age**
+  - Younger voters (blue dots to the right) show decreased populist support
+  - Older voters (red dots to the left) show increased support
+  - The spread suggests age effects vary across different voter groups
+
+### Economic Factors: Complex and Mixed Effects
+
+Several economic indicators appear in the visualization:
+
+- **Income Decile** (7th): High income (red dots to the right) slightly increases populist support, while low income (blue dots to the left) decreases it - a pattern that contradicts simple economic grievance theories
+- **Economic Satisfaction** (10th): Shows a similar mixed pattern, with no clear directional effect
+- **Financial Difficulty Childhood** (19th): Low childhood financial difficulty (blue dots) associated with lower populist support
+
+The economic variables show less consistent and sometimes counterintuitive patterns compared to cultural factors, with substantial overlap between high and low values in their effect on predictions.
+
+### Cultural and Political Values: Clear Patterns
+
+Several cultural and political variables show stronger and more consistent effects:
+
+- **Country Attachment** (6th): Lower attachment (blue dots to the left) strongly decreases populist support
+- **Child Obedience** (8th): Higher value on obedience (blue dots to the right) increases populist support
+- **Trust in Politicians** (13th): Higher trust (red dots to the right) increases populist support
+
+### Integrated Interpretation
+
+This SHAP analysis reveals several crucial insights about our research question:
+
+1. **Cultural values dominate the top positions**, with attitudes toward gay rights and immigration showing the clearest and strongest relationships to populist support
+
+2. **Economic factors show inconsistent effects** - income and economic satisfaction appear midway through the top features but with overlapping distributions that suggest complex, non-linear relationships that don't align with simple economic grievance narratives
+
+3. **Institutional and political factors** like EU integration and trust in politicians show clearer patterns than purely economic variables
+
+4. **Education emerges as a critical factor** that likely captures multiple dimensions of stratification - economic, cultural, and social - suggesting a more complex relationship than purely economic explanations allow
+
+This detailed SHAP analysis provides compelling evidence that far-right populist support cannot be primarily attributed to economic conditions alone. While economic factors do matter, cultural values and political attitudes show stronger, more consistent relationships with populist support. The results point to a multidimensional explanation where cultural identity concerns and political disillusionment play at least as important a role as economic circumstances, if not more so.
+
+# Catboost By Country Models
+
+
+Code block with stuff taken from other files
+
+```{python}
+features = [
+'income_decile', 'income_feeling', 'paid_work', 
+'econ_satisfaction', 'unemp_3m', 'years_education', 'financial_difficulty_childhood', 
+'immig_same_ethnic', 'immig_diff_ethnic', 'gay_rights_freedom', 
+'gay_adoption_rights', 'eu_integration', 'europe_attachment', 'country_attachment', 
+'child_obedience', 'leader_loyalty', 'tradition_important', 'pleasure_important', 
+'trust_politicians', 'trust_parliament', 'influence_on_politics', 
+'confident_participation', 'active_politics_role', 'political_interest',
+'party_closeness', 'ess_round', 'age', 'gender', 'ethnic_majority_identity', 'disc_nationality', 
+'disc_race', 'disc_ethnicity', 'born_in_country', 'citizen', 'how_religious', 'religion_belonging', 
+'religion_attendance'
+]
+target = 'populist_and_farright'
+```
+
+```{python}
+merged = pd.read_csv('final_df_with_populist_splits.csv')
+```
+
+### Further Data Inspection
+
+As the survey contains the most data from Italy and France we decided to focus on a comparative study between the two.
+
+As focusing on specific countries significantly downsizes the data we are working with further data exploration was undertaken into France's and Italy's data.
+
+```{python}
+italy = merged[merged["country_name"]== "Italy"].copy()
+IT_report = sweet.analyze(italy)
+IT_report.show_notebook()
+```
+
+```{python}
+france = merged[merged["country_name"]== "France"].copy()
+FR_report = sweet.analyze(france)
+FR_report.show_notebook()
+```
+
+Key findings were certain categorical levels contained very few responses hence those categories were merged with their nearest neighbours category to reduce uneccessary dimensionality and stabilize estimates provided by the model.
+
+Both countries had very similar feature distribution hence the same edits to the features were done to both. The Following features contain merged categories:
+- income_feeling
+- immig_same_ethnic
+- gay_rights_freedom
+- child_obedience
+- leader_loyalty
+- tradition_important
+- pleasure_important
+- influence_on_politics
+- confident_participation
+- active_politics_role
+
+Additionally two distinct categories appeared skewed due to unrealistic outliers that may have orginated from typos, data entry errors, or default error values. This appeared in years_education as certain ages were recorded as high as 88 which is highly unrealistic. We decided to remove rows with over 40 years of education which is still a very high values but is more realistic.
+Additionally age contained values at 999 which is likely a default error value. All rows containing 999 were also removed. Not these rows combined accounted for less than 1% of the data hence their removal is not substantively detrimental.
+
+```{python}
+def cat_merge(df):
+    df["income_feeling"] = df["income_feeling"].replace({4: 3})
+    df["financial_difficulty_childhood"] = df["financial_difficulty_childhood"].replace({1: 2})
+    df["immig_same_ethnic"] = df["immig_same_ethnic"].replace({4: 3})
+    df["gay_rights_freedom"] = df["gay_rights_freedom"].replace({5: 4})
+    df["child_obedience"] = df["child_obedience"].replace({5: 4})
+    df["leader_loyalty"] = df["leader_loyalty"].replace({1: 2})
+    df["tradition_important"] = df["tradition_important"].replace({6: 5})
+    df["pleasure_important"] = df["pleasure_important"].replace({6: 5})
+    df["influence_on_politics"] = df["influence_on_politics"].replace({5: 4})
+    df["confident_participation"] = df["confident_participation"].replace({5: 4})
+    df["active_politics_role"] = df["active_politics_role"].replace({5: 4})
+    df["religion_attendance"] = df["religion_attendance"].replace({1: 2})
+
+def row_cut(df):
+    df.drop(df[df['years_education'] > 40].index, inplace=True)
+    df.drop(df[df['age'] == 999].index, inplace=True)
+
+cat_merge(france)
+row_cut(france)
+cat_merge(italy)
+row_cut(italy)
+```
+
+```{python}
+cats = [
+'income_decile', 'income_feeling', 'paid_work', 'unemp_3m','financial_difficulty_childhood', 
+'immig_same_ethnic', 'immig_diff_ethnic', 'gay_rights_freedom', 
+'gay_adoption_rights','child_obedience', 'leader_loyalty', 'tradition_important', 'pleasure_important', 'influence_on_politics', 
+'confident_participation', 'active_politics_role', 'political_interest',
+'party_closeness', 'ess_round', 'gender', 'ethnic_majority_identity', 'disc_nationality', 
+'disc_race', 'disc_ethnicity', 'born_in_country', 'citizen', 'religion_belonging', 
+'religion_attendance']
+```
+
+```{python}
+# Include country in the dataframe
+france = france[features + [target]].copy()
+italy = italy[features + [target]].copy()
+```
+
+### France
+
+Firstly survey data from french respondants was trained and tested using a CatBoost model as done before in the previous section.
+
+During the further data exploration we observed that the outcome variable distribution was highly skewed towards non-right-populist parties. Hence to ensure this class imbalance does not create bias in the models predictive ability we opted to under-sample non-right-populist party outcomes to the level of right populist party outcomes. Note that france as 2,133 data points however only 412 far-right outcomes. Therefore the quality of the model might be hindered by the lack of data however that decision was taken over oversampling that data and duplicating surveys which could lead to overfitting. As we intend to do a cross country analysis this would be undesirable. However the test set remained imbalanced as under sampling would leave us with a significanly reduced test set size which would not provide meaningful results.
+
+```{python}
+FR_X = france.drop(columns=[target])
+FR_Y = france[target]
+
+IT_X = italy.drop(columns=[target])
+IT_Y = italy[target]
+
+# 1) Stratified split
+FRX_train, FRX_test, FRY_train, FRY_test = train_test_split(
+    FR_X, FR_Y, test_size=0.2, random_state=42, stratify=FR_Y)
+
+# 2) Undersample
+rus = RandomUnderSampler(sampling_strategy='auto', random_state=42)
+FRX_train, FRY_train = rus.fit_resample(FRX_train, FRY_train)
+
+# 3) Compute pos/neg weight (will be ~1.0 after 50/50)
+scale_pos_weight = FRY_train.value_counts()[0] / FRY_train.value_counts()[1]
+```
+
+With our focus on balanced accuracy the french model's hyperparamters were tuned in regards to maximizing balanced accuracy. This is especially useful as the test set has a heavy class imbalance. 
+
+```{python}
+from catboost import CatBoostClassifier
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import make_scorer, balanced_accuracy_score
+
+# 1) Define hyperparameter grid
+param_grid = {
+    "iterations":         [500, 1000],
+    "depth":              [4, 6, 8],
+    "learning_rate":      [0.01, 0.05, 0.1],
+    "l2_leaf_reg":        [1, 5, 10],
+    "auto_class_weights": ["Balanced"],
+    "loss_function":      ["MultiClass"]
+}
+
+# 2) Initialize CatBoost
+cat_model = CatBoostClassifier(
+    verbose=0,
+    random_seed=42
+)
+
+# 3) Build a balanced‐accuracy scorer
+ba_scorer = make_scorer(balanced_accuracy_score)
+
+# 4) GridSearchCV with balanced accuracy
+grid_search = GridSearchCV(
+    estimator=cat_model,
+    param_grid=param_grid,
+    scoring=ba_scorer,
+    cv=3,            # 3‐fold stratified by default
+    n_jobs=-1,
+    verbose=1
+)
+
+# 5) Fit on your training set
+grid_search.fit(FRX_train, FRY_train)
+
+# 6) Report best params
+best_params = grid_search.best_params_
+print(f"Best Hyperparameters (by Balanced Accuracy): {best_params}")
+```
+
+#### French Model Metrics
+
+```{python}
+# 1) Train the model with the best hyperparameters
+FRmodel = CatBoostClassifier(**best_params, verbose=0, cat_features=cats,)
+FRmodel.fit(FRX_train, FRY_train)
+
+# 2) Predict on train & test sets
+FRy_pred_train  = FRmodel.predict(FRX_train)
+FRy_pred_test   = FRmodel.predict(FRX_test)
+
+# 3) Get predicted probabilities (for ROC AUC)
+FRy_proba_train = FRmodel.predict_proba(FRX_train)[:, 1]
+FRy_proba_test  = FRmodel.predict_proba(FRX_test)[:, 1]
+
+# 4) Compute all metrics with the correct variable names
+from sklearn.metrics import (
+    balanced_accuracy_score, f1_score,
+    precision_score, recall_score, roc_auc_score
+)
+
+metrics = {
+    "Train Balanced Accuracy": balanced_accuracy_score(FRY_train, FRy_pred_train),
+    "Test  Balanced Accuracy": balanced_accuracy_score(FRY_test,  FRy_pred_test)}
+
+for name, val in metrics.items():
+    print(f"{name:25s}: {val:.3f}")
+```
+
+The french model provides a balanced accuracy score on the test set of 0.573 against the training set's 0.777. This shows signs of overfitting which can be expected when dealing with smaller data splits. More importantly however the model shows a moderate predictive ability on determining a respondants support for far right populist parties. Compared to the baseline Logit model it has a slightly lower balanced accuracy compared to its 0.580 while also underperforming compared to the across countries Catboost model's 0.610. This is probably more attributed to the smaller sample size the french model is provided as there is signs of overfitting likely from the model's struggle with generalizabilty from a small training set . However either way this model is not a better predictor despite focusing down onto one country.
+
+```{python}
+feature_names = list(FRX_train.columns)
+importances = FRmodel.feature_importances_
+
+# Now build a DataFrame that lines up
+feat_imp = pd.DataFrame({
+    'Feature'   : feature_names,
+    'Importance': importances
+})
+
+# Sort for presentation
+feat_imp = feat_imp.sort_values(by='Importance', ascending=False).reset_index(drop=True)
+
+# Select top 10
+top_n = 10
+top_feat_imp = feat_imp.head(top_n)
+
+plt.figure(figsize=(10, 6))
+plt.barh(top_feat_imp['Feature'][::-1], top_feat_imp['Importance'][::-1])
+plt.xlabel('Importance')
+plt.title('Top 10 Feature Importances FRANCE')
+plt.tight_layout()
+plt.show()
+```
+
+Looking at individual feature importance we see that child_obedience is the highest contribution. This feature comes from the ESS survey question:
+
+- "Obedience and respect for authority are the most
+important values children should learn."
+
+Other top features involve immigration of different ethnicities, important of pleasure in life, and attendence of religious events. Only at 10th and economic related factor is seen being the individuals feeling towards their householf income and if it is enought to support them. The model reflects that in france economic factors do not appear to be primarily responsible for the support of right-wing populist parties. Instead it seems Cultural explanations to be the more salient predictors in france
+
+### Italy
+
+For the italian model the same modelling process was executed.
+
+```{python}
+# 1) Stratified split
+ITX_train, ITX_test, ITY_train, ITY_test = train_test_split(
+    IT_X, IT_Y, test_size=0.2, random_state=42, stratify=IT_Y)
+
+# 2) Undersample
+rus = RandomUnderSampler(sampling_strategy='auto', random_state=42)
+ITX_train, ITY_train = rus.fit_resample(ITX_train, ITY_train)
+
+# 3) Compute pos/neg weight (will be ~1.0 after 50/50)
+scale_pos_weight = ITY_train.value_counts()[0] / ITY_train.value_counts()[1]
+
+
+
+# 1) Define hyperparameter grid
+param_grid = {
+    "iterations":         [500, 1000],
+    "depth":              [4, 6, 8],
+    "learning_rate":      [0.01, 0.05, 0.1],
+    "l2_leaf_reg":        [1, 5, 10],
+    "auto_class_weights": ["Balanced"],
+    "loss_function":      ["MultiClass"]
+}
+
+# 2) Initialize CatBoost
+cat_model = CatBoostClassifier(
+    verbose=0,
+    random_seed=42
+)
+
+# 3) Build a balanced‐accuracy scorer
+ba_scorer = make_scorer(balanced_accuracy_score)
+
+# 4) GridSearchCV with balanced accuracy
+grid_search = GridSearchCV(
+    estimator=cat_model,
+    param_grid=param_grid,
+    scoring=ba_scorer,
+    cv=3,            # 3‐fold stratified by default
+    n_jobs=-1,
+    verbose=1
+)
+
+# 5) Fit on your training set
+grid_search.fit(ITX_train, ITY_train)
+
+# 6) Report best params
+best_params = grid_search.best_params_
+print(f"Best Hyperparameters (by Balanced Accuracy): {best_params}")
+
+# 1) Train the model with the best hyperparameters
+ITmodel = CatBoostClassifier(**best_params, verbose=0, cat_features=cats,)
+ITmodel.fit(ITX_train, ITY_train)
+
+# 2) Predict on train & test sets
+ITy_pred_train  = ITmodel.predict(ITX_train)
+ITy_pred_test   = ITmodel.predict(ITX_test)
+
+# 3) Get predicted probabilities (for ROC AUC)
+ITy_proba_train = ITmodel.predict_proba(ITX_train)[:, 1]
+ITy_proba_test  = ITmodel.predict_proba(ITX_test)[:, 1]
+
+# 4) Compute all metrics with the correct variable names
+from sklearn.metrics import (
+    balanced_accuracy_score, f1_score,
+    precision_score, recall_score, roc_auc_score
+)
+
+metrics = {
+    "Train Balanced Accuracy": balanced_accuracy_score(ITY_train, ITy_pred_train),
+    "Test  Balanced Accuracy": balanced_accuracy_score(ITY_test,  ITy_pred_test),}
+
+for name, val in metrics.items():
+    print(f"{name:25s}: {val:.3f}")
+```
+
+The Italian model shows a slight improvement in balanced accuracy score compared to the french with a 0.591 compared to 0.573 and even beats the logit baseline model's 0.580. However it still falls short of the Original across countries Catboost model. Once again the shortfalls of the sample size have to be considered a crucial factor in the performance of the model. However the model is overfitted as the train set score is 0.712 so oversampling and increasing overfitting is still not justified.
+
+```{python}
+feature_names = list(ITX_train.columns)
+importances = ITmodel.feature_importances_
+
+# Now build a DataFrame that lines up
+feat_imp = pd.DataFrame({
+    'Feature'   : feature_names,
+    'Importance': importances
+})
+
+# Sort for presentation
+feat_imp = feat_imp.sort_values(by='Importance', ascending=False).reset_index(drop=True)
+
+# Select top 10
+top_n = 10
+top_feat_imp = feat_imp.head(top_n)
+
+plt.figure(figsize=(10, 6))
+plt.barh(top_feat_imp['Feature'][::-1], top_feat_imp['Importance'][::-1])
+plt.xlabel('Importance')
+plt.title('Top 10 Feature Importances ITALY')
+plt.tight_layout()
+plt.show()
+```
+
+We see a similar trend in feature importance in the italian model compared to the french model. Once again economic factors do not appear to be a driving factor in classification towards right-wing populist supporters. EU integration is the most significant feature which did not appear in france's top ten however like france cultural and political factors drive seem right wing populist support the most. 
+
+### Cross Testing Models
+
+To further test if there is a difference in factors that drive right wing support between countries we opted to test the italian and french models on each others data to see if the model's are robust and able to maintain their predictive ability across borders, hence implying that the countries' political views are shaped by similar factors. On the other hand if they do not maintain their predictive power this will highlight a difference between them.
+
+#### Italian Model on French Data
+
+Firstly we ran the italian model over french respondents' data
+
+```{python}
+# 1) Align the Italy test set to the France model’s training features
+expected_cols_it = list(ITX_train.columns)
+FRX_test_aligned = FRX_test.reindex(columns=expected_cols_it, fill_value=0)
+
+# 2) Use the France model to predict on Italy
+y_fr_pred = ITmodel.predict(FRX_test_aligned)
+
+# 3) Compute metrics
+metrics = {
+    "Balanced Accuracy": balanced_accuracy_score(FRY_test, y_fr_pred),
+    "Precision"       : precision_score(FRY_test, y_fr_pred),
+    "Recall"          : recall_score(FRY_test, y_fr_pred),
+    "F1 Score"        : f1_score(FRY_test, y_fr_pred)
+}
+
+# 4) Build results DataFrame
+metrics_df = pd.DataFrame.from_dict(metrics, orient='index', columns=['Score'])
+metrics_df.index.name = 'Metric'
+
+print("=== Italy Model evaluated on France Test Set ===")
+print(metrics_df)
+```
+
+As seen when the italian model is used on french data the model drops down to a balanced accuracy of 0.506 reflecting approximately a 14% drop in accuracy. This implies that there is some difference in factors influencing right-wing populist support but overall the model does retain a large marjority of its balanced accuracy. Additionally it is only 11.7 worse then the actual french model. From this we can imply that factors driving french political far right allegiences, though may be different to italian, do show substantive differences.
+
+#### French Model on Italian Data
+
+Next we ran the french model on italian data to see if the results reflect the other way around.
+
+```{python}
+# 1) Align the Italy test set to the France model’s training features
+expected_cols_fr = list(FRX_train.columns)
+ITX_test_aligned = ITX_test.reindex(columns=expected_cols_fr, fill_value=0)
+
+# 2) Use the France model to predict on Italy
+y_it_pred = FRmodel.predict(ITX_test_aligned)
+
+# 3) Compute metrics
+metrics = {
+    "Balanced Accuracy": balanced_accuracy_score(ITY_test, y_it_pred),
+    "Precision"       : precision_score(ITY_test, y_it_pred),
+    "Recall"          : recall_score(ITY_test, y_it_pred),
+    "F1 Score"        : f1_score(ITY_test, y_it_pred)
+}
+
+# 4) Build results DataFrame
+metrics_df = pd.DataFrame.from_dict(metrics, orient='index', columns=['Score'])
+metrics_df.index.name = 'Metric'
+
+print("=== France Model evaluated on Italy Test Set ===")
+print(metrics_df)
+```
+
+Here we see the french model perform better on italian data than the italian model did on the french data with an even higher balanced accuracy score of 0.543. This is only an 8% decrease compared to the Italian model on its own data and a small 5% decrease compared to the french model on its own data. Although the french model showed a lower balanced accuracy initially it seems that it may be a more robust model across countries.
+
+
+#### French Model on Hungarian Data
+
+To see if the french model's robustness holds against other countries. As revealed in initial exploratory analysis hungary appeared to have comparatively stronger ideological structuring of far-right support. Hence we decided to test the french model on it.
+
+```{python}
+Hungary = merged[merged["country_name"]== "Hungary"].copy()
+cat_merge(Hungary)
+row_cut(Hungary)
+
+Hungary = Hungary[features + [target]].copy()
+Hungary = pd.get_dummies(Hungary,columns=cats,drop_first=True)
+
+HU_X = Hungary.drop(columns=[target])
+HU_Y = Hungary[target]
+```
+
+```{python}
+# 1) Align the Italy test set to the France model’s training features
+expected_cols_fr = list(FRX_train.columns)
+HUX_test_aligned = HU_X.reindex(columns=expected_cols_fr, fill_value=0)
+
+# 2) Use the France model to predict on Italy
+y_hu_pred = FRmodel.predict(HUX_test_aligned)
+
+# 3) Compute metrics
+metrics = {
+    "Balanced Accuracy": balanced_accuracy_score(HU_Y, y_hu_pred),
+    "Precision"       : precision_score(HU_Y, y_hu_pred),
+    "Recall"          : recall_score(HU_Y, y_hu_pred),
+    "F1 Score"        : f1_score(HU_Y, y_hu_pred)
+}
+
+# 4) Build results DataFrame
+metrics_df = pd.DataFrame.from_dict(metrics, orient='index', columns=['Score'])
+metrics_df.index.name = 'Metric'
+
+print("=== France Model evaluated on Hungary Test Set ===")
+print(metrics_df)
+```
+
+The French model performed significanly poorer on hungarian data with a balanced accuracy of 0.444. This is a 22.5% decrease in balanced accuracy compared to the french models original score of 0.573. It appears that contrasting features may be driving hungarians towards far-right populism.
+
+
+# Conclusion
+
+
+This project sought to investigate the individual-level drivers of support for radical right-wing populist parties across five European countries, using European Social Survey data merged with The PopuList party classification. Drawing on competing accounts in the literature — particularly the economic insecurity thesis (e.g. Inglehart and Norris, 2017), the cultural backlash hypothesis (e.g. Mudde, 2007; Gidron and Hall, 2017), and political alienation perspectives — this study employed a mixed-methods approach combining descriptive statistics, logistic regression, CatBoost modelling, and SHAP interpretation.
+
+The baseline logistic regression model highlighted cultural attitudes — particularly restrictive immigration views and low support for gay rights — as the strongest and most consistent predictors of support for Right Wing populist parties. Economic variables such as perceived household income difficulty and unemployment status were statistically significant in some national contexts but generally had weaker effects. These findings support the cultural threat hypothesis and echo Gidron and Hall’s (2017) argument that status anxiety and identity displacement, rather than material deprivation per se, are central to explaining Right Wing Populsist appeal.
+
+The CatBoost model, a gradient boosting classifier capable of capturing nonlinear interactions and complex feature hierarchies, provided stronger overall predictive accuracy and more nuanced insight. It confirmed the salience of cultural predictors, but also suggested that economic factors played a more complex role — for example, interacting with trust in institutions or perceived EU integration. The SHAP analysis, deepened our analysis by indicaing feature direction as well as importance. This reinforced this interpretation: while cultural conservatism and nativist sentiment were the most uniformly influential features, economic variables exhibited heterogeneous effects — sometimes intensifying, and other times moderating, the likelihood of Right-wing populist support depending on their interaction with cultural and political orientations. This speaks to the literature’s increasing recognition of cross-cutting factors (Margalit, 2019) as more predictive than any single causal factor.
+
+While the logistic regression model offered clarity and interpretability, its linear assumptions and sensitivity to multicollinearity limited its ability to capture the complexity of individual-level populist support. To further address this, we implemented single-country CatBoost models, allowing us to explore context-specific dynamics more precisely. These models were chosen to account for the political, economic, and cultural heterogeneity across national contexts — an approach grounded in the literature's recognition that the drivers of radical right-wing populism vary significantly across countries (e.g. Mudde, 2007; Gidron and Hall, 2017).
+
+The country models revealed distinctive patterns: in France, identity and cultural values emerged as dominant predictors, consistent with the nation’s long-standing debates around laïcité, immigration, and national identity. In contrast, Italy’s model highlighted a stronger role for economic dissatisfaction and institutional distrust, reflecting the country’s history of political volatility and economic precarity. These findings underscore the limitations of cross-national generalisations and highlight the value of disaggregated analysis in capturing the localised drivers of populist sentiment.
+
+Together with the SHAP analysis, the CatBoost models provided a richer, more flexible depiction of how cultural, economic, and political factors interact — often nonlinearly — to shape right wing populist support. This approach supports recent scholarship that emphasizes cultural backlash and political alienation over strictly economic accounts, while also demonstrating how machine learning methods can enhance political analysis by detecting interactions and conditional effects that traditional regressions may obscure.
+
+Overall, the findings align with recent scholarship emphasizing the primacy of cultural and political disaffection drivers, while cautioning against overly deterministic accounts of economic insecurity. Importantly, they suggest that predictive modelling can enrich political sociology by uncovering complex interactions often missed in traditional regression. Future work might incorporate temporal or media exposure data to explore how political narratives shape — and are shaped by — these individual-level attitudes.
+
+## Limitations
+While this project offers important insights into the drivers of radical right-wing populist (RRWP) support across Europe, several limitations should be acknowledged.
+
+### 1. Use of Cross-Sectional Survey Data
+
+A primary limitation lies in the reliance on cross-sectional survey data, which restricts our ability to infer causal relationships or track changes over time. Although the European Social Survey (ESS) provides rich, harmonised micro-level data, it captures perceptions at a single point, limiting our capacity to distinguish between long-standing grievances and more proximate triggers of populist support. Furthermore, self-reported attitudes and behaviours are subject to social desirability bias, particularly on sensitive topics such as immigration, race, and nationalism.
+
+### 2. Subjective vs. Objective Economic Conditions
+
+Our emphasis on perceived economic insecurity, rather than objective economic indicators (e.g. income level, employment status), aligns with recent scholarship on the psychological dimensions of political behaviour. However, this focus may omit structural determinants of populist sentiment that operate below the level of conscious perception. Moreover, the absence of regional-level or contextual economic data (e.g. local unemployment rates or trade exposure) constrains our ability to capture place-based economic grievances that have been shown to influence populist voting patterns.
+
+### 3. Party Classification Constraints
+
+The use of The PopuList dataset to classify parties as radical right-wing populist is both a strength and a limitation. While it offers a consistent, expert-coded framework, it necessarily involves judgment calls and excludes smaller or emerging parties that may exhibit populist features but are not formally coded as such. This may slightly understate the prevalence of populist support in some countries.
+
+### 4. Modelling Assumptions and Interpretability
+
+Our modelling strategy—particularly the use of CatBoost and SHAP values—allows for flexible, high-dimensional analysis of complex interactions. However, these models are optimised for predictive performance, not causal inference. While SHAP enhances interpretability, the results still reflect statistical associations rather than mechanisms. Moreover, despite CatBoost’s strengths in handling categorical variables and imbalanced data, model tuning and validation remain sensitive to hyperparameter choices, and overfitting remains a potential risk—especially in country-level models with smaller sample sizes.
+
+### 5. National Focus and External Validity
+
+While the inclusion of five diverse European countries enables cross-national comparison, the findings may not be generalisable beyond this set. Differences in political history, party systems, and media environments shape the meaning and appeal of populism in ways not fully captured by our models. In particular, the dynamics of populist support in Eastern Europe or outside Europe may involve distinct explanatory logics.
+
+# Future Research Directions
+In light of these limitations, some avenues of potential future research include:
+
+### 1. Longitudinal Analysis of Economic Shocks and Populist Support
+
+A natural extension would involve tracking the same individuals across multiple ESS waves to examine how economic transitions affect populist support over time. It would be possible to test whether economic hardship precedes shifts in populist support or whether pre-existing cultural attitudes shape economic perceptions.
+
+In addition we could analyse and compare with periods like 2008-2015, to determine how the financial crisis and subsequent austerity measures influenced populist support across different demographics and countries.
+
+### 2. Comparative Expansion and Theory Testing
+
+Future research could test the generalisability of these findings by replicating the analysis in non-European contexts such as the Americas, Asia, or Africa, where different historical legacies, economic structures, and political systems may produce distinct patterns of populist support. Additionally, party-specific analysis could move beyond treating all RRWP parties identically to examine whether different subtypes—anti-immigration parties (like the Sweden Democrats), anti-establishment movements (like the Five Star Movement), or anti-EU parties (like UKIP)—attract distinct voter coalitions with varying motivations. This differentiated approach would provide more nuanced insights into the heterogeneous nature of populist appeals and voter responses.
+
+### 3. Left-Wing Populist Comparison: Economic vs. Cultural Drivers
+
+Another extension is analysing support for left-wing populist parties to understand whether the drivers of populist support are fundamentally different across the ideological spectrum. This research could examine whether economic grievances play a more central role in attracting left populist voters compared to right populist supporters, potentially revealing that economic conditions are indeed primary—but specifically for left-wing variants of populism. 
+
+Such analysis would help disentangle whether our findings reflect the limits of economic explanations for populism generally, or whether economic factors operate differently for different types of populist appeals. Such analysis would help determine whether our findings reflect the limits of economic explanations for populism generally, or whether different types of populist appeals attract distinct voter bases with different motivations.
+
+
+# Bibliography 
+
+
+Canovan, M. (1999). Trust the People! Populism and the Two Faces of Democracy. Political Studies, 47(1), pp.2–16. doi:https://doi.org/10.1111/1467-9248.00184.
+
+Cas Mudde and Cristóbal Rovira Kaltwasser (2012). Populism in Europe and the Americas : threat or corrective for democracy? Cambridge U.A.: Cambridge University Press.
+
+Conley, R.S. (2020). Donald Trump and American Populism. Edinburgh University Press.European Social Survey European Research Infrastructure (ESS ERIC) (2024) ESS11 - integrated file, edition 2.0 [Data set]. Sikt - Norwegian Agency for Shared Services in Education and Research. https://doi.org/10.21338/ess11e02_0. 
+
+Gidron, N. and Hall, P. (2017). The Politics of Social Status: Economic and Cultural Roots of the Populist Right. The British Journal of Sociology, 68(S1). doi:https://doi.org/10.1111/1468-4446.12319.
+
+Laclau, E. (2005). On Populist Reason. [online] London: Verso. Available at: https://voidnetwork.gr/wp-content/uploads/2016/09/On-Populist-Reason-by-Ernesto-Laclau.pdf.Margalit Y. 2019. Economic insecurity and the causes of populism, reconsidered. J. Econ. Perspect. 33(4):152–70 
+
+
+Naoi M. 2020. Survey experiments in international political economy: what we (don’t) know about the backlash
+against globalization. Annu. Rev. Political Sci. 23:333–56 
+
+Norris P, Inglehart R. 2019. Cultural Backlash: Trump, Brexit, and Authoritarian Populism. Cambridge, UK:
+Cambridge Univ. Press 
+
+Prokhorenkova, L., Gusev, G., Vorobev, A., Dorogush, A.V. and Gulin, A. (2018). CatBoost: unbiased boosting with categorical features. [online] Neural Information Processing Systems. Available at: https://papers.nips.cc/paper_files/paper/2018/hash/14491b756b3a51daac41c24863285549-Abstract.html.
+
+
+Rodrik, D. (2021). Why Does Globalization Fuel Populism? Economics, Culture, and the Rise of Right-Wing Populism. Annual Review of Economics, [online] 13(1). doi:https://doi.org/10.1146/annurev-economics-070220-032416.
+
+Rooduijn, Matthijs, Andrea L.P. Pirro, Daphne Halikiopoulou, Caterina Froio, Stijn van Kessel, Sarah L. de Lange, Cas Mudde, and Paul Taggart (2023). The PopuList 3.0: An Overview of Populist, Far-left and Far-right Parties in Europe. www.popu-list.org. DOI 10.17605/OSF.IO/2EWKQ. 
+
+Rooduijn, Matthijs, Andrea L.P. Pirro, Daphne Halikiopoulou, Caterina Froio, Stijn van Kessel, Sarah L. de Lange, Cas Mudde, and Paul Taggart (2023). The PopuList: A Database of Populist, Far-Left, and Far-Right Parties Using Expert-Informed Qualitative Comparative Classification (EiQCC). British Journal of Political Science, 1–10. https://doi.org/10.1017/S0007123423000431. 
+
+Sides J, Tesler M, Vavreck L. 2018. Identity Crisis: The 2016 Presidential Campaign and the Battle for the Meaning
+of America. Princeton, NJ: Princeton Univ. Press 
+

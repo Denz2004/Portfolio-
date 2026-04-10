@@ -1,0 +1,345 @@
+# REGRESSION FOR THE BONUS MODEL (missing levels are replaced with NA)
+#we will run the regression using a backwards elimination strategy
+library(arm)
+library(car)
+
+model_na_data<-clean_main_model #creating a copy where missing will be replaced by NA
+
+# Loop through each column
+for (col in colnames(model_na_data)) {
+  # Check if missing is a level, and replace it by NA
+      levels(model_na_data[[col]])[levels(model_na_data[[col]]) == "missing"] <- NA
+}
+
+summary(model_na_data) #checking the summary
+# We need to remove columns that only have 1 level after missing is removed, as it doesn't make sense to have a predictor with only 1 level.
+# These are: W4Childck1YP
+model_na_data <- model_na_data[, !colnames(model_na_data) %in% "W4Childck1YP"] 
+
+# Next we decided to remove W6NEETAct, as even though there are multiple levels, 
+# the missing values are too dominant and would cause the complete case analysis to have too little data
+# As shown in the Missing Analysis part, this missingness is believed to be caused by from people being not applicable to be a NEET, 
+# this means that they are in employment, education or training.
+# Since we have W6JobYP and W6EducYP in the data, this should be okay
+model_na_data <- model_na_data[, !colnames(model_na_data) %in% "W6NEETAct"] 
+
+complete_cases <- complete.cases(model_na_data) # we now need to do a complete cases analysis 
+model_na_data<-model_na_data[complete_cases, ] #keeping only complete rows (361)
+dim(model_na_data) #the dimensions are much smaller, this is the impact of replacing the missing levels with NA
+
+#starting with all predictors 
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . , data = model_na_data)
+Anova(W8DINCW.na.lm)
+ 
+#we remove the least significant predictor W1usevcHH
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W1alceverYP
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W2ghq12scr_binary
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W1ch12_15HH
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH
+                    , data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor standardised_W4schatYP
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W6acqno
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor IndSchool
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W4empsYP
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W1InCarHH
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W8QMAFI
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W4AlcFreqYP
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W1empsdad
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W6gcse
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W1empsmum
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W8DMARSTAT
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W1truantYP
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W1hous12HH
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    , data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W5JobYP
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    - W5JobYP, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor log_of_W8QDEB2
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    - W5JobYP - log_of_W8QDEB2, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W1bulrc
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    - W5JobYP - log_of_W8QDEB2 - W1bulrc, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W4NamesYP
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    - W5JobYP - log_of_W8QDEB2 - W1bulrc - W4NamesYP, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W2depressYP
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    - W5JobYP - log_of_W8QDEB2 - W1bulrc - W4NamesYP - W2depressYP, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W1condur5MP
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    - W5JobYP - log_of_W8QDEB2 - W1bulrc - W4NamesYP - W2depressYP - W1condur5MP, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W8TENURE
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    - W5JobYP - log_of_W8QDEB2 - W1bulrc - W4NamesYP - W2depressYP - W1condur5MP - W8TENURE
+                    , data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W1heposs9YP
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    - W5JobYP - log_of_W8QDEB2 - W1bulrc - W4NamesYP - W2depressYP - W1condur5MP - W8TENURE
+                    - W1heposs9YP, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W1ch3_11HH
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    - W5JobYP - log_of_W8QDEB2 - W1bulrc - W4NamesYP - W2depressYP - W1condur5MP - W8TENURE
+                    - W1heposs9YP - W1ch3_11HH, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor log_of_W1GrssyrHH
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    - W5JobYP - log_of_W8QDEB2 - W1bulrc - W4NamesYP - W2depressYP - W1condur5MP - W8TENURE
+                    - W1heposs9YP - W1ch3_11HH - log_of_W1GrssyrHH, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor standardised_W1yschat1
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    - W5JobYP - log_of_W8QDEB2 - W1bulrc - W4NamesYP - W2depressYP - W1condur5MP - W8TENURE
+                    - W1heposs9YP - W1ch3_11HH - log_of_W1GrssyrHH - standardised_W1yschat1, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W8DACTIVITY
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    - W5JobYP - log_of_W8QDEB2 - W1bulrc - W4NamesYP - W2depressYP - W1condur5MP - W8TENURE
+                    - W1heposs9YP - W1ch3_11HH - log_of_W1GrssyrHH - standardised_W1yschat1 - W8DACTIVITY
+                    , data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W6EducYP
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    - W5JobYP - log_of_W8QDEB2 - W1bulrc - W4NamesYP - W2depressYP - W1condur5MP - W8TENURE
+                    - W1heposs9YP - W1ch3_11HH - log_of_W1GrssyrHH - standardised_W1yschat1 - W8DACTIVITY
+                    - W6EducYP, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W8DGHQSC_binary
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    - W5JobYP - log_of_W8QDEB2 - W1bulrc - W4NamesYP - W2depressYP - W1condur5MP - W8TENURE
+                    - W1heposs9YP - W1ch3_11HH - log_of_W1GrssyrHH - standardised_W1yschat1 - W8DACTIVITY
+                    - W6EducYP - W8DGHQSC_binary, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W1ch0_2HH
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    - W5JobYP - log_of_W8QDEB2 - W1bulrc - W4NamesYP - W2depressYP - W1condur5MP - W8TENURE
+                    - W1heposs9YP - W1ch3_11HH - log_of_W1GrssyrHH - standardised_W1yschat1 - W8DACTIVITY
+                    - W6EducYP - W8DGHQSC_binary - W1ch0_2HH, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W6OwnchiDV
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    - W5JobYP - log_of_W8QDEB2 - W1bulrc - W4NamesYP - W2depressYP - W1condur5MP - W8TENURE
+                    - W1heposs9YP - W1ch3_11HH - log_of_W1GrssyrHH - standardised_W1yschat1 - W8DACTIVITY
+                    - W6EducYP - W8DGHQSC_binary - W1ch0_2HH - W6OwnchiDV, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W1depkids
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    - W5JobYP - log_of_W8QDEB2 - W1bulrc - W4NamesYP - W2depressYP - W1condur5MP - W8TENURE
+                    - W1heposs9YP - W1ch3_11HH - log_of_W1GrssyrHH - standardised_W1yschat1 - W8DACTIVITY
+                    - W6EducYP - W8DGHQSC_binary - W1ch0_2HH - W6OwnchiDV - W1depkids, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W1NoldBroHS
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    - W5JobYP - log_of_W8QDEB2 - W1bulrc - W4NamesYP - W2depressYP - W1condur5MP - W8TENURE
+                    - W1heposs9YP - W1ch3_11HH - log_of_W1GrssyrHH - standardised_W1yschat1 - W8DACTIVITY
+                    - W6EducYP - W8DGHQSC_binary - W1ch0_2HH - W6OwnchiDV - W1depkids - W1NoldBroHS
+                    , data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W1ch16_17HH
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    - W5JobYP - log_of_W8QDEB2 - W1bulrc - W4NamesYP - W2depressYP - W1condur5MP - W8TENURE
+                    - W1heposs9YP - W1ch3_11HH - log_of_W1GrssyrHH - standardised_W1yschat1 - W8DACTIVITY
+                    - W6EducYP - W8DGHQSC_binary - W1ch0_2HH - W6OwnchiDV - W1depkids - W1NoldBroHS
+                    - W1ch16_17HH, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+# Moving on are borderline significant predictors
+
+#we remove the least significant predictor log_of_W1GrssyrMP
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    - W5JobYP - log_of_W8QDEB2 - W1bulrc - W4NamesYP - W2depressYP - W1condur5MP - W8TENURE
+                    - W1heposs9YP - W1ch3_11HH - log_of_W1GrssyrHH - standardised_W1yschat1 - W8DACTIVITY
+                    - W6EducYP - W8DGHQSC_binary - W1ch0_2HH - W6OwnchiDV - W1depkids - W1NoldBroHS
+                    - W1ch16_17HH - log_of_W1GrssyrMP, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor standardised_W1hiqualparents_score
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    - W5JobYP - log_of_W8QDEB2 - W1bulrc - W4NamesYP - W2depressYP - W1condur5MP - W8TENURE
+                    - W1heposs9YP - W1ch3_11HH - log_of_W1GrssyrHH - standardised_W1yschat1 - W8DACTIVITY
+                    - W6EducYP - W8DGHQSC_binary - W1ch0_2HH - W6OwnchiDV - W1depkids - W1NoldBroHS
+                    - W1ch16_17HH - log_of_W1GrssyrMP - standardised_W1hiqualparents_score, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W2disc1YP
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    - W5JobYP - log_of_W8QDEB2 - W1bulrc - W4NamesYP - W2depressYP - W1condur5MP - W8TENURE
+                    - W1heposs9YP - W1ch3_11HH - log_of_W1GrssyrHH - standardised_W1yschat1 - W8DACTIVITY
+                    - W6EducYP - W8DGHQSC_binary - W1ch0_2HH - W6OwnchiDV - W1depkids - W1NoldBroHS
+                    - W1ch16_17HH - log_of_W1GrssyrMP - standardised_W1hiqualparents_score - W2disc1YP
+                    , data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#we remove the least significant predictor W4RacismYP
+W8DINCW.na.lm <- lm(log(W8DINCW) ~ . - W1usevcHH - W1alceverYP - W2ghq12scr_binary - W1ch12_15HH 
+                    - standardised_W4schatYP - W6acqno - IndSchool - W4empsYP - W1InCarHH - W8QMAFI
+                    - W4AlcFreqYP - W1empsdad - W6gcse - W1empsmum - W8DMARSTAT - W1truantYP - W1hous12HH
+                    - W5JobYP - log_of_W8QDEB2 - W1bulrc - W4NamesYP - W2depressYP - W1condur5MP - W8TENURE
+                    - W1heposs9YP - W1ch3_11HH - log_of_W1GrssyrHH - standardised_W1yschat1 - W8DACTIVITY
+                    - W6EducYP - W8DGHQSC_binary - W1ch0_2HH - W6OwnchiDV - W1depkids - W1NoldBroHS
+                    - W1ch16_17HH - log_of_W1GrssyrMP - standardised_W1hiqualparents_score - W2disc1YP
+                    - W4RacismYP, data = model_na_data)
+Anova(W8DINCW.na.lm)
+
+#display the coefficients of the final model
+display(W8DINCW.na.lm)
+#display the final model summary
+summary(W8DINCW.na.lm)
+#check that all vif values are less than 5
+vif(W8DINCW.na.lm)
+
+#checking the residuals of our final model
+par(mfrow=c(2,2))
+plot(W8DINCW.na.lm,which=c(1,2))
+hist(W8DINCW.na.lm$residuals,main="Histogramofresiduals",
+     font.main=1,xlab="Residuals")
+
+#The diagnostics for this model is worse than our initial model.
+#We see that the residuals vs fitted plot does not show clear heteroscedasticity. However, the range in the middle is slighly higher than both ends.
+#The qq plot has also improved on the lower tail, however the histogram looks less like a normal distribution.
+#What was also interesting was that we had to remove even more predictors in this model.
+#List of additional predictors removed: 
+#log_of_W1GrssyrMP, log_of_W1GrssyrHH, W1heposs9YP, W2disc1YP, W6NEETAct (removed at start), W8DACTIVITY
+#List of predictors not in main_model but present in this model:
+#W1hwndayYP, W5EducYP
+#We will validate this model using Cross Validation

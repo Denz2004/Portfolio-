@@ -1,0 +1,73 @@
+---
+title: "Development and Structure"
+self-contained: true
+format: html
+---
+### Project Diagram
+
+This diagram is a flowchart that represents the structure and proccesses involved in the development of our project.
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script> 
+   <!-- Initialize Mermaid -->
+   <script>
+       // Initialize Mermaid
+       mermaid.initialize({
+       });
+   </script>
+```{mermaid}
+
+flowchart TB
+classDef democratcolour fill:#FFB6C1,stroke:#333,stroke-width:4px
+classDef republicancolour fill:#FFB6C1,stroke:#333,stroke-width:4px
+subgraph Brainstorming
+
+A[Start] --> B(Uber Eats)
+class B democratcolour
+class A republicancolour
+A  --> H(Sociopolitical buzzwords)
+class H democratcolour
+   
+H  --> C(Twitter API)
+
+B  --> G(Issue: No public API)
+class G republicancolour
+
+class C republicancolour
+A --> R(NASA)
+class R democratcolour
+R --> S(Issue: Data too clean)
+class S republicancolour
+C  --> D(Issue: limit of 1500 tweets to scrape)
+class D democratcolour
+end
+subgraph Reddit
+ style Reddit fill:#ADD8E6,stroke:#333,stroke-width:4px
+H  --> I(Reddit API)
+I  --> J(Scrape state subreddits)
+J --> Y(Filter out stopwords)
+Y  --> K(Calculate topics for each state)
+K --> T[(DATAFRAME)]
+T --> U[list of states, top 3 topics, upvote ratio and comments]
+
+U -->|e.g|V((r/NewYork))
+U -->|e.g|W((r/Florida))
+U --> X{JSON or CSV}
+end 
+
+
+
+subgraph Exploratory_Anaysis
+
+T --> AA[Interactive map]
+AA --> CC[languages used: CSS, HTML, Java]
+T --> UU[graphs for each state:]
+class UU republicancolour
+UU --> VV[top 10 topics]
+UU --> WW[topic clustering]
+UU --> XX[similarity matrix]
+UU --> YY[interstate topic similarity]
+end
+```
+
+
+

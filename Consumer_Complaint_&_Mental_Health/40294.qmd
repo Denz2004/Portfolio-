@@ -1,0 +1,1075 @@
+---
+title: DS202W - Spring Term Summative
+author: <40294>
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    number-sections: true
+    theme: journal 
+    code-fold: true
+output: html
+self-contained: true
+jupyter: python3
+engine: jupyter
+editor:
+  render-on-save: true
+  preview: true
+---
+
+# Similarity: Reddit Mental Health Subreddits
+## Aim of Analysis
+My aim for my analysis of the Reddit Mental Health Subreddits is to discover the salient topics of discussion associated with each mental health issue. With this I intend to compare the similarity between them. I do this with the practical intention to see if there is an overlap between mental health issues in the way people may describe them or their experiences suffering from them. This is to help identify where diseases or issues appear similar and may lead to misdiagnosis and confusion inbetween them.
+
+## Downloading and Inspecting Data
+
+```{python}
+import pandas as pd
+import sweetviz as sv
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+import spacy
+from tqdm import tqdm
+from scipy.stats import chi2_contingency
+from sklearn.decomposition import LatentDirichletAllocation
+from gensim.models.coherencemodel import CoherenceModel
+from sklearn.decomposition import TruncatedSVD
+from sklearn.preprocessing import normalize
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from wordcloud import WordCloud
+from lets_plot import *
+LetsPlot.setup_html()
+import plotly.express as px
+import pyLDAvis
+import pyLDAvis.lda_model
+from scipy.sparse import csr_matrix
+from scipy import stats
+import warnings
+from IPython.display import IFrame
+from gensim.models import CoherenceModel
+from gensim.corpora import Dictionary
+from sklearn.metrics.pairwise import cosine_similarity
+
+nlp = spacy.load("en_core_web_sm", disable=["ner", "parser"])  
+stopwords = nlp.Defaults.stop_words
+```
+
+For the analysis I opted to use the most recent data available, May 2022 from each unique mental health subreddit. Aka All except the general mental health subreddit
+
+- r/anxiety
+- r/depression
+- r/suicidewatch
+- r/lonely
+
+```{python}
+path = "data/Reddit/"
+anxi = pd.read_csv(f"{path}anximay22.csv")
+dep = pd.read_csv(f"{path}depmay22.csv")
+lone = pd.read_csv(f"{path}lonemay22.csv")
+suicide = pd.read_csv(f"{path}Swmay22.csv")
+
+```
+
+Inspecting the data in each dataframe
+
+r/Anxiety data
+```{python}
+a_report = sv.analyze(anxi)
+a_report.show_notebook()
+
+```
+
+r/depression data
+```{python}
+d_report = sv.analyze(dep)
+d_report.show_notebook()
+
+```
+
+r/lonely data
+```{python}
+l_report = sv.analyze(lone)
+l_report.show_notebook()
+
+```
+
+r/suicidewatch data
+```{python}
+s_report = sv.analyze(suicide)
+s_report.show_notebook()
+
+```
+
+From the data summaries we can some key issues. Firstly not all posts have a selftext. Some are removed, deleted or missing. Suicide watch has the most missing at 8% while depression has 23% of its posts selftexts deleted. However self texts are not the only texts of interest the titles will hold important information too. Hence the rows with missing deleted or removed self text will not be removed. Instead a new Joint feature will be created joining the title and whatever available text there is.
+
+
+## Data Cleaning, Engineering, and Tokenization
+
+The code below returns a new selftext column without null removed or deleted values. Then another column is created with the joint text.
+
+```{python}
+def clean_selftext(text):
+    if pd.isnull(text):
+        return ""
+    text = text.strip().lower()
+    if text in ["[removed]", "[deleted]"]:
+        return ""
+    return text
+
+all_df = [anxi, dep, lone, suicide]
+
+for df in all_df:
+    df["clean_selftext"] = df["selftext"].apply(clean_selftext)
+    df["combined_text"] = df["title"] + " " + df["clean_selftext"]
+
+```
+
+Example new dataframe:
+```{python}
+anxi.head(5)
+```
+
+Before preprocessing the text I opted to edit the default list of stop words provided by the spacy library. As the data deals with emotion based content I felt the tonality and sentiment of phrases had to be preserved espicially with the later use of bigrams and trigrams during tokenization. Removing Negation terms like "not" could make the word "happy" appear as a key term in a topic when in reality "happy" only appears due to its association with negative terms like:
+
+- Not Happy
+- Never Happy
+
+Hence I chose the remove the following terms from the stopword list:
+
+"no", "not", "n't", "never", "none", "nobody", "nothing", "nowhere", "neither", "nor", "cannot", "without"
+
+All are negations and can flip the meaning of a word.
+
+```{python}
+negation_words = ["no", "not", "n't", "never", "none", "nobody", "nothing", "nowhere", "neither", "nor", "cannot", "without"]
+
+for word in negation_words:
+    stopwords.discard(word)
+    nlp.vocab[word].is_stop = False    
+```
+
+During preprocessing stopwords and punctuation were removed from the posts texts from each subreddit. When tokenizing individual words werent just tokenized, bigrams and trigrams were tokenized too. This is too ensure words are also looked at in their context. I found this especially important when dealing with emotional text where negation words play a part in flipping the meaning of certain words.
+
+Count-DFMs were used instead of TF IDFs in the tokenization process as LDA is the preffered tool for later in the analysis
+
+```{python}
+
+
+def preprocess_text(text):
+    tokenized_text = []
+    
+    for tx in tqdm(text, desc="Tokenizing text", total=len(text)):
+        doc = nlp(tx)
+        
+        tokens = [
+            token.lemma_.lower()
+            for token in doc
+            if token.is_alpha and token.lemma_.lower() not in stopwords
+        ]
+
+        tokenized_text.append(' '.join(tokens)) 
+    
+    return tokenized_text
+
+# function to tokenize combine text column for each df
+def create_dfm(df):
+    tokenized_text = preprocess_text(df["combined_text"])
+    count_vectorizer = CountVectorizer(ngram_range=(1, 3), min_df=10)
+    
+    # Fit and transform
+    X_count = count_vectorizer.fit_transform(tokenized_text)
+
+    dfm = pd.DataFrame(X_count.toarray(), columns=count_vectorizer.get_feature_names_out())
+    
+    return dfm, count_vectorizer
+
+anxi_count, anxi_vectorizer = create_dfm(anxi)
+dep_count, dep_vectorizer = create_dfm(dep)
+lone_count, lone_vectorizer = create_dfm(lone)
+suicide_count, suicide_vectorizer = create_dfm(suicide)
+
+```
+
+Inspect Result
+```{python}
+anxi_count.head()
+
+```
+
+## Initial Analysis
+
+The figure below display the top 10 tokens for each subreddit.
+
+```{python}
+
+warnings.filterwarnings("ignore", category=FutureWarning)
+def get_top_10_tokens(df):
+    mean_counts = df.mean()
+    return mean_counts.sort_values(ascending=False).head(10)
+
+subreddit_dfms = {
+    "depression": dep_count,
+    "anxiety": anxi_count,
+    "suicidewatch": suicide_count,
+    "lonely": lone_count
+}
+
+
+def plot_top_10_tokens(df, subreddit_name, ax):
+    top_10 = get_top_10_tokens(df)
+    
+    sns.barplot(x=top_10.values, y=top_10.index, palette="viridis", ax=ax)
+    ax.set_title(f"Top 10 Tokens - r/{subreddit_name}")
+    ax.set_xlabel("Average Token Count")
+    ax.set_ylabel("Token")
+
+
+def plot_top_tokens_all_subreddits(subreddit_dfms):
+    num_subs = len(subreddit_dfms)
+    cols = 2
+    rows = (num_subs + cols - 1) // cols
+    
+    fig, axes = plt.subplots(rows, cols, figsize=(14, rows * 6))
+    axes = axes.flatten()
+    
+    for i, (sub_name, df) in enumerate(subreddit_dfms.items()):
+        plot_top_10_tokens(df, sub_name, axes[i])
+    
+    for j in range(i + 1, len(axes)):
+        fig.delaxes(axes[j])
+    
+    plt.tight_layout()
+    plt.show()
+
+plot_top_tokens_all_subreddits(subreddit_dfms)
+warnings.filterwarnings("ignore", category=FutureWarning)
+```
+
+From the plots we can identify certain words which seem to appear in all subreddits but dont contribute much towards the analysis of interest. I have indentified those words to be:
+
+- Feel: too overused, emotion based data its obvious feelings are involved
+- Like: filler word
+- Think: generic cognition verb
+- Know: generic cognition verb
+- want: common verb
+- day: temporal filler: sad every day, lonely all day...
+
+Update Stopwords
+```{python}
+custom_sw = ['feel','like','think','know','want','day']
+
+for word in custom_sw:
+    nlp.Defaults.stop_words.add(word)    
+    nlp.vocab[word].is_stop = True 
+```
+
+preprocess again and retokenize text
+```{python}
+anxi_count, anxi_vectorizer = create_dfm(anxi)
+dep_count, dep_vectorizer = create_dfm(dep)
+lone_count, lone_vectorizer = create_dfm(lone)
+suicide_count, suicide_vectorizer = create_dfm(suicide)
+
+```
+
+## Topic Modelling
+
+Now that additional "noisy" words have been removed, we can move on to analyzing the salient topics within each subreddit. Since DFM matrices are huge feature wise and sparse LDA is the preffered method of dimensionality reduction to be employed here.
+
+After testing different component numbers I found 5 components to provide the most sensical and interpretable topics. Hence I created LDA models for each subreddit with 5 topics
+
+```{python}
+lda_anxi = LatentDirichletAllocation(n_components=5, random_state=42)
+lda_anxi.fit(anxi_count)
+
+lda_dep = LatentDirichletAllocation(n_components=5, random_state=42)
+lda_dep.fit(dep_count)
+
+lda_lone = LatentDirichletAllocation(n_components=5, random_state=42)
+lda_lone.fit(lone_count)
+
+lda_suicide = LatentDirichletAllocation(n_components=5, random_state=42)
+lda_suicide.fit(suicide_count)
+
+```
+
+```{python}
+def visualize_lda(lda_model, count_matrix, vectorizer, name='lda_viz'):
+    
+    if not isinstance(count_matrix, csr_matrix):
+        count_matrix = csr_matrix(count_matrix)
+
+    
+    vocab_list = vectorizer.get_feature_names_out()
+    vocab_dict = {word: idx for idx, word in enumerate(vocab_list)}
+
+    
+    data = {
+        'topic_term_dists': lda_model.components_ / lda_model.components_.sum(axis=1)[:, None],
+        'doc_topic_dists': lda_model.transform(count_matrix),
+        'doc_lengths': count_matrix.sum(axis=1).A1,
+        'vocab': list(vocab_dict.keys()),
+        'term_frequency': count_matrix.sum(axis=0).A1
+    }
+
+    vis = pyLDAvis.prepare(**data)
+    pyLDAvis.display(vis)
+    pyLDAvis.save_html(vis, f"{name}.html")
+```
+
+```{python}
+warnings.filterwarnings("ignore", category=UserWarning)
+
+visualize_lda(lda_anxi, anxi_count, anxi_vectorizer, name="lda_anxi")
+
+visualize_lda(lda_dep, dep_count, dep_vectorizer, name="lda_dep")
+
+visualize_lda(lda_lone, lone_count, lone_vectorizer, name="lda_lone")
+
+visualize_lda(lda_suicide, suicide_count, suicide_vectorizer, name="lda_suicide")
+```
+
+Shown below are visualizations of each subreddits identified 5 salient topics and the tokens that they are comprised of. Below each visualization is a description of the interpretable topics and the key words that led to this interpretation. Not all topics seemed coherent or had a clear theme.
+
+### r/Anxiety Topics
+<iframe src="lda_anxi.html" width="100%" height="700px" style="border:none;"></iframe>
+
+- Topic 1 reflects social interaction struggles. key words: Friend, Relationships, talk, people, social
+
+- Topic 2 reflects career related struggles, possibly pressure related. Key words: Job, work School
+
+- Topic 3 surrounds talk about panic attacks. Key words: Panic, attack, heart, medication, prescribe, doctor, mg
+
+- Topic 5: Physical issues and pain plus sleep related issues. Key Words: Sleep, pain, night, wake, chest, head, body
+
+
+### r/Depression Topics
+<iframe src="lda_dep.html" width="100%" height="700px" style="border:none;"></iframe>
+
+- Topic 2 surrounds discussion about work and money struggles. Key words: Job, work, money, hard bad. Note appearence of die and end, possibly suicide related and may have crossover in them with suicide subreddit.
+
+- Topic 4 concerns social struggles of teenagers and yound adults. Key words: school, parents, dad, college, grade. Once again note appearence of kill as key token.
+
+- Topic 5: General symptoms and feelings of depression. Key words: cry, sleep, bed, nothing, sad, point (no point), energy, tired
+
+### r/Lonely Topics
+<iframe src="lda_lone.html" width="100%" height="700px" style="border:none;"></iframe>
+
+- Topic 2 likely discusses issues or lack of platonic and familial relationships. Key words: People, Friend, lonely, care. Note high frequency of negations no and not implying that relationships are negative. Additionally possible reference to suicide with word "die"
+
+- Topic 3 discusses issues of romantic relationships. Key words: Love, girl, Love, girl, relationship, date, guy, hug. Again high frequency of negations in never and not implying a negative link to romantic relationships.
+
+- Topic 4 addresses similarly social issues however with a focus on young adults like in the depression subreddit. Key words: Friend, school, new, social, college, meet
+
+- Topic 5 relates to ones need to speak and talk to someone.
+
+### r/Suicide Watch
+<iframe src="lda_suicide.html" width="100%" height="700px" style="border:none;"></iframe>
+
+- Topic 1: Parent related and likely about young adults and teenagers, recurring theme in many subreddits. Mom and dad appear heavily uniquelly in this topic
+
+- Topic 2 seems to contain passionate suicide admissions and rants. key words: Life, anymore, live, fuck, hate, end, die, pain, nothing and more.
+
+- Topic 3 talks about suicide in a softer tone likely chats about encouraging people to open up and talk. key words: not, kill, love, die, help, talk, hurt
+
+- Topic 5 discusses specific people suicide plans or ways to commit suicide. Key word: Die, pill, overdose, cut, gun, tonight, hang. Most thes terms are heavily unique feature that mostly appear in this topic
+
+### Similarity Matrix
+
+From the topic modeeling results there are some salient themes and sentiments that stretch across subreddits. Those are:
+
+- Social issues, especially young adults.
+
+- suicide term references such as die end and kill.
+
+- Job related issues, however it may seem that it would be from different root causes. Depression seems to have more of a struggle for money and overall satisfaction while anxiety seems to display the topic as pressure related.
+
+
+For Further analysis i conducted a topic similarity heat map for depression with anxiety and lonely with suicide watch to see if there is a genuine overlap in topics. To do this I had to employ the use of cosine similiarity which requires models to originate from the same vocabulary space, hence I joined my previously seperate dfms to create one single space. I then reinitiated the models which the same parameters however it is likely they will not return the exact same results but will give a valuable similarity insight none the less
+
+
+```{python}
+all_vocab = list(set(anxi_count.columns)
+                 .union(set(dep_count.columns))
+                 .union(set(lone_count.columns))
+                 .union(set(suicide_count.columns)))
+
+all_vocab = sorted(all_vocab)
+
+anxi_count = anxi_count.reindex(columns=all_vocab, fill_value=0)
+dep_count = dep_count.reindex(columns=all_vocab, fill_value=0)
+lone_count = lone_count.reindex(columns=all_vocab, fill_value=0)
+suicide_count = suicide_count.reindex(columns=all_vocab, fill_value=0)
+
+n_topics = 5
+random_state = 42
+
+lda_anxi = LatentDirichletAllocation(n_components=n_topics, random_state=random_state)
+lda_dep = LatentDirichletAllocation(n_components=n_topics, random_state=random_state)
+lda_lone = LatentDirichletAllocation(n_components=n_topics, random_state=random_state)
+lda_suicide = LatentDirichletAllocation(n_components=n_topics, random_state=random_state)
+
+lda_anxi.fit(anxi_count)
+lda_dep.fit(dep_count)
+lda_lone.fit(lone_count)
+lda_suicide.fit(suicide_count)
+```
+
+```{python}
+def compare_lda_models(lda_a, lda_b, vocab, label_a="A", label_b="B", n_topics=5):
+
+    a_topics = lda_a.components_ / lda_a.components_.sum(axis=1, keepdims=True)
+    b_topics = lda_b.components_ / lda_b.components_.sum(axis=1, keepdims=True)
+
+    sim_matrix = cosine_similarity(a_topics, b_topics)
+
+    data = []
+    for i in range(n_topics):
+        for j in range(n_topics):
+            data.append({
+                "topic_a": f"{label_a}-{i+1}",
+                "topic_b": f"{label_b}-{j+1}",
+                "similarity": sim_matrix[i][j]
+            })
+    sim_df = pd.DataFrame(data)
+
+    return (
+        ggplot(sim_df, aes(x="topic_b", y="topic_a", fill="similarity")) +
+        geom_tile(color="white") +
+        geom_text(aes(label=sim_df['similarity'].round(2).astype(str)), color="black", size=10) +
+        scale_fill_gradient(low="#f9f9f9", high="#0072B2") +
+        ggtitle(f"Topic Similarity: {label_a} vs {label_b}") +
+        theme(
+            axis_title="blank",
+            axis_text_x=element_text(angle=45, hjust=1)
+        )
+    )
+```
+
+The first plot below shows the topic similarity between the Anxiety Subreddit and Depression Subreddit
+```{python}
+compare_lda_models(lda_anxi, lda_dep, vocab=all_vocab, label_a="r/Anxiety", label_b="r/Depression")
+```
+
+- Topic 2 for both depression and anxiety showcases a high similarity score
+
+- Anxiety Topic 2 also has the highest similarity scores with all the depression topics implying that it is a common them in the Depression subreddit
+
+```{python}
+# Function to return top tokens of "new" topics
+def get_top_terms_from_topic(lda_model, feature_names, topic_index, topn=10, return_scores=False):
+    topic = lda_model.components_[topic_index]
+    top_indices = topic.argsort()[:-topn - 1:-1]
+    
+    return [(feature_names[i], topic[i]) for i in top_indices]
+
+```
+
+Looking at the 2nd Topic top tokens for both subreddits we can identify what the topic is.
+```{python}
+get_top_terms_from_topic(lda_anxi, all_vocab, 1, topn=10,)
+```
+
+```{python}
+get_top_terms_from_topic(lda_dep, all_vocab, 1, topn=10,)
+```
+
+As we can see they are similar topics to the ones indentified before. Both talk about work related struggles and possibly a struggle with the social aspect at work or after work as time is a key word and may reflect a lack of free time after work. Therefore from this we can infer that those who struggle with social aspects within work and out of work can fall both into the depression and anxiety category and can be confused by each other.
+
+
+Below shows a topic similarity matrix between the Lonely Subreddit and the Suicide Watch subreddit.
+```{python}
+compare_lda_models(lda_lone, lda_suicide, vocab=all_vocab, label_a="r/Lonely", label_b="r/SuicideWatch")
+```
+
+- Topic 2 for both subreddits is highly similar again
+
+- Topic 4 for both subreddits is moderately similar
+
+- Topics 2 and 4 for Lonely seem to themeatically appear more in suicide watch then the other topics
+
+
+Taking a closer look at both topic 2s we see a similar theme to the other subreddits
+```{python}
+get_top_terms_from_topic(lda_lone, all_vocab, 1, topn=10,)
+```
+
+```{python}
+get_top_terms_from_topic(lda_suicide, all_vocab, 1, topn=10,)
+```
+
+While these topics dont specify jobs or work a similar social theme is showcased here with friend making another appearence along with love, people. We can tell its a negative relationship to these words due to the frequency and salience of negation words in these topics such as not, no, and never. 
+
+## Conclusion
+
+From this analysis key insights into the factors that effect different mental health issues and which factor overlap and manifest across multiple. We have seen that socializing issues was salient in many topics during the original topic modelling we did where this issue appeared in different subsets such as work issues, young adult issues and romantic relationship issues.
+
+This similarity across subreddits and mentalhealth issues persisted in our topic similarity matrices as we saw the highest similarities were between socializing based topics.
+
+This means that across the mental health issues today a root cause for them lies in individuals ability to form healthy and caring relationships and develope satisfactory social lives. We have also seen that they tend to have the same top tokens hence they might be described similarly by people with different issues. In a medical or psychological setting this could lead to misdiagnoses. Hence when judging ones mental health based on their description of their social lives special care must be taken and other factors must come into consideration.
+
+# Unsupervised Learning
+
+## Aim and Research Question
+
+**Research Question: Which consumer issues do companies struggle the most to handle and which companies perform the worst in these issues?**
+
+This question aims to examine what are the types of issues consumers seem to have that companies seem to struggle with handling. This will be done be examining consumer complaints that are not resolved the first time of asking and lead to consumers disputing the companies
+
+## Inspecting and Loading Data
+```{python}
+import zipfile
+import pandas as pd
+import missingno as msno
+import sweetviz as sv
+from tqdm import tqdm
+import spacy
+import seaborn as sns
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfTransformer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.decomposition import TruncatedSVD
+from sklearn.metrics import silhouette_score
+import numpy as np
+import umap
+from sklearn.preprocessing import StandardScaler
+from sklearn.cluster import KMeans
+from umap import UMAP
+import warnings
+from lets_plot import *
+LetsPlot.setup_html()
+from sklearn.neighbors import NearestNeighbors
+from kneed import KneeLocator
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.neighbors import LocalOutlierFactor
+np.random.seed(42)
+
+
+nlp = spacy.load("en_core_web_sm")
+```
+```{python}
+df = pd.read_csv('data/complaints_reduced.zip',compression='zip')
+```
+
+Filtering data to only contain complaints that later led to consumers disputing their responses.
+```{python}
+df = df[df["Consumer disputed?"] == "Yes"]
+
+```
+
+Inspecting data
+```{python}
+msno.matrix(df)
+```
+
+There appears to be a large proportion of missing values in the sub_product and sub_issue section implying that consumers may not be provided with exhaustive categorical options when choosing what product they are referring to or the exact issue they have
+
+```{python}
+al = sv.analyze(df)
+al.show_notebook()
+```
+
+Column statistics reveal that the most escalated complaints occur with debt collection products and mortgage. When selecting an issue category over 20% of consumers select other and in Sub- issueover 25% percent select other. This confirms suspicions that the companies do not provide exhaustive options for consumers to place their complaints in. Hence why topic modelling will be used to try and identify a set of more exhaustive options so that greater analysis into uncategorized issues can be done.
+
+As the issues warranting escalation stretch over 12 products I have decided to select the proportionally largest product in debt collection as when topic modelling i want to discover the niche sub-issues that have not been accounted for. This would be difficult to do while analysis a host of different parent topics which would strectch our topic analysis. Other as a category would not be useful when discovering what companies struggle to handle.
+
+```{python}
+df_debt = df[df["Product"] == "Debt collection"]
+df_debt = df_debt.reset_index(drop=True)
+```
+
+## Tokenization and data cleaning
+
+The Tokenizing function below lemmatisez tokens, excludes stop words and punctuation.
+
+```{python}
+def preprocess_comp(comp):
+    tokenized_complaints = []
+    
+    for comp in tqdm(comp, desc="Tokenizing Complaints", total=len(comp)):
+        doc = nlp(comp)
+        
+        tokens = [token.lemma_ for token in doc if not token.is_stop and not token.is_punct]
+        
+        tokenized_complaints.append(' '.join(tokens))  
+    
+    return tokenized_complaints
+tokenized_complaints = preprocess_comp(df_debt['Consumer complaint narrative'])
+```
+
+Viewing the new filtered tokens in a world cloud below we can see a clear apparent issue.
+
+```{python}
+all_tokens_string = ' '.join(tokenized_complaints)
+
+wordcloud = WordCloud(
+    width=800,
+    height=400,
+    background_color='white'
+).generate(all_tokens_string)
+
+plt.figure(figsize=(10, 6))
+plt.imshow(wordcloud, interpolation='bilinear')
+plt.axis("off")
+plt.show()
+```
+
+As seen there is a high frequency of 'X'ed out details from the complaints. This would have been to protect personal information. These have to be removed first before any further token analysis can occur.
+
+```{python}
+def clean_tokenized_complaints(tokenized_complaints):
+    return [
+        ' '.join([tok for tok in review.split() if "xx" not in tok.lower()])
+        for review in tokenized_complaints]
+
+tokenized_complaints = clean_tokenized_complaints(tokenized_complaints)
+
+
+```
+
+As seen below the word cloud now only contains meaningful tokens
+
+```{python}
+all_tokens_string = ' '.join(tokenized_complaints)
+
+wordcloud = WordCloud(
+    width=800,
+    height=400,
+    background_color='white'
+).generate(all_tokens_string)
+
+
+plt.figure(figsize=(10, 6))
+plt.imshow(wordcloud, interpolation='bilinear')
+plt.axis("off")
+plt.show()
+```
+
+Including bigram and trigrams to capture important mutliword themes within "debt collection". Important word combinations such as "late fees" and "Fraudulent Charges" could be missed for examples. 
+```{python}
+
+count_vectorizer = CountVectorizer(ngram_range=(1, 3), min_df=10)  
+
+X_count = count_vectorizer.fit_transform(tokenized_complaints)
+
+tfidf_transformer = TfidfTransformer()
+X_tfidf = tfidf_transformer.fit_transform(X_count)
+
+
+df_tfidf = pd.DataFrame(X_tfidf.toarray(), columns=count_vectorizer.get_feature_names_out())
+
+```
+
+Additionally, I decided to make use of a TF-IDF DFM firstly, so that importance is placed on scarcer more signficant terms. Secondly, for the intention of applying LSA dimensionality reduction to resulting features.
+
+Now after adding bigrams and trigrams and cleaning for removed values we can look if there are anymore words worth removing from the data set
+
+```{python}
+ngram_tfidf_scores = df_tfidf.mean(axis=0).sort_values(ascending=False)
+
+
+top_n = 50
+top_ngrams = ngram_tfidf_scores.head(top_n)
+
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(10, 6))
+top_ngrams[::-1].plot(kind='barh', color='mediumseagreen', edgecolor='black')
+plt.xlabel("Average TF-IDF Score")
+plt.title(f"Top {top_n} Tokens by TF-IDF")
+plt.tight_layout()
+plt.show()
+```
+
+As we can see debt is a highly featured word as expected in the debt collection product complaints. Below is a list of words that I decided to remove.
+
+- Debt: Word on its own provides no topic value
+- 00: no meaning
+- say: no substantial contextual meaning
+- year: time description not issue
+- day: same as above
+
+```{python}
+df_count = df_tfidf.drop(columns=["debt", "00", "say", "year","day"])
+```
+
+## LSA Topic modelling and dimensionality reduction
+
+From here we have a prepared TF-IDF DFM that we can apply dimensionality reduction to. I opted to use LSA as it handles sparse data matrices better than other traditional methods such as UMAP or PCA
+```{python}
+tokens_columns = df_tfidf.columns
+```
+
+Implementing LSA dimensionality reduction and topic modelling
+
+```{python}
+n_topics = 100
+svd = TruncatedSVD(n_components=n_topics, random_state=42)
+lsa_matrix = svd.fit_transform(df_tfidf[tokens_columns])
+
+evr = list(svd.explained_variance_ratio_)
+print(f"sum explained variance: {sum(evr)}")
+```
+
+
+```{python}
+cumulative_var = np.cumsum(evr)
+
+plt.figure(figsize=(10, 5))
+plt.plot(range(1, len(cumulative_var) + 1), cumulative_var, marker='o')
+plt.title("Cumulative Explained Variance by LSA Topics")
+plt.xlabel("Number of Topics")
+plt.ylabel("Cumulative Explained Variance")
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+```
+
+We see from the graph that rate of total explained variance added by topic decreases over time. For Semantic diversity and dense vectors suitable for clustering I decided to use 50 topics for LSA. This will allow richer company topic profiles after aggregation. This will also allow indentification of niche topics that the set options provided to consumers are not provided with but may be of interest.
+
+```{python}
+n_topics = 50
+svd = TruncatedSVD(n_components=n_topics, random_state=42)
+lsa_matrix = svd.fit_transform(df_tfidf[tokens_columns])
+
+```
+
+
+Now with the topics we can get the topic vectors for each complaint and rejoin them to the company they were directed at.
+```{python}
+complaint_topic_vectors = pd.DataFrame(
+    lsa_matrix,
+    columns=[f"topic_{i}" for i in range(n_topics)]
+)
+topic_vectors = pd.concat([complaint_topic_vectors, df_debt["Company"]], axis=1)
+
+topic_vectors.head()
+```
+
+With the individual vectors we can now aggregate at the company level.
+```{python}
+company_vectors = (topic_vectors.groupby("Company").mean().reset_index())
+company_vectors.head()
+```
+
+With 50 topics / features UMAP dimensionality reduction was applied to the data to enable 2D visualization and interpretation for later clustering. It is suitable for non-linear latent structures as LSA provides.
+
+Below shows the resulting plot from the UMAP dimensionality reduction. Additionally the previous company vectors are joined for later reference.
+
+```{python}
+warnings.filterwarnings("ignore")
+X = company_vectors.drop(columns=["Company"]).to_numpy()
+
+reducer = UMAP(n_neighbors=100, n_components=2, random_state=42)
+
+embedding = reducer.fit_transform(X)
+
+embedding_df = pd.DataFrame(embedding, columns=["UMAP_1", "UMAP_2"])
+embedding_df["Company"] = company_vectors["Company"].reset_index(drop=True)
+
+embedding_df = pd.concat([company_vectors, embedding_df ], axis=1)
+
+embedding_df = embedding_df.loc[:, ~embedding_df.columns.duplicated()]
+
+embedding_df.head()
+```
+
+
+## Unsupervised Learning
+### DBSCAN
+
+```{python}
+plt.scatter(embedding_df["UMAP_1"], embedding_df["UMAP_2"], alpha=0.6)
+plt.xlabel("UMAP-1")
+plt.ylabel("UMAP-2")
+plt.title("UMAP Projection of Company Topic Vectors")
+plt.grid(True)
+plt.show()
+```
+
+To identify the salient clusters of companies and the types of complaints DBscan clustering was used. This was done for a number of reasons:
+
+- Firstly clusters appear to be organic and no obvious spherical clusters seem to be obvious to the human eye. DBscan might be more suitable in identifying clusters rather than k-means which may force clusters.
+
+- Points in low density can be identified as outliers possibly allowing the identification of companies that display a struggle in handling specific topics compared to the norm
+
+- There appear to be some outliers that drift from the large middle cluster that dbscan might be able to identify
+
+Identifying ideal hyperparameters. Using the rule of thumb k = 2 * dimensions = 4
+```{python}
+
+
+X_umap = embedding_df[["UMAP_1", "UMAP_2"]].to_numpy()
+
+k = 4
+neighbors = NearestNeighbors(n_neighbors=k)
+neighbors.fit(X_umap)
+distances, indices = neighbors.kneighbors()
+
+sorted_distances = np.sort(distances[:, -1])
+i = np.arange(len(sorted_distances))
+
+knee_locator = KneeLocator(i, sorted_distances, S=1, curve='convex', direction='increasing', interp_method='polynomial')
+knee_index = knee_locator.knee
+knee_value = sorted_distances[knee_index]
+
+plt.figure(figsize=(8, 6))
+plt.plot(i, sorted_distances, label=f'{k}-distance (sorted)')
+plt.plot(knee_index, knee_value, 'ro', label=f'Knee: {knee_value:.2f}')
+plt.annotate(f"Knee: {knee_value:.2f}",
+             xy=(knee_index, knee_value),
+             xytext=(knee_index + 10, knee_value + 0.2),
+             arrowprops=dict(facecolor='black', shrink=0.05))
+plt.axvline(x=knee_index, color='gray', linestyle='--')
+plt.xlabel('Points')
+plt.ylabel(f'Distance to {k}-th Nearest Neighbor')
+plt.title(f'k-Distance Graph (k={k}) with Knee Detection')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+print(f"The value of the knee (suggested eps) is: {knee_value:.4f}")
+
+```
+
+As seen the identified optimal eps value is 0.19
+
+```{python}
+from sklearn.cluster import DBSCAN
+dbscan = DBSCAN(eps=0.19, min_samples=5)
+embedding_df["Cluster"] = dbscan.fit_predict(embedding_df[["UMAP_1", "UMAP_2"]])
+
+```
+
+providing code to identify top 3 topics per cluster
+```{python}
+topic_cols = [col for col in company_vectors.columns if col.startswith("topic_")]
+
+cluster_topic_dist = embedding_df.groupby("Cluster")[topic_cols].mean()
+
+top_topics_per_cluster = cluster_topic_dist.apply(lambda row: row.nlargest(3).index.tolist(), axis=1)
+
+top_topics_per_cluster_str = top_topics_per_cluster.apply(lambda topics: ", ".join(topics))
+
+embedding_df["TopTopics"] = embedding_df["Cluster"].map(top_topics_per_cluster_str)
+
+```
+
+
+Plotting DBscan clusters
+
+```{python}
+from lets_plot import *
+LetsPlot.setup_html()
+
+embedding_df["Cluster"] = embedding_df["Cluster"].astype(str)  
+
+gg_umap_dbscan = (
+    ggplot(embedding_df, aes(x="UMAP_1", y="UMAP_2", color="Cluster"))
+    + geom_point(
+        size=4,
+        alpha=0.7,
+        tooltips=layer_tooltips()
+            .line("@Company")
+            .line("Cluster: @Cluster")
+            .line("Top Topics: @TopTopics")
+    )
+    + scale_color_discrete()
+    + ggtitle("DBSCAN Clustering with Top Topics")
+    + xlab("UMAP_1")
+    + ylab("UMAP_2")
+    + theme_minimal()
+)
+
+gg_umap_dbscan
+```
+```{python}
+def show_topic(topic_number):
+    top_n = 15
+    feature_names = df_tfidf[tokens_columns].columns
+    topic_weights = svd.components_[topic_number]
+    top_indices = topic_weights.argsort()[::-1][:top_n]
+    return [feature_names[i] for i in top_indices]
+
+```
+
+As seen from the plot DB scan indentified 10 distinct clusters. There is a clear dominating cluster in cluster 1: which containes topics 0, 1 and 13. The topics' key tokens can be seen down below.
+
+```{python}
+print(f"Topic 0:{show_topic(0)}")
+print(f"Topic 1:{show_topic(1)}")
+print(f"Topic 13:{show_topic(13)}")
+
+```
+
+Topic 0 seems to be generally debt and credit related with collection as a key word in there. This seems to be a generic topic which appears to be a theme in all clusters. This is to be expected as all the complaints are debt collect product related but implies that on further analysis topic 0 should be removed as it provides no differentiating insights.
+
+Topic 1 is hard to decipher on face value. Provides no real insight.
+
+Topic 13 relates to loan related issues. looks specifically like mortgages and student loans that fall into the the hand of portfolio recovery firms. Likely the complaints stem from consumers unhappy that their debt might have been sold off to other debt collectors.
+
+One interesting cluster is cluster number 2 which is a small cluster of companies that struggle to resolve topic 2
+
+```{python}
+print(f"Topic 2:{show_topic(2)}")
+
+```
+
+Topic 2 refers to identity theft meaning that these specific group of companies might have poor data security and struggle to find solutions for consumers that may have been affected by it.
+
+From this implication we can pull this list of companies and flag them as high security concern.
+
+```{python}
+high_risk = embedding_df[embedding_df["Cluster"] == str(2)].reset_index(drop=True)
+
+pd.DataFrame(high_risk['Company'])
+
+```
+
+DBscan identifies a unique cluster number 1 with topic number 3
+```{python}
+print(f"Topic 3:{show_topic(3)}")
+
+```
+
+Topic 3 involves once again debt colllection agencies but seems to have more of a legal twist to with with mentions of the FDCPA (Fair debt collection practices act) and collection companies. This probably involves consumer complaints on unlawful activities by companies while attempting to collect debt for them. To further explore these outliers we can use an anomoly detection model.
+
+DBscan identifies a group of outliers linked to topic 14.
+```{python}
+print(f"Topic 14:{show_topic(14)}")
+
+```
+
+Topic 14 has a heavy aspect on portfolio recovery similar to topic 13. With Topic 0 and 1 also within their top topics they have no real difference from cluster 0 and do not seem like real real semantic outliers. An anomaly detection software might be suitable here to detect outliers that actually stray semantically from the typical clusters.
+
+### Local Outlier Factor (LOF)
+
+To further explore these identified anomalies I opted to use an LOF model. Reasons being:
+
+- LOF handles 2 dimensional data well
+- There appear to be points in lower density areas in the previous cluster. Some of which DBscan identifies as outliers however some may have been missed
+- Majority of identified outliers rest on the edges of the main large cluster number 1. LOF may provide a different insight.
+
+Iniating LOF model
+```{python}
+lof_model = LocalOutlierFactor(n_neighbors=5, contamination="auto")
+lof_scores = -lof_model.fit_predict(embedding_df[["UMAP_1", "UMAP_2"]]) 
+
+
+embedding_df["lof_score"] = -lof_model.negative_outlier_factor_
+```
+
+Plotting distribution of outlier factors
+```{python}
+
+plt.hist(embedding_df["lof_score"], bins=10, edgecolor="black")
+plt.axvline(np.percentile(embedding_df["lof_score"], 95), color="red", linestyle="dashed", label="95th Percentile")
+plt.xlabel("LOF Score")
+plt.ylabel("Frequency")
+plt.title("LOF Score Distribution (minPts=5)")
+plt.legend()
+plt.show()
+```
+
+From the graph we can see that a large majority of companies have an LOF of around one implying that most companies complaint struggles are typical of each other. There is a small fraction that deviates towards a score of 1.5 or higher.
+
+
+```{python}
+from lets_plot import *
+LetsPlot.setup_html()
+from lets_plot import *
+LetsPlot.setup_html()
+
+topic_cols = [col for col in company_vectors.columns if col.startswith("topic_")]
+
+# Create label column: 1 = outlier, 0 = inlier
+embedding_df["LOF_Label"] = (lof_model.fit_predict(embedding_df[["UMAP_1", "UMAP_2"]]) == -1).astype(int)
+
+# Compute average topic weights per label (0: inlier, 1: outlier)
+cluster_topic_dist = embedding_df.groupby("LOF_Label")[topic_cols].mean()
+
+# Find top 3 topics per label
+top_topics_per_cluster = cluster_topic_dist.apply(lambda row: row.nlargest(3).index.tolist(), axis=1)
+
+# Convert list to comma-separated string
+top_topics_per_cluster_str = top_topics_per_cluster.apply(lambda topics: ", ".join(topics))
+
+# Map back to each company
+embedding_df["TopTopics"] = embedding_df["LOF_Label"].map(top_topics_per_cluster_str)
+
+# Convert labels to string for plotting
+embedding_df["LOF_Label"] = embedding_df["LOF_Label"].astype(str)
+
+gg_umap_lof = (
+    ggplot(embedding_df, aes(x="UMAP_1", y="UMAP_2", color="LOF_Label"))
+    + geom_point(
+        size=4,
+        alpha=0.7,
+        tooltips=layer_tooltips()
+            .line("@Company")
+            .line("LOF Label: @LOF_Label")
+            .line("Top Topics: @TopTopics")
+    )
+    + scale_color_discrete()
+    + ggtitle("LOF Outlier Detection with Top Topics")
+    + xlab("UMAP_1")
+    + ylab("UMAP_2")
+    + theme_minimal()
+)
+
+gg_umap_lof
+
+```
+
+Using LOF on the cluster plot seems to indentify and even lower amount of outliers further pushing the conclusion that the companies in large display a homogenic profile in disputed customer complaints.
+
+The dominant outlier topics are topic 0 (as expected) topic 14 and topic 32.
+
+```{python}
+print(f"Topic 2:{show_topic(14)}")
+print(f"Topic 3:{show_topic(32)}")
+```
+
+- Topic 32 mentions two specific companies, bank america and midland funding. This combination is probably quiet unique hence it is an outlier however it is a significant enough combination to end up as a topic. hence we can conclude that there is an unusually high rate of disputed complaints when these two companies are involved.
+
+- Topic 14 once again appears as an outlier but it seems that this may just be a common topic among all cluster semantically, even if its not the same label.
+
+Additonally we can plot company by magnitude to view which companies stray furthest from the average disputed complaint profile
+
+```{python}
+from lets_plot import *
+LetsPlot.setup_html()
+
+ggplot(embedding_df, aes(x='UMAP_1',y='UMAP_2', color="lof_score", size="lof_score")) + \
+    geom_point(alpha=0.5,tooltips=layer_tooltips()
+            .line("Company: @Company")) + \
+    scale_color_viridis(option="viridis", direction=1) + \
+    scale_size(range=[1, 10]) + \
+    theme_minimal() + \
+    labs(title="LOF Scores Scatter Plot",
+         x='UMAP_1',
+         y='UMAP_2',
+         color="LOF Score",
+         size="LOF Score")
+
+```
+
+This plot reveals illustrates the highest LOF scoring companies. Below the top 5 are listed
+
+``` {python}
+top_lof_df = embedding_df[['Company', 'lof_score']].sort_values(by='lof_score', ascending=False,).head(5).reset_index(drop=True)
+top_lof_df
+```
+
+Ideal Collection Services, Inc is significantly higher than the rest implying that its disputed complaint profile is highly anomalous. 
+
+All the companies in the top 5 however can conclude that they struggle in areas where other companies tend not too.
+
+## Conclusion
+In conclusion the analysis has revealed that typical behaviour for companies include struggle with medical bill and debt related complaints as well as topic 2 which was difficult to decipher. I was able to identify a small cluster of companies that pose a serious data security risk to their consumers based on their high ratio of identity theft based complaints compared to the average company. Additionally we found that the dominating outlier topics were as mentioned identity theft related and legal dispute on debt collection related which have face value logic as these are detrimental issues to have with consumers. Most companies would try to heavily avoid such issues

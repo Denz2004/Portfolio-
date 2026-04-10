@@ -1,0 +1,54 @@
+
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: BuzzPolitica
+  navbar:
+    background: primary
+    search: true
+    left:
+      - text: Aim & Background
+        menu:
+          - href: index.qmd
+            text: Background
+          - href: home.qmd
+            text: About us
+          - href: output.qmd
+            text: Aim
+      - text: Approach 
+        menu: 
+          - href: dev.qmd
+            text: Development
+          - href: data.qmd
+            text: Data & Code
+          - href: analysis.qmd
+            text: Analysis
+
+      - text: Results
+        menu:
+          - href: map.html
+            text: Interactive Map
+          - href: slidestest.qmd
+            text: Conclusion 
+
+    
+  page-footer: 
+      left: 
+        - icon : hypnotize
+          text: Buzz Politica 
+      right:
+        - icon: github
+          href: https://github.com/orgs/lse-ds105/teams/my-team
+
+format:
+  html:
+    grid:
+      sidebar-width: 0px
+      margin-width: 0px
+    theme: materia
+    css: styles.css
+    toc: true
+
+# lux, , quartz, sandstone, solar

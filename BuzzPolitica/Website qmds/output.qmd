@@ -1,0 +1,81 @@
+---
+title: ""
+about:
+    template: marquee
+---
+<style>
+  .full-width-image {
+    width: 100%; /
+    height: auto; 
+    display: block; 
+    margin: 20px 0; 
+  }
+</style>
+
+<style>
+.text-box {
+  background: rgba(255, 255, 255, 0.8); 
+  border: 1px solid #a3c1da; 
+  box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.1); 
+  border-radius: 10px; 
+  padding: 20px; 
+  margin: 20px; 
+  max-width: 800px; 
+  box-sizing: border-box; 
+}
+</style>
+
+<style>
+body {
+  background-color: #f0f7ff;
+}
+</style>
+
+
+<figure class="text-center">
+  <blockquote class="blockquote" style="font-size: 80px;">
+    <p class="mb-0"style="color: black; font-weight: bold;">Aim</p>
+  </blockquote>
+</figure>
+
+
+<div class="image-container">
+  <img src="https://www.aljazeera.com/wp-content/uploads/2020/10/Electoral-College-forecasts-02.jpg?resize=770%2C513&quality=80" alt="Descriptive text for the image" class="full-width-image"/>
+</div>
+
+<figure class="text-center">
+<h2>
+  Final Output
+  <small class="text-body-secondary"> We have multiple goals for our final data analysis</small>
+</h2>
+</figure>
+<h2>
+   Interactive map
+</h2>
+
+
+<blockquote class="blockquote" style="color: #FEFEFE; font-size: 25px; background-color: rgba(3, 82, 128, 0.5); padding: 20px; border-radius: 50px;">
+    <p class="mb-0"> We aim to privide an interactive map of the United States where users can access two main peices of information:
+        <ul>
+            <ul> 
+            </ul>
+            <li> 
+            A list attached to each state listing out the most commonly appearing buzzwords across our data. Words that represent interests, political preferences, state sources of pride and so on. 
+            </li>
+            <ul> 
+            </ul>
+            <li> A poltical spectrum rating. this number will represent the states placement on a republican to democrat scale through cross analysing content from the state's data and the two parties' data.  </li>
+        </ul> 
+   </p>
+</blockquote>
+
+<h2>
+   AI Generated Speach
+</h2>
+
+<blockquote class="blockquote" style="color: #FEFEFE; font-size: 25px; background-color: rgba(3, 82, 128, 0.5); padding: 20px; border-radius: 50px;">
+    <p class="mb-0"> 
+        <ul> We also aim to create an AI Generated speech for a chosen state using our data to see how a presidential candidate might interpret are findings and use them to his advantage. This speech will be accompanied by an AI generated video of a president saying reciting the speech       
+        </ul> 
+   </p>
+  </blockquote>

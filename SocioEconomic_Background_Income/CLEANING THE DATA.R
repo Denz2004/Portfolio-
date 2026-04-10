@@ -1,0 +1,387 @@
+# CLEANING THE DATASET
+
+new.rw.data <- assig.dat
+
+# Create a helper function to match column names ignoring bracketed info
+clean_col_names <- function(col_names) {
+  return(sub("\\(.*\\)", "", col_names))  # Removes anything inside parentheses
+}
+
+# Clean column names from the new.rw.data
+col_names_cleaned <- clean_col_names(names(new.rw.data))
+
+# Step 1: Remove rows where columns in cat_with_less_than_10_per
+for (col in names(new.rw.data)) {
+  if (clean_col_names(col) %in% cat_with_less_than_10_per) {
+    # Convert factor to numeric temporarily
+    new.rw.data[[col]] <- as.numeric(as.character(new.rw.data[[col]]))
+    new.rw.data <- new.rw.data[new.rw.data[[col]] >= 0, ]
+    # Convert back to factor only if NOT in cont_list
+    if (!(clean_col_names(col) %in% cont_list)) {
+      new.rw.data[[col]] <- as.factor(new.rw.data[[col]])
+    }
+  }
+}
+
+# Step 2: Replace values < 0 with "missing" in transform_into_missing columns
+for (col in names(new.rw.data)) {
+  if (clean_col_names(col) %in% transform_into_missing) {
+    # Convert factor to numeric temporarily
+    new.rw.data[[col]] <- as.numeric(as.character(new.rw.data[[col]]))
+    
+    # Replace negative values with NA for numeric columns in cont_list, or "missing" for others
+    if (clean_col_names(col) %in% cont_list | clean_col_names(col) %in% cont_with_more_than_30_per) {
+      new.rw.data[[col]][new.rw.data[[col]] < 0] <- NA  # Use NA for numeric columns in cont_list
+    } else {
+      new.rw.data[[col]][new.rw.data[[col]] < 0] <- "missing"  # Use "missing" for other columns
+    }
+    
+    # Convert back to factor only if NOT in cont_list
+    if (!(clean_col_names(col) %in% cont_list)&!(clean_col_names(col) %in% cont_with_more_than_30_per)) {
+      new.rw.data[[col]] <- as.factor(new.rw.data[[col]])
+    }
+  }
+}
+
+# Data set is now clean, we just need to re level some of the categorical columns that have too many levels
+
+# Count and print the number of unique levels for each factor column where it has more than 6 levels
+#we will transform the data so that we have at most 5 levels per factor
+for (col in names(new.rw.data)) {
+  if (is.factor(new.rw.data[[col]])) {
+    length_of_col<-length(levels(new.rw.data[[col]]))
+    if (length_of_col>5){
+    cat(col, "has", length(levels(new.rw.data[[col]])), "unique levels\n")}
+  }
+}
+#we see that there are quite a lot of columns to re level, we will first check if any of these are correlated so we can eliminate them
+library(vcd)
+
+# Calculate Cramér's V for the parents qualifications
+factor1 <- new.rw.data$`W1hiqualmum(Mother’s highest qualification)`
+factor2 <- new.rw.data$`W1hiqualdad(Father’s highest qualification)`
+
+# Create a contingency table
+contingency_table <- table(factor1, factor2)
+cramers_v <- assocstats(contingency_table)
+print(cramers_v$cramer)
+#since they are moderately correlated, we will merge both predictors into a combined parents qualification level
+# Merge the two columns (combine mum and dad qualifications)
+new.rw.data$W1hiqualparents_combined_qualification <- 
+  as.numeric(new.rw.data$`W1hiqualmum(Mother’s highest qualification)`) + 
+  as.numeric(new.rw.data$`W1hiqualdad(Father’s highest qualification)`)
+
+# Remove the original individual columns
+new.rw.data$`W1hiqualmum(Mother’s highest qualification)` <- NULL
+new.rw.data$`W1hiqualdad(Father’s highest qualification)` <- NULL
+
+# Calculate Cramér's V for the parents employement status
+factor1 <- new.rw.data$`W1empsmum(Employment status of mother)`
+factor2 <- new.rw.data$`W1empsdad(Employment status of father)`
+
+# Create a contingency table
+contingency_table <- table(factor1, factor2)
+cramers_v <- assocstats(contingency_table)
+print(cramers_v$cramer)
+#since they are moderately correlated, we will remove the mother column, 
+#as it has 9 levels compared to the father column which has 10 as we kept the missing as a level for the fathers column
+new.rw.data$`W1empsmum(Employment status of mother)` <- NULL
+
+dim(new.rw.data) #check the new dimensions
+
+#for the remaining columns with too many levels, we will merge them
+for (col in names(new.rw.data)) {
+  if (is.factor(new.rw.data[[col]])) {
+    length_of_col<-length(levels(new.rw.data[[col]]))
+    if (length_of_col>5){
+      cat(col, "has", length(levels(new.rw.data[[col]])), "unique levels\n")}
+  }
+}
+
+
+#making a function that will help identify the levels we can merge in categorical predictors
+get_level_stats <- function(data, column_name, custom_order) {
+  # Loop through each custom level in the specified order
+  for (level in custom_order) {
+    # Subset the data for the current level
+    subset_data <- data[data[[column_name]] == level, ]
+    
+    # Count how many rows there are for the current level
+    count_values <- nrow(subset_data)
+    
+    # Calculate the mean of weekly income for the current level
+    mean_W8DINCW <- mean(subset_data$`W8DINCW(Continuous weekly income)`)
+    
+    # Print the level, length of values for that level, and mean of W8DINCW(Continuous weekly income)
+    cat(level, "LENGTH:", count_values, "\n")
+    print(mean_W8DINCW)
+  }
+}
+
+# Starting with W1wrk1aMP(MP: current working status)
+
+# Custom order for the levels
+custom_order_W1wrk1aMP <- 1:12
+
+# check the mean weekly income for each level along with the length of each level
+get_level_stats(new.rw.data, "W1wrk1aMP(MP: current working status)", custom_order_W1wrk1aMP)
+
+# Merging levels 1-4(working) and all the others
+levels(new.rw.data$`W1wrk1aMP(MP: current working status)`)[levels(new.rw.data$`W1wrk1aMP(MP: current working status)`) %in% 1:4] <- "Working"
+levels(new.rw.data$`W1wrk1aMP(MP: current working status)`)[levels(new.rw.data$`W1wrk1aMP(MP: current working status)`) %in% 5:12] <- "Not Working"
+
+# Checking the changes
+summary(new.rw.data$`W1wrk1aMP(MP: current working status)`)
+
+# Now for W1NoldBroHS(Number of younger siblings)
+
+# Custom order for the levels
+custom_order_W1NoldBroHS <- c(0,1,2,3,4,5,6,7,9)
+
+# check the mean weekly income for each level along with the length of each level
+get_level_stats(new.rw.data, "W1NoldBroHS(Number of younger siblings)", custom_order_W1NoldBroHS)
+
+# Merging levels 0-2 and 3+
+levels(new.rw.data$`W1NoldBroHS(Number of younger siblings)`)[levels(new.rw.data$`W1NoldBroHS(Number of younger siblings)`) %in% 0:2] <- "0-2"
+levels(new.rw.data$`W1NoldBroHS(Number of younger siblings)`)[levels(new.rw.data$`W1NoldBroHS(Number of younger siblings)`) %in% c(3,4,5,6,7,9,12)] <- "3+"
+
+# Checking the changes
+summary(new.rw.data$`W1NoldBroHS(Number of younger siblings)`)
+
+# W1hous12HH(Tenure) is the next column with too many levels
+
+# Custom order for the levels
+custom_order_W1hous12HH <- 1:8
+
+# check the mean weekly income for each level along with the length of each level
+get_level_stats(new.rw.data, "W1hous12HH(Tenure)", custom_order_W1hous12HH)
+
+# Merging levels 1-3(house is owned) and 4+(house is rented or other)
+levels(new.rw.data$`W1hous12HH(Tenure)`)[levels(new.rw.data$`W1hous12HH(Tenure)`) %in% 1:3] <- "Owned"
+levels(new.rw.data$`W1hous12HH(Tenure)`)[levels(new.rw.data$`W1hous12HH(Tenure)`) %in% 4:8] <- "Rented/other"
+
+# Checking the changes
+summary(new.rw.data$`W1hous12HH(Tenure)`)
+
+# W1empsdad(Employment status of father) is next
+
+# Custom order for the levels
+custom_order_W1empsdad <- 1:9
+
+# check the mean weekly income for each level along with the length of each level
+get_level_stats(new.rw.data, "W1empsdad(Employment status of father)", custom_order_W1empsdad)
+
+# Merging levels 1-2and 5(working/education) and 4,6,7,8,9(not working)
+levels(new.rw.data$`W1empsdad(Employment status of father)`)[levels(new.rw.data$`W1empsdad(Employment status of father)`) %in% c(1,2,5)] <- "Working/Education"
+levels(new.rw.data$`W1empsdad(Employment status of father)`)[levels(new.rw.data$`W1empsdad(Employment status of father)`) %in% c(3,4,6,7,8,9)] <- "Not Working"
+
+# Checking the changes
+summary(new.rw.data$`W1empsdad(Employment status of father)`)
+
+# W1ch3_11HH(Number of children aged 3-11 in HH) is next
+
+# Custom order for the levels
+custom_order_W1ch3_11HH <- 0:5
+
+# check the mean weekly income for each level along with the length of each level
+get_level_stats(new.rw.data, "W1ch3_11HH(Number of children aged 3-11 in HH)", custom_order_W1ch3_11HH)
+
+# Merging levels 0-2 and 3+
+levels(new.rw.data$`W1ch3_11HH(Number of children aged 3-11 in HH)`)[levels(new.rw.data$`W1ch3_11HH(Number of children aged 3-11 in HH)`) %in% 0:2] <- "0-2"
+levels(new.rw.data$`W1ch3_11HH(Number of children aged 3-11 in HH)`)[levels(new.rw.data$`W1ch3_11HH(Number of children aged 3-11 in HH)`) %in% 3:5] <- "3+"
+
+# Checking the changes
+summary(new.rw.data$`W1ch3_11HH(Number of children aged 3-11 in HH)`)
+
+# W1marstatmum(Marital status of mother) is next
+
+# Custom order for the levels
+custom_order_W1marstatmum <- 1:7
+
+# check the mean weekly income for each level along with the length of each level
+get_level_stats(new.rw.data, "W1marstatmum(Marital status of mother)", custom_order_W1marstatmum)
+
+# Merging levels 2&3(living with partner) and all others(single divorced etc)
+levels(new.rw.data$`W1marstatmum(Marital status of mother)`)[levels(new.rw.data$`W1marstatmum(Marital status of mother)`) %in% 2:3] <- "Living With Partner"
+levels(new.rw.data$`W1marstatmum(Marital status of mother)`)[levels(new.rw.data$`W1marstatmum(Marital status of mother)`) %in% c(1,4,5,6,7)] <- "Not Living With Partner"
+
+# Checking the changes
+summary(new.rw.data$`W1marstatmum(Marital status of mother)`)
+
+# W1depkids(Number of dependent children in HH) is next
+
+# Custom order for the levels
+custom_order_W1depkids <- 1:10
+
+# check the mean weekly income for each level along with the length of each level
+get_level_stats(new.rw.data, "W1depkids(Number of dependent children in HH)", custom_order_W1depkids)
+
+# Merging levels 1-3 and 4+
+levels(new.rw.data$`W1depkids(Number of dependent children in HH)`)[levels(new.rw.data$`W1depkids(Number of dependent children in HH)`) %in% 1:3] <- "1-3"
+levels(new.rw.data$`W1depkids(Number of dependent children in HH)`)[levels(new.rw.data$`W1depkids(Number of dependent children in HH)`) %in% 4:10] <- "4+"
+
+# Checking the changes
+summary(new.rw.data$`W1depkids(Number of dependent children in HH)`)
+
+# W1nssecfam(Family’s NS-SEC class)
+
+# Custom order for the levels
+custom_order_W1nssecfam <- 1:8
+
+# check the mean weekly income for each level along with the length of each level
+get_level_stats(new.rw.data, "W1nssecfam(Family’s NS-SEC class)", custom_order_W1nssecfam)
+
+# Merging levels 1-5(modern occupations) and 6+(routine occupations/no job)
+levels(new.rw.data$`W1nssecfam(Family’s NS-SEC class)`)[levels(new.rw.data$`W1nssecfam(Family’s NS-SEC class)`) %in% 1:5] <- "Modern occupations"
+levels(new.rw.data$`W1nssecfam(Family’s NS-SEC class)`)[levels(new.rw.data$`W1nssecfam(Family’s NS-SEC class)`) %in% 6:8] <- "Routine occupations/unemployed"
+
+# Checking the changes
+summary(new.rw.data$`W1nssecfam(Family’s NS-SEC class)`)
+
+# W1ethgrpYP(Young person’s ethnic group) is next
+
+# Custom order for the levels
+custom_order_W1ethgrpYP <- 1:8
+
+# check the mean weekly income for each level along with the length of each level
+get_level_stats(new.rw.data, "W1ethgrpYP(Young person’s ethnic group)", custom_order_W1ethgrpYP)
+
+# Merging levels 1(white) and 2+(other ethnicities)
+levels(new.rw.data$`W1ethgrpYP(Young person’s ethnic group)`)[levels(new.rw.data$`W1ethgrpYP(Young person’s ethnic group)`) %in% 1:1] <- "White"
+levels(new.rw.data$`W1ethgrpYP(Young person’s ethnic group)`)[levels(new.rw.data$`W1ethgrpYP(Young person’s ethnic group)`) %in% 2:8] <- "Other"
+
+# Checking the changes
+summary(new.rw.data$`W1ethgrpYP(Young person’s ethnic group)`)
+
+# W1hwndayYP(Number of evenings of HWK per week) is next
+
+# Custom order for the levels
+custom_order_W1hwndayYP <- 0:5
+
+# check the mean weekly income for each level along with the length of each level
+get_level_stats(new.rw.data, "W1hwndayYP(Number of evenings of HWK per week)", custom_order_W1hwndayYP)
+
+# Merging levels 0 and 1
+levels(new.rw.data$`W1hwndayYP(Number of evenings of HWK per week)`)[levels(new.rw.data$`W1hwndayYP(Number of evenings of HWK per week)`) %in% 0:1] <- "0-1"
+
+# Checking the changes
+summary(new.rw.data$`W1hwndayYP(Number of evenings of HWK per week)`)
+
+# The next predictor with too many levels is W4AlcFreqYP(Frequency of having an alcoholic drink in last 12 months)
+
+# Custom order for the levels
+custom_order_W4AlcFreqYP <- 1:6
+
+# check the mean weekly income for each level along with the length of each level
+get_level_stats(new.rw.data, "W4AlcFreqYP(Frequency of having an alcoholic drink in last 12 months)", custom_order_W4AlcFreqYP)
+
+# Merging levels 1 and 2, and 5 and 6
+levels(new.rw.data$`W4AlcFreqYP(Frequency of having an alcoholic drink in last 12 months)`)[levels(new.rw.data$`W4AlcFreqYP(Frequency of having an alcoholic drink in last 12 months)`) %in% 1:2] <- "1-2"
+levels(new.rw.data$`W4AlcFreqYP(Frequency of having an alcoholic drink in last 12 months)`)[levels(new.rw.data$`W4AlcFreqYP(Frequency of having an alcoholic drink in last 12 months)`) %in% 5:6] <- "5-6"
+
+# Checking the changes
+summary(new.rw.data$`W4AlcFreqYP(Frequency of having an alcoholic drink in last 12 months)`)
+
+# The next predictor with too many levels is W4empsYP(Employment status of young person)
+
+# Custom order for the levels
+custom_order_W4empsYP <- c(1,2,3,4,5,6,9)
+# check the mean weekly income for each level along with the length of each level
+get_level_stats(new.rw.data, "W4empsYP(Employment status of young person)", custom_order_W4empsYP)
+
+# Merging levels 1,2 and 5(working or studying) and the others(not in work or education)
+levels(new.rw.data$`W4empsYP(Employment status of young person)`)[levels(new.rw.data$`W4empsYP(Employment status of young person)`) %in% c(1,2,5)] <- "Working/In Education"
+levels(new.rw.data$`W4empsYP(Employment status of young person)`)[levels(new.rw.data$`W4empsYP(Employment status of young person)`) %in% c(3,4,6,9)] <- "Not Working Or In Education"
+
+# Checking the changes
+summary(new.rw.data$`W4empsYP(Employment status of young person)`)
+
+# The next predictor with too many levels is W6acqno(Highest academic qualification studied at Wave 6)
+
+# Custom order for the levels
+custom_order_W6acqno <- 1:9
+# check the mean weekly income for each level along with the length of each level
+get_level_stats(new.rw.data, "W6acqno(Highest academic qualification studied at Wave 6)", custom_order_W6acqno)
+
+# Merging levels 1-4(A level/HE) and 5-8(GCSE/OTHER), and 9(no academic study aim)
+levels(new.rw.data$`W6acqno(Highest academic qualification studied at Wave 6)`)[levels(new.rw.data$`W6acqno(Highest academic qualification studied at Wave 6)`) %in% 1:4] <- "A level/HE"
+levels(new.rw.data$`W6acqno(Highest academic qualification studied at Wave 6)`)[levels(new.rw.data$`W6acqno(Highest academic qualification studied at Wave 6)`) %in% 5:8] <- "GCSE/Other"
+levels(new.rw.data$`W6acqno(Highest academic qualification studied at Wave 6)`)[levels(new.rw.data$`W6acqno(Highest academic qualification studied at Wave 6)`) %in% 9:9] <- "No Academic Study Aim"
+
+# Checking the changes
+summary(new.rw.data$`W6acqno(Highest academic qualification studied at Wave 6)`)
+
+# We will now merge levels in W8DMARSTAT(Legal marital status)
+
+# Custom order for the levels
+custom_order_W8DMARSTAT <- 1:8
+# check the mean weekly income for each level along with the length of each level
+get_level_stats(new.rw.data, "W8DMARSTAT(Legal marital status)", custom_order_W8DMARSTAT)
+
+# Merging levels 1(single) and the others(has been in a relationship at one point)
+levels(new.rw.data$`W8DMARSTAT(Legal marital status)`)[levels(new.rw.data$`W8DMARSTAT(Legal marital status)`) %in% 2:8] <- "Not Single/Formely Not Single"
+levels(new.rw.data$`W8DMARSTAT(Legal marital status)`)[levels(new.rw.data$`W8DMARSTAT(Legal marital status)`) %in% 1:1] <- "Single"
+
+# Checking the changes
+summary(new.rw.data$`W8DMARSTAT(Legal marital status)`)
+
+# We will now merge levels in W8DACTIVITYC(Current activity of CM)
+
+# Custom order for the levels
+custom_order_W8DACTIVITYC <- 1:10
+# check the mean weekly income for each level along with the length of each level
+get_level_stats(new.rw.data, "W8DACTIVITYC(Current activity of CM)", custom_order_W8DACTIVITYC)
+
+# Merging levels 1-3(employed), 4,7,8 and 9(unemployed), and 5,6,10
+levels(new.rw.data$`W8DACTIVITYC(Current activity of CM)`)[levels(new.rw.data$`W8DACTIVITYC(Current activity of CM)`) %in% c(1,2,3)] <- "Employed"
+levels(new.rw.data$`W8DACTIVITYC(Current activity of CM)`)[levels(new.rw.data$`W8DACTIVITYC(Current activity of CM)`) %in% c(4, 7, 8,9)] <- "Unemployed"
+levels(new.rw.data$`W8DACTIVITYC(Current activity of CM)`)[levels(new.rw.data$`W8DACTIVITYC(Current activity of CM)`) %in% c(5, 6, 10)] <- "Education/Appreticechip Or Something Else"
+
+# Checking the changes
+summary(new.rw.data$`W8DACTIVITYC(Current activity of CM)`)
+
+# We will now merge levels in W8TENURE(Tenure)
+# Get unique values for the column 'W1wrk1aMP(MP: current working status)'
+unique_values <- unique(new.rw.data$`W8TENURE(Tenure)`)
+print(unique_values)
+
+# Custom order for the levels
+custom_order_W8TENURE <- 1:7
+# check the mean weekly income for each level along with the length of each level
+get_level_stats(new.rw.data, "W8TENURE(Tenure)", custom_order_W8TENURE)
+
+# Merging levels 1,2(Own the house) and 3-5(rent the house), and 6 and 7(squatting/other)
+levels(new.rw.data$`W8TENURE(Tenure)`)[levels(new.rw.data$`W8TENURE(Tenure)`) %in% c(1,2)] <- "Owned"
+levels(new.rw.data$`W8TENURE(Tenure)`)[levels(new.rw.data$`W8TENURE(Tenure)`) %in% 3:5] <- "Rented"
+levels(new.rw.data$`W8TENURE(Tenure)`)[levels(new.rw.data$`W8TENURE(Tenure)`) %in% 6:7] <- "Other"
+
+
+# Checking the changes
+summary(new.rw.data$`W8TENURE(Tenure)`)
+
+# We will now merge levels in W8DACTIVITY(Current activity)
+# Get unique values for the column 'W1wrk1aMP(MP: current working status)'
+unique_values <- unique(new.rw.data$`W8DACTIVITY(Current activity)`)
+print(unique_values)
+
+# Custom order for the levels
+custom_order_W8DACTIVITY <- 1:14
+# check the mean weekly income for each level along with the length of each level
+get_level_stats(new.rw.data, "W8DACTIVITY(Current activity)", custom_order_W8DACTIVITY)
+
+# Merging levels 1,3(FT Employment) and 5,8,9,10, 13, 14(unemployed) and 6,7,12(education/apprenticeship), and 11,12, 2, 4(PT employment or voluntary work)
+levels(new.rw.data$`W8DACTIVITY(Current activity)`)[levels(new.rw.data$`W8DACTIVITY(Current activity)`) %in% c(1,3)] <- "Full Time Work"
+levels(new.rw.data$`W8DACTIVITY(Current activity)`)[levels(new.rw.data$`W8DACTIVITY(Current activity)`) %in% c(11,2,4)] <- "Part Time/Voluntary Work"
+levels(new.rw.data$`W8DACTIVITY(Current activity)`)[levels(new.rw.data$`W8DACTIVITY(Current activity)`) %in% c(5,8,9,10,13,14)] <- "Unemployed"
+levels(new.rw.data$`W8DACTIVITY(Current activity)`)[levels(new.rw.data$`W8DACTIVITY(Current activity)`) %in% c(6,7,12)] <- "Education/Apprenticechip"
+
+
+# Checking the changes
+summary(new.rw.data$`W8DACTIVITY(Current activity)`)
+
+col_names_cleaned <- clean_col_names(names(new.rw.data))
+# Final step: we will create 2 models: 1 with the continuous predictors that have more than 30% missing data and the other without
+model_with_missing<-new.rw.data
+main_model <- new.rw.data[, !col_names_cleaned %in% cont_with_more_than_30_per]
+dim(model_with_missing)
+dim(main_model)

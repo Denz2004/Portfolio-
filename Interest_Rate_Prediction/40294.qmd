@@ -1,0 +1,633 @@
+---
+title: DS202W - W10 Summative
+author: <40294>
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    toc-location: left
+    number-sections: true
+    theme: journal 
+    code-fold: true
+output: html
+self-contained: true
+jupyter: python3
+engine: jupyter
+editor:
+  render-on-save: true
+  preview: true
+---
+<hr style="border: 2px solid black; margin: 2em 0;" />
+
+# Part 1:
+
+## Question 1:
+
+Loading yuan dynasty data into a dataframe
+
+```{python}
+import pandas as pd
+yuan = pd.DataFrame(pd.read_stata("yuan_inflation_data.dta"))
+```
+
+## Question 2:
+### A)
+
+The top 10 years with the highest wars are displayed in the table below
+
+```{python}
+top_wars = yuan.sort_values("totalwar", ascending=False).head(10)
+top_wars[["year","totalwar"]].reset_index(drop = True)
+```
+
+The top 10 years with the highest nominal money issues are displayed in the table below
+
+```{python}
+top_nominal = yuan.sort_values("nominal", ascending=False).head(10)
+top_nominal[["year","nominal"]].reset_index(drop = True)
+```
+
+
+```{python}
+matches = top_wars[top_wars["year"].isin(top_nominal["year"])]
+matches = list(matches["year"])
+m_count = len(matches)
+print(f"{m_count} years overlap between the top 10 years with highest wars \n and highest nominal money issues. Those years were: \n {matches}")
+
+```
+
+
+### B)
+The top 10 years with the highest number of disasters are displayed in the table below
+```{python}
+top_dis = yuan.sort_values("disaster", ascending=False).head(10)
+top_dis[["year","disaster"]].reset_index(drop = True)
+```
+
+```{python}
+matches2 = top_dis[top_dis["year"].isin(top_nominal["year"])]
+matches2 = list(matches2["year"])
+m_count2 = len(matches2)
+print(f"{m_count2} years overlap between the top 10 years with the highest \nnumber of disasters and highest nominal money issues.")
+
+```
+
+### C)
+
+```{python}
+plot_scale = yuan.copy()
+
+# scaling values 
+plot_scale["cpi_scaled"] = plot_scale["cpi"] / plot_scale["cpi"].max()
+plot_scale["totalwar_scaled"] = plot_scale["totalwar"] / plot_scale["totalwar"].max()
+plot_scale["disaster_scaled"] = plot_scale["disaster"] / plot_scale["disaster"].max()
+plot_scale["nominal_scaled"] = plot_scale["nominal"] / plot_scale["nominal"].max()
+
+# Reshaping df for plotting
+plot_long = plot_scale.melt(
+    id_vars = "year",
+    value_vars = ["cpi_scaled", "totalwar_scaled", "disaster_scaled", "nominal_scaled"],
+    var_name = "variable",
+    value_name = "value"
+)
+
+# Plotting values
+from plotnine import *
+(
+    ggplot(plot_long, aes(x="year", y="value", color="variable")) +
+    geom_line(size=1) +
+    labs(
+        title="Scaled Trends of CPI, Total Wars, Disasters, and Nominal Money Issues",
+        x="Year",
+        y="Scaled Value (0–1)"
+    ) +
+    theme_light() +
+    theme(legend_position="top")
+)
+```
+
+The plot shows some key insights:
+
+* consumer price index steadily increased over time until the 1340s where a sudden increase in the rate of increase occured.
+
+* this spike was followed by by spikes in nominal money issues and total wars implying that increased consumer price index led to widescale financial crisis and possibly contributing to tensions that led to wars.
+
+* a large spike in natural disasters was observed in the 20s into the 30s. This could have been a cause for the proceeding increase in cpi as largescale damage would have put financial burdens of repair on the yuan dynasty's empire.
+
+* other than a corresponding spike in wars in the 20s and 30s accompanying the large spike in massive disasters as mentioned, there seems to be little correlation between the other factors as they display random spikes at random times.
+
+<hr style="border: 2px solid black; margin: 2em 0;" />
+
+# Part 2:
+
+## Question 1:
+
+Before splitting the data into the testing and training sets first all the variables were inspected.
+```{python}
+yuan.dtypes
+```
+
+As training and testing data is to be split by time periods emperors will not be a useful feature as the training data will have different emperors to the tesing data therefore no useful correlation can be obtained there. As consumer price index tends to increase over time i have decided to keep year as the passing of time should be a useful predictor for cpi. However I keep two version of it, the original for data splitting purposes and the normalized for regression analysis.
+
+```{python}
+yuan_base = yuan.drop(yuan[["emperor","emperorname"]], axis=1)
+base_feat = list(yuan_base.columns)
+base_feat.remove('cpi')
+base_feat.remove('year')
+```
+
+As seen earlier with the graphs the remaining variables are scaled differently therefore before applying a linear regression model to tha data, the data was normalized
+
+```{python}
+def normalise(var):
+  return (var-var.mean())/var.std()
+
+normal_feat = yuan_base[base_feat].apply(lambda x: normalise(x),axis=0)
+normal_year = normalise(yuan_base["year"]).to_frame(name = "year_norm")
+```
+
+```{python}
+yuan_final = pd.concat([normal_feat, normal_year, yuan_base[["year", "cpi"]]], axis=1)
+base_feat = base_feat + ["year_norm"]
+
+```
+
+```{python}
+yuan_train, yuan_test = yuan_final.query("year < 1327"), yuan_final.query("year >= 1327")
+
+X_yuantrain, X_yuantest = yuan_train[base_feat], yuan_test[base_feat]
+y_yuantrain, y_yuantest = yuan_train["cpi"], yuan_test["cpi"]
+
+print(y_yuantest.describe())
+```
+
+```{python}
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score, root_mean_squared_error, mean_absolute_error, mean_absolute_percentage_error
+import numpy as np
+
+linear_model = LinearRegression()
+linear_model.fit(X_yuantrain, y_yuantrain)
+
+#predictions for test set
+test_preds = linear_model.predict(X_yuantest)
+
+
+#performance metrics
+r2 = r2_score(y_yuantest, test_preds)
+rmse = root_mean_squared_error(y_yuantest, test_preds)
+mae = mean_absolute_error(y_yuantest, test_preds)
+mape = mean_absolute_percentage_error(y_yuantest, test_preds)
+
+# Print results
+print(f'r2:{np.round(r2, 2)}, rmse:{np.round(rmse, 2)}, mae:{np.round(mae, 2)}, mape:{np.round(mape, 2)}')
+
+```
+
+The metrics reveal a very poor r2 score of -0.24 and a high rmse of 29.97. The linear model is shown to have a poor predictive ability in predicting cpi as well as a massive error rate.
+
+```{python}
+residuals_toplot = pd.DataFrame({"predictions": test_preds,
+                                 "residuals": np.array(y_yuantest) - test_preds})
+(
+  ggplot(residuals_toplot, aes("predictions", "residuals")) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_point() +
+  theme(panel_grid_minor = element_blank()) +
+  labs(x = "Fitted values", y = "Residuals")
+)
+```
+
+The residual plots reveal additional problems with the model. They appear to not be randomly scattered around 0 but instead almost all exclusively lie above 0 implmying all predictions are underpredictions of the true cpi.
+
+
+## Question 2
+
+Firstly an inspection of each features boxplots and summary statistics was performed to identify if any variables would benifit from a transformation
+
+```{python}
+yuan_col = list(yuan.columns)
+yuan_col.remove("emperorname")
+yuan_col.remove("emperor")
+
+```
+
+```{python}
+import matplotlib.pyplot as plt
+for col in yuan_col:
+    print(f"--- {col} ---")
+    print(f"Mean:   {yuan[col].mean():.2f}")
+    print(f"Median: {yuan[col].median():.2f}")
+    print(f"Std:    {yuan[col].std():.2f}")
+    print(f"Skew:   {yuan[col].skew():.2f}")
+    print()  # Blank line to separate columns
+    
+    yuan[[col]].boxplot()
+    plt.title(f"Boxplot for {col}")
+    plt.show()
+```
+
+Variables that appeared to by largely positively skewed with their skew statistic were:
+
+* nominal: 3.61
+* cpi: 1.58
+
+Although other variables showed high skew statistics only nominal and cpi experience continious growth and showed high skew statistics implying that they are exponential variables. Population also has continious growth but did not showcase exponential properties.
+
+As a result i have decided to log these values to account for large variability and skewness. Additionally I removed emperor, emperorname, and year from the used features in the model as they are likely to not contribute much to the variation of cpi.
+```{python}
+import pandas as pd
+import numpy as np
+from sklearn.preprocessing import StandardScaler
+
+yuan = pd.DataFrame(pd.read_stata("yuan_inflation_data.dta"))
+
+columns_to_log = [
+ 
+    "nominal", 
+    "cpi"
+]
+
+for col in columns_to_log:
+    if col in yuan.columns:  
+        yuan[col] = np.log1p(yuan[col]) # handles zeroes and small positives
+
+#Standardize
+scaler = StandardScaler()
+numeric_cols = yuan.select_dtypes(include=[np.number]).columns
+yuan[numeric_cols] = scaler.fit_transform(yuan[numeric_cols])
+
+# 4) Lagging feature by 3
+lagged = yuan.copy()
+lagged.sort_values(by="year", inplace=True)
+lagged.reset_index(drop=True, inplace=True)
+
+for col in lagged.columns:
+    if col not in ["year", "cpi"]:
+        lagged[col] = lagged[col].shift(3)
+
+# 6) drop NAN due to shifting
+lagged.dropna(inplace=True)
+lagged.reset_index(drop=True, inplace=True)
+
+X = lagged.drop(columns=["cpi", "year","emperor","emperorname" ])
+y = lagged["cpi"]
+
+```
+
+As we are treating CPI as a consequence of the other features, the other features must be lagged by a year to account for the reaction time of the CPI.
+
+For the second model i opted to use LassoCV as it attached weighted importance to each feature and reduces the effect of features that appear to have little to no correlation to the cpi. Additionally it provodes the ideal alpha for the model. As time series data is used I used Timerseries split to ensure that trained data is not tested on past data and no data leakage occurs
+
+```{python}
+import numpy as np
+from sklearn.linear_model import LassoCV
+from sklearn.model_selection import TimeSeriesSplit
+from sklearn.metrics import r2_score, mean_squared_error
+
+tscv = TimeSeriesSplit(n_splits=3)
+fold_r2_scores = []
+fold_rmse_scores = []
+
+for fold, (train_idx, test_idx) in enumerate(tscv.split(X), start=1):
+    # Split data 
+    X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
+    y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
+
+    model = LassoCV(cv=3, random_state=42)
+    model.fit(X_train, y_train)
+    
+    y_pred_test = model.predict(X_test)
+    
+    fold_r2 = r2_score(y_test, y_pred_test)
+    fold_mse = mean_squared_error(y_test, y_pred_test)
+    fold_rmse = np.sqrt(fold_mse)  
+    
+    fold_r2_scores.append(fold_r2)
+    fold_rmse_scores.append(fold_rmse)
+
+    print(f"Fold {fold}, Test R²: {fold_r2:.4f}, Test RMSE: {fold_rmse:.4f}")
+
+print("Mean Test R² across folds:", np.mean(fold_r2_scores))
+print("Mean Test RMSE across folds:", np.mean(fold_rmse_scores))
+
+```
+
+As seen in the final metrics the model it has a poor predictive ability with an r2 of -5.598 much lower than the linear model however a lower rmse of 0.3458 which implies that the loging of certain variables may have reduced overall variability, or the lasso model put less weighting on highly variable features. However one thing to note is that R2 improved between folds. Its possible that towards the end of the yuan dynasty the features may have had a more causal relationship with cpi as shown by the -0.2621 r2 score for fold three. Though still very poor it is less negative then the others . This is also in line with what was seen on the earlier plotted graph that showed a unanimous spike among several variables.
+
+The culprit for the significantly bad r2 score may lie in cross vallidiation method. Although timeseries split allows a more rigourous cross validation through multiple folds of training and testing sets, the model may suffer from a lack of sample size. As the yuan dataset is not large, dividing the data into even smaller sets may leave the model with insufficient data in each fold to identify correlations to their full strength. for future models one may wish to adopt a one split method as done previously in the baseline model.
+
+
+<hr style="border: 2px solid black; margin: 2em 0;" />
+
+# Part 3:
+
+## Question 1)
+
+```{python}
+boe_rates = pd.read_csv('BoE_interest_rates.csv')
+```
+
+Firstly inspecting data completeness using missingno matrix. As shown data looks to be fully complete
+
+```{python}
+import missingno as msno
+msno.matrix(boe_rates)
+boe_rates.columns
+```
+
+
+
+```{python}
+boe_rates = boe_rates.sort_values('Date')
+
+
+boe_rates['rate_changed'] = boe_rates['rate_change'] != 0
+
+
+boe_rates['cumulative_updates'] = boe_rates['rate_changed'].cumsum()
+
+from plotnine.options import set_option
+set_option('figure_size', (12, 6))
+
+fig, ax = plt.subplots(figsize=(12, 6))
+ax.plot(boe_rates['Date'], boe_rates['cumulative_updates'], marker='o', linestyle='-')
+ax.set_title('Cumulative Count of Interest Rate Changes Over Time')
+ax.set_xlabel('Date')
+ax.set_ylabel('Cumulative Rate Updates')
+plt.xticks(rotation=45)
+plt.grid(True)
+plt.tight_layout()
+
+# Save only, don't display
+plt.savefig("rate_change_plot.png", dpi=300)
+plt.close()  
+
+
+#Plot was not rendering on html properly so i manually saved it and embedded it into the markdown
+
+
+```
+
+This cumulative graph represents the cumulative amount of times rates have changed over time. We can see rate changes were fairly constant up until 2008 where about a 7 year period had no changes in rates followed by some clustered change in rates around 2022
+
+![Cumulative rate changes](2a88238f-8883-4a01-8123-039f0f1b3da2.png)
+
+Downloading economic indicators
+```{python}
+econ_rate = pd.read_csv('economic_indicators_interest_rate_setting.csv')
+
+```
+
+Calculating 3 point averages for the previous 3 months of indicators to a corresponding date of rate change
+```{python}
+import pandas as pd
+from pandas.tseries.offsets import MonthEnd
+
+boe_rates['Date'] = pd.to_datetime(boe_rates['Date'])
+econ_rate['Date'] = pd.to_datetime(econ_rate['Date'])
+econ_rate = econ_rate.set_index('Date').sort_index()
+
+econ_cols = econ_rate.columns.tolist()
+
+# averaging function
+def avg_last_three_months(row):
+    event_date = row['Date']
+    end_date = event_date - MonthEnd(1)
+    start_date = end_date - pd.DateOffset(months=2)
+    data_slice = econ_rate.loc[(econ_rate.index >= start_date) & (econ_rate.index <= end_date)]
+    return data_slice[econ_cols].mean()
+
+
+averages = boe_rates.apply(avg_last_three_months, axis=1)
+
+boe_rates = pd.concat([boe_rates.reset_index(drop=True), averages.reset_index(drop=True)], axis=1)
+
+```
+
+Renaming beo_rates final table column names for readibility and convenience
+```{python}
+# Renaming columns for convenience
+rename_dict = {
+    'CCI': 'cci_avg',
+    'Unemployment rate (aged 16 and over, seasonally adjusted): %': 'unemployment_avg',
+    '10-year-gilt-yield': 'gilt_yield_avg',
+    'CPIH MONTHLY RATE 00: ALL ITEMS 2015=100': 'cpih_avg',
+    'Gross Value Added - Monthly (Index 1dp) :CVM SA': 'gva_avg',
+    'Monthly average Spot exchange rate, Sterling into US$              [a]             XUMAGBD': 'exchange_usd_avg',
+    'Monthly average Spot exchange rates, Sterling into Euro              [a]             XUMASER': 'exchange_eur_avg'
+}
+
+boe_rates = boe_rates.rename(columns=rename_dict)
+```
+
+Below shows a preview of the final dataframe
+```{python}
+boe_rates.head(5)
+```
+
+## Question 2
+
+```{python}
+from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, balanced_accuracy_score, confusion_matrix, roc_auc_score, roc_curve, f1_score, fbeta_score, precision_score, recall_score, precision_recall_curve, average_precision_score
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+from sklearn.linear_model import LinearRegression
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.svm import SVC
+from sklearn.model_selection import cross_val_score, GridSearchCV
+import statsmodels.api as sm
+
+```
+
+Firstly creating an instance of the model. As we want a 70/30 split i calculated what is 70% of 67 which is 47 and divided the data in testing and training between the 47th and 48th data point to insure the integrity of the time series data. Following I generated probability predictions and converted those predictions to predicted outcomes.
+
+```{python}
+
+logit_model = LogisticRegression(max_iter=2000) 
+
+boe_rates = boe_rates.dropna()
+boe_rates['rate_change'] = boe_rates['rate_change'].replace(-1, 0)
+num_train = round(67*0.7)
+
+
+features = list(boe_rates.columns)
+features.remove("Date")
+features.remove("rate_changed")
+features.remove("rate_change")
+
+X_train = boe_rates.iloc[:num_train][features]
+y_train = boe_rates.iloc[:num_train]['rate_change']
+
+X_test = boe_rates.iloc[num_train:][features]
+y_test = boe_rates.iloc[num_train:]['rate_change']
+
+logit_model.fit(X_train, y_train)
+
+train_probas = logit_model.predict_proba(X_train)[:,1]
+
+# Generate predictions
+train_probas = logit_model.predict_proba(X_train)[:,1]
+
+test_probas = logit_model.predict_proba(X_test)[:,1]
+
+# Convert predicted scores 
+train_preds = np.where(train_probas > 0.5, 0, 1)
+ 
+test_preds = np.where(test_probas > 0.5, 0, 1)
+```
+
+ Note that -1 was converted to 0 in the rate_change column hence 0 represents a rate decrease and 1 represents a rate increase. Shown below is the counts for each
+
+```{python}
+boe_rates['rate_change'].value_counts()
+```
+
+
+To evaluate this metric I have opted for the balanced accuracy score as there is a slight imbalance in the positive and negative rate changes in the data set. Additionally the difference in importance between a false negative and a false positive in this context is nothing. This model should aim to be predictivly overall accurate, for both outcomes
+```{python}
+
+balanced_accuracy_test = np.round(balanced_accuracy_score(y_test, test_preds),2)
+print(f"Balanced Accuracy (Test): {balanced_accuracy_test}")
+
+```
+
+With a Balanced accuracy score of 0.72 this model can be considered satisfactory. It is not highly predictive but can be useful as and aiding tool to predict future interest rate trends
+
+Regression coefficients in logistical regression represent two factors. Beta 0 represent the baseline probability of a classification if all other Beta K coefficents are at 0. Beta K coefficients represent the rate of change in the target variable that a certain feature k is responsible for (logarithmically). In this context the Beta ks represent the features that contribute towards changes in the interest rate such as unemployment and exchange rates. they each have their own individual coefficient beta k which describes their effect on the probability an interest rate increases or decreases. 
+
+## Question 3)
+
+I Decided to opt for a Random Forrest model here. Firstly I identified that the exchange rate of pounds to dollars and euros might be correlated as the euro can be heavily dependent on the dollar. Therefore as a precaution i joined them into into one feature to avoid multi-colinearty
+
+```{python}
+
+correlation = boe_rates['exchange_usd_avg'].corr(boe_rates['exchange_eur_avg'])
+
+print(f"Correlation between USD and Euro exchange rates: {correlation:.4f}")
+
+```
+
+Checking the correlation i found it to be 0.66 which I deemed high enought to justify joining. From the model i removed rate chnaged as they are all true and cumulative updates as it most likely has no predictive significance for determining the direction of change in interest rate. I standardized the data to ensure certain large valued variable dont overrepresent themselves. Then using random forrest classifiers i set up a timeseriessplit cross validation to ensure the model is cross tested across multiple folds and data leakage in prevented.
+
+```{python}
+import numpy as np
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import TimeSeriesSplit, cross_val_score
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score
+
+boe_rates = boe_rates.dropna()
+
+boe_rates['exchange_combined'] = boe_rates['exchange_usd_avg'] + boe_rates['exchange_eur_avg']
+
+boe_rates = boe_rates.drop(columns=['Date', 'cumulative_updates', 'rate_changed'])
+
+X = boe_rates.drop(columns=['rate_change'])
+y = boe_rates['rate_change']
+
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+rf_model = RandomForestClassifier(n_estimators=100, random_state=123)
+tscv = TimeSeriesSplit(n_splits=3)
+
+predictions_custom = np.full(shape=len(y), fill_value=np.nan, dtype=float)
+
+for train_idx, test_idx in tscv.split(X_scaled):
+    X_train, X_test = X_scaled[train_idx], X_scaled[test_idx]
+    y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
+
+    fold_model = RandomForestClassifier(n_estimators=100, random_state=123)
+    fold_model.fit(X_train, y_train)
+    
+    fold_preds = fold_model.predict(X_test)
+    predictions_custom[test_idx] = fold_preds
+
+
+valid_mask = ~np.isnan(predictions_custom)
+overall_accuracy = accuracy_score(y[valid_mask], predictions_custom[valid_mask])
+print("Predictions Accuracy (Out-of-Fold):", overall_accuracy)
+
+cv_results = cross_val_score(rf_model, X_scaled, y, cv=tscv, scoring='accuracy')
+print(f"Random Forest Model Time-Series CV Accuracy Scores: {cv_results}")
+print(f"Mean Accuracy: {cv_results.mean():.4f}")
+
+
+
+```
+
+As seen above a mean accuracy score of 0.6042 was obtained from the model. Despite attempted improvments this was lower than the basline model.
+
+```{python}
+from sklearn.metrics import balanced_accuracy_score
+
+
+balanced_acc = balanced_accuracy_score(y[valid_mask], predictions_custom[valid_mask])
+print(f"Balanced Accuracy: {balanced_acc:.4f}")
+```
+
+Adjusting for the balanced accuracy we see a slight improvment of 0.6206 however the model still falls short of the baseline
+
+```{python}
+from sklearn.metrics import confusion_matrix
+
+conf_matrix = confusion_matrix(y[valid_mask], predictions_custom[valid_mask])
+print("Confusion Matrix:\n", conf_matrix)
+
+import pandas as pd
+from plotnine import (ggplot, aes, geom_tile, geom_text, 
+                      scale_fill_gradient, ggtitle, xlab, ylab, 
+                      coord_fixed, theme_minimal, theme)
+
+# Convert the matrix to a labeled DataFrame
+conf_matrix_df = pd.DataFrame(
+    conf_matrix,
+    columns=["Predicted 0", "Predicted 1"], 
+    index=["Actual 0", "Actual 1"]
+)
+
+conf_matrix_long = (
+    conf_matrix_df.reset_index()
+                  .melt(id_vars="index", value_vars=["Predicted 0", "Predicted 1"])
+)
+conf_matrix_long.columns = ["Actual", "Predicted", "Count"]
+
+label_map = {
+    ("Actual 0", "Predicted 0"): "TN",
+    ("Actual 0", "Predicted 1"): "FP",
+    ("Actual 1", "Predicted 0"): "FN",
+    ("Actual 1", "Predicted 1"): "TP",
+}
+
+conf_matrix_long['Annotation'] = conf_matrix_long.apply(
+    lambda row: f"{label_map[(row['Actual'], row['Predicted'])]}: {row['Count']}",
+    axis=1
+)
+
+conf_matrix_plot = (
+    ggplot(conf_matrix_long, aes(x='Predicted', y='Actual', fill='Count')) 
+    + geom_tile() 
+    + geom_text(aes(label='Annotation'), size=10, color='black', va='center', ha='center')
+    + scale_fill_gradient(low='white', high='blue')
+    + ggtitle("Confusion Matrix")
+    + xlab('Predicted')
+    + ylab('Actual')
+    + coord_fixed(ratio=1)
+    + theme_minimal()
+    + theme(legend_position='right', plot_margin=0)
+)
+
+conf_matrix_plot
+
+
+```
+
+The model seems to have overpredicted the amount of interest rate decreases.
+

@@ -1,0 +1,60 @@
+---
+title: 'Data and Code'
+format: 
+    html:
+        toc: true 
+self-contained: true
+mode: visual
+jupyter: python3
+echo: true
+---
+ 
+
+## Data Collection
+
+For our primary source, we use the Reddit API to scrape texts from posts in 54 subreddits, including all the states and the political parties. 
+
+This approach allows us to obtain a total of 27,000 text data, in which we store in a SQL database. Our usage of the API allowed us to obtain data with minimal cleaning.
+
+The table below shows 1,000 of the text data we have collected through the API and the information collected with it.
+
+
+```{python}
+#| column: page
+#| echo: false
+
+
+import sqlite3
+import pandas as pd
+from itables import show
+
+
+# Create your connection.
+cnx = sqlite3.connect('./data/states_reddit.db')
+
+df = pd.read_sql_query("SELECT * FROM states_data", cnx)
+cnx.close()
+df = df[17000:18000]
+
+show(df,classes ="display nowrap compact")
+
+```
+
+## Data Cleaning 
+
+In order to prepare our data for analysis, we made a custom function to extract the title and the contents of the post into a dictionary. We also filtered out stopwords and special characters, which allows increased efficiency while maintaining the meaningful content.
+
+```{.python filename="functions.py"}
+# Cleans the text data of every subreddit 
+def clean_text(data,subreddit):
+    title_list = [x for x in data[data['subreddit']== subreddit]['title']]
+    text_list = [x for x in data[data['subreddit']== subreddit]['selftext']]
+    all_text = title_list + text_list
+    filtered_text = list(filter(lambda x: x.strip(), all_text))
+    clean_text = [" ".join([w for w in t.split() if not w in stopwords['stopwords'] and w.isalnum()]) for t in filtered_text]
+    return clean_text
+
+```
+
+
+
